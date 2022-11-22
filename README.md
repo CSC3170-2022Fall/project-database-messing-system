@@ -7,8 +7,8 @@ This is our implementation for the course project of CSC3170, 2022 Fall, CUHK(SZ
 
 <!-- Please fill in "x" to replace the blank space between "[]" to tick the todo item; it's ticked on the first one by default. -->
 
-- [x] **Application with Database System(s)**
-- [ ] **Implementation of a Database System**
+- [ ] **Application with Database System(s)**
+- [x] **Implementation of a Database System**
 
 ## Team Members
 
@@ -30,11 +30,7 @@ Our team consists of the following members, listed in the table below (the team 
 
 After thorough discussion, our team made the choice and the specification information is listed below:
 
-- Our option choice is: **Option 1**
-- Our branch choice is: **Branch 1**
-- The difficulty level is: **Normal**
-
-As for Option 2, our topic background specification can be found in [background-specification.md](background-specification.md).
+- Our option choice is: **Option 3**
 
 ## Project Abstract
 
