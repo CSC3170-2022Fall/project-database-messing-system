@@ -1,37 +1,57 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=9422691&assignment_repo_type=AssignmentRepo)
-# CSC3170 Course Project
+This directory contains a skeleton for CS61B Project 1.
 
-## Project Overall Description
+CONTENTS:
 
-This is our implementation for the course project of CSC3170, 2022 Fall, CUHK(SZ). For details of the project, you can refer to [project-description.md](project-description.md). In this project, we will utilize what we learned in the lectures and tutorials in the course, and implement either one of the following major job:
+ReadMe                  This file.
+        
+Makefile                A makefile (for the 'make' program) that will compile
+                        your files and run tests.  You must turn in a Makefile,
+                        'make' must compile all your files, and 
+                        'make check' must perform all your tests.  Currently,
+                        this makefile is set up to do just that with our
+                        skeleton files.  Be sure to keep it up to date.
 
-<!-- Please fill in "x" to replace the blank space between "[]" to tick the todo item; it's ticked on the first one by default. -->
+staff-version           If we update the skeleton, this file will contain a
+                        unique version id indicating what version of the
+                        skeleton is currently in use.
 
-- [ ] **Application with Database System(s)**
-- [x] **Implementation of a Database System**
 
-## Team Members
+db61b                   A subdirectory containing skeletons for the 
+                        db61b package:
 
-Our team consists of the following members, listed in the table below (the team leader is shown in the first row, and is marked with 🚩 behind his/her name):
+  Main.java             The main program---entry point to the db61b system.
+  Database.java         Abstraction for an entire collection of tables.  
+  Table.java            Abstraction for one table.
+  Row.java              Abstraction for one row of a table.
 
-<!-- change the info below to be the real case -->
+testing                 Subdirectory holding files for integration testing:
 
-| Student ID | Student Name | GitHub Account (in Email) |
-| ---------- | ------------ | ------------------------- |
-| 121090001  | 安子航 🚩    | 2284874018@qq.com         |
-| 121090184  | 侯天赐       | enderturtle@foxmail.com    |
-| 123030245  | 王五         | wuwang@foxmail.com         |
-| 121090628  | 夏禹扬       | 2467925095@qq.com          |
-| 121090841  | 郑莹琪       | 121090841@link.cuhk.edu.cn |
+  Makefile              A makefile containing instructions for performing
+                        tests on your project.
 
-## Project Specification
+  students.db, enrolled.db, courses.db
+                        Sample database tables from the project handout.
 
-<!-- You should remove the terms/sentence that is not necessary considering your option/branch/difficulty choice -->
+  test1.in, test2.in    Input files for testing.  The makefile will respond
+                        to 'make check' by running these files through your
+                        program, filtering the output through 
+                        testing/test-filter, and comparing the results with 
+                        the corresponding .out files.  You should add more 
+                        files to the list in Makefile.
+                        REMINDER: These are samples only.  They DON'T 
+                        constitute adequate tests.
 
-After thorough discussion, our team made the choice and the specification information is listed below:
+  test1.out, test2.out  Output that is supposed to result from test1.in
+                        and test2.in, with the first line, all prompts,
+                        and all blank lines removed (which is what 
+                        test-filter does).
 
-- Our option choice is: **Option 3**
+  testing.py            A Python 3 module containing a framework for integration
+                        testing.   Used by tester.py.
 
-## Project Abstract
+  tester.py             A Python 3 program that tests your project.  It runs
+                        your program with each .in file, comparing the output
+                        with the corresponding .out file and producing a report
+                        of the result.
 
-<!-- TODO -->
+
