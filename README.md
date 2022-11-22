@@ -31,13 +31,6 @@ Our team consists of the following members, listed in the table below (the team 
 After thorough discussion, our team made the choice and the specification information is listed below:
 
 - Our option choice is: **Option 3**
-<<<<<<< HEAD
-- Our branch choice is: **Not applied**
-- The difficulty level is: **Not applied**
-
-As for Option 2, our topic background specification can be found in [background-specification.md](background-specification.md).
-=======
->>>>>>> f80a5b2c39c535321617b823d17f4b68bdb171b1
 
 ## Project Abstract
 
