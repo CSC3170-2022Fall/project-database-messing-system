@@ -7,8 +7,8 @@ This is our implementation for the course project of CSC3170, 2022 Fall, CUHK(SZ
 
 <!-- Please fill in "x" to replace the blank space between "[]" to tick the todo item; it's ticked on the first one by default. -->
 
-- [x] **Application with Database System(s)**
-- [ ] **Implementation of a Database System**
+- [ ] **Application with Database System(s)**
+- [x] **Implementation of a Database System**
 
 ## Team Members
 
@@ -19,7 +19,7 @@ Our team consists of the following members, listed in the table below (the team 
 | Student ID | Student Name | GitHub Account (in Email) |
 | ---------- | ------------ | ------------------------- |
 | 121090001  | 安子航 🚩    | 2284874018@qq.com         |
-| 123010345  | 李四         | sili@outlook.com           |
+| 123010345  | 侯天赐       | enderturtle@foxmail.com    |
 | 123030245  | 王五         | wuwang@foxmail.com         |
 | 121090628  | 夏禹扬       | 2467925095@qq.com          |
 | 121090841  | 郑莹琪       | 121090841@link.cuhk.edu.cn |
@@ -30,9 +30,9 @@ Our team consists of the following members, listed in the table below (the team 
 
 After thorough discussion, our team made the choice and the specification information is listed below:
 
-- Our option choice is: **Option 1**
-- Our branch choice is: **Branch 1**
-- The difficulty level is: **Normal**
+- Our option choice is: **Option 3**
+- Our branch choice is: **Not applied**
+- The difficulty level is: **Not applied**
 
 As for Option 2, our topic background specification can be found in [background-specification.md](background-specification.md).
 
