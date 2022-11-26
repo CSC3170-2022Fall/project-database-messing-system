@@ -166,7 +166,7 @@ class CommandInterpreter {
         _input.next("table");
         String name = name();
         Table table = tableDefinition();
-        // FILL IN CODE TO EXECUTE THE STATEMENT
+        _database.put(name,table);
         _input.next(";");
     }
 
@@ -226,8 +226,12 @@ class CommandInterpreter {
     Table tableDefinition() {
         Table table;
         if (_input.nextIf("(")) {
-            // REPLACE WITH SOLUTION
-            table = null;
+            ArrayList<String> columnTitles = new ArrayList<String>();
+            do{ 
+                columnTitles.add(columnName());
+            } while (_input.nextIf(","));
+            if(_input.nextIf(")")==false) throw error("Sytax error, insert \')\' to complete expression");
+            else table = new Table(columnTitles);
         } else {
             // REPLACE WITH SOLUTION
             table = null;

@@ -7,6 +7,8 @@
 // solutions.
 package db61b;
 
+import java.util.HashMap;
+import static db61b.Utils.*;
 // FILL IN (WITH IMPORTS)?
 
 /** A collection of Tables, indexed by name.
@@ -14,7 +16,7 @@ package db61b;
 class Database {
     /** An empty database. */
     public Database() {
-        // FILL IN
+        _database = new HashMap<String, Table>();
     }
 
     /** Return the Table whose name is NAME stored in this database, or null
@@ -29,8 +31,13 @@ class Database {
         if (name == null || table == null) {
             throw new IllegalArgumentException("null argument");
         }
-        // FILL IN
+        if(_database.containsKey(name)){
+            throw error("Table '%s' already exits",name);
+        }
+        else{
+            _database.put(name,table);
+        }
     }
-
+    private HashMap<String,Table> _database = null;
     // FILL IN?
 }

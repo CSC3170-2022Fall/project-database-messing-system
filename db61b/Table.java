@@ -35,7 +35,7 @@ class Table implements Iterable<Row> {
                 }
             }
         }
-        // FILL IN
+        _column_titles = columnTitles;
     }
 
     /** A new Table whose columns are give by COLUMNTITLES. */
@@ -45,12 +45,12 @@ class Table implements Iterable<Row> {
 
     /** Return the number of columns in this table. */
     public int columns() {
-        return 0;  // REPLACE WITH SOLUTION
+        return _column_titles.length;
     }
 
     /** Return the title of the Kth column.  Requires 0 <= K < columns(). */
     public String getTitle(int k) {
-        return null;  // REPLACE WITH SOLUTION
+        return _column_titles[k];
     }
 
     /** Return the number of the column whose title is TITLE, or -1 if
@@ -162,6 +162,6 @@ class Table implements Iterable<Row> {
 
     /** My rows. */
     private HashSet<Row> _rows = new HashSet<>();
-    // FILL IN
+    private String[] _column_titles;
 }
 
