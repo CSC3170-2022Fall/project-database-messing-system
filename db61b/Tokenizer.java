@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static db61b.Utils.*;
+import static db61b.Utils.*;// Some useful tools from other sources
 
 /** Represents a stream of db61b tokens read from a given Scanner.
  *  @author P. N. Hilfinger. */
@@ -39,9 +39,9 @@ class Tokenizer {
      *  if it is non-null. */
     Tokenizer(Scanner s, PrintStream prompter) {
         _input = s;
-        _buffer = new ArrayList<>();
-        _prompter = prompter;
-        _continued = false;
+        _buffer = new ArrayList<>();// Temporarily store the tokens
+        _prompter = prompter;// System.out
+        _continued = false;// The command is not ended yet.
         _shouldPrompt = true;
         _k = 0;
         _mat = Pattern.compile(".").matcher("");
@@ -66,12 +66,12 @@ class Tokenizer {
                     throw error("unterminated comment");
                 }
                 continue;
-            } else if (token.endsWith("\n")) {
-                _shouldPrompt = true;
-                continue;
+            } else if (token.endsWith("\n")) {// If there is newline, that means the user
+                _shouldPrompt = true;                 // finishes a command or changes line,
+                continue;                             // in either case we should print ">" or "..." to prompt.
             }
-            _buffer.add(token);
-            _continued = !token.equals(";");
+            _buffer.add(token);// Store the token into the buffer
+            _continued = !token.equals(";"); // If the sentence ends with ";", we needn't continue.
             return;
         }
     }
@@ -82,11 +82,11 @@ class Tokenizer {
     private void prompt() {
         if (_shouldPrompt && _prompter != null) {
             if (_continued) {
-                _prompter.print("...");
+                _prompter.print("...");// when the sentence is not ended by ";", print "..." to remind the user.
             } else {
                 _prompter.print("> ");
             }
-            _prompter.flush();
+            _prompter.flush();// flush() is used to let the system print immediately before the program goes to the next step.
             _shouldPrompt = false;
         }
     }

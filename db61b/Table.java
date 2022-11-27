@@ -56,12 +56,15 @@ class Table implements Iterable<Row> {
     /** Return the number of the column whose title is TITLE, or -1 if
      *  there isn't one. */
     public int findColumn(String title) {
-        return -1;  // REPLACE WITH SOLUTION
+        for (int i = 0; i < _column_titles.length; i++)
+            if (_column_titles[i] == title)
+                return i;
+        return -1;
     }
 
     /** Return the number of Rows in this table. */
     public int size() {
-        return 0;  // REPLACE WITH SOLUTION
+        return _rows.size();  // REPLACE WITH SOLUTION
     }
 
     /** Returns an iterator that returns my rows in an unspecfied order. */

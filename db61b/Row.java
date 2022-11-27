@@ -9,6 +9,7 @@ package db61b;
 
 import java.util.Arrays;
 import java.util.List;
+import static db61b.Utils.*;
 
 /** A single row of a database.
  *  @author
@@ -40,17 +41,21 @@ class Row {
      *  consider converting this spec to HTML using the Javadoc command.
      */
     Row(List<Column> columns, Row... rows) {
-        // FILL IN
+        int M = columns.size();
+        for (int i = 0; i < M; ++i)
+            _data[i] = columns.get(i).getFrom(rows);
     }
 
     /** Return my number of columns. */
     int size() {
-        return 0;  // REPLACE WITH SOLUTION
+        return _data.length;
     }
 
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
     String get(int k) {
-        return null; // REPLACE WITH SOLUTION
+        if (k < 0 || k >= _data.length)
+            throw error("Error: index out of range.");
+        return _data[k];
     }
 
     @Override

@@ -13,8 +13,8 @@
 - [ ] selectStatement
 
 - [ ] tableDefinition  
-	- [x] if part
-	- [ ] else part
+	- [x] if part-$HTC$
+	- [x] else part-$AZH$
 
 - [ ] selectClause
 
@@ -28,31 +28,31 @@
 
 ### Database.java
 
-- [x] Database()
+- [x] Database()-$HTC$
 
-- [x] put
+- [x] put-$HTC$
 
 - [ ] get
 
 ### Row.java
 
-- [ ] size
+- [x] size-$AZH$
 
-- [ ] get
+- [x] get-$AZH$
 
 - [ ] equals
 
 ### Table.java
 
-- [x] Table()
+- [x] Table()-$HTC$
 
-- [x] columns
+- [x] columns-$HTC$
 
-- [x] getTitle
+- [x] getTitle-$HTC$
 
-- [ ] findColumn
+- [x] findColumn-$AZH$
 
-- [ ] size
+- [x] size-$AZH$
 
 - [ ] add
 
@@ -72,12 +72,12 @@
 
 ### Duplicate
 
-- [x] table name
+- [x] table name-$HTC$
 
-- [x] table column title
+- [x] table column title-$HTC$
 
 ### Syntax Error
 
-- [x] Bracket (create table)
+- [x] Bracket (create table)-$HTC$
 
 

@@ -122,6 +122,8 @@ class CommandInterpreter {
 
     /** A new CommandInterpreter executing commands read from INP, writing
      *  prompts on PROMPTER, if it is non-null. */
+
+    // The commandinterpreter receives input and System.out from Main.
     CommandInterpreter(Scanner inp, PrintStream prompter) {
         _input = new Tokenizer(inp, prompter);
         _database = new Database();
@@ -230,11 +232,17 @@ class CommandInterpreter {
             do{ 
                 columnTitles.add(columnName());
             } while (_input.nextIf(","));
-            if(_input.nextIf(")")==false) throw error("Sytax error, insert \')\' to complete expression");
+            if(_input.nextIf(")")==false) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
             else table = new Table(columnTitles);
         } else {
-            // REPLACE WITH SOLUTION
             table = null;
+            if (_input.nextIf(";"))
+                throw error("Error: A table must have at least one visible column.");
+            else {
+                while (!_input.nextIf(";"))
+                        _input.next();
+                throw error("Syntax error: \'(\' is expected after table name.");
+            }
         }
         return table;
     }
