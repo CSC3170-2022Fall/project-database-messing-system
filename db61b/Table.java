@@ -97,9 +97,12 @@ class Table implements Iterable<Row> {
             header = input.readLine();
             while(header != null){
                 String[] value=header.split(",");
+                if(value.length!=columnNames.length){
+                    throw error("wrong data in DB file");
+                }
                 //System.out.println(header+"?????");
                 table._rows.add(new Row(value));
-                if(input== null) break;
+                if(input==null) break;
                 header = input.readLine();
             }
             input.close();
