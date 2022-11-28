@@ -56,7 +56,7 @@
 
 - [ ] add
 
-- [ ] readTable
+- [x] readTable-**XYY**
 
 - [ ] writeTable
 
