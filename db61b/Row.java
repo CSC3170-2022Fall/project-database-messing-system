@@ -60,7 +60,12 @@ class Row {
 
     @Override
     public boolean equals(Object obj) {
-        return false; // REPLACE WITH SOLUTION
+        if (!(obj instanceof Row) || !(_data.length == ((Row) obj).size())) return false;
+        for (int i = 0; i< (_data.length); i++){
+            if (_data[i] != ((Row) obj).get(i))
+                return false;
+        }
+        return true; // REPLACE WITH SOLUTION
     }
 
     /* NOTE: Whenever you override the .equals() method for a class, you

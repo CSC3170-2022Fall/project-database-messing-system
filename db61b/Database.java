@@ -22,7 +22,7 @@ class Database {
     /** Return the Table whose name is NAME stored in this database, or null
      *  if there is no such table. */
     public Table get(String name) {
-        return null;             // REPLACE WITH SOLUTION
+        return _database.get(name);
     }
 
     /** Set or replace the table named NAME in THIS to TABLE.  TABLE and

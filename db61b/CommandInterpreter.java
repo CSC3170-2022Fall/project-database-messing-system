@@ -188,13 +188,31 @@ class CommandInterpreter {
         Table table = tableName();
         _input.next("values");
 
-        ArrayList<String> values = new ArrayList<>();
-        values.add(literal());
-        while (_input.nextIf(",")) {
-            values.add(literal());
-        }
+        // ArrayList<String> values = new ArrayList<>();
+        // values.add(literal());
+        // while (_input.nextIf(",")) {
+        //     values.add(literal());
+        // }
 
-        table.add(new Row(values.toArray(new String[values.size()])));
+        // table.add(new Row(values.toArray(new String[values.size()])));
+        do{
+            if (_input.nextIf("(")) {
+                ArrayList<String> values = new ArrayList<>();
+                int times = 0;
+                do {
+                    values.add(literal());
+                    times++;
+                } while (_input.nextIf(","));
+                if (times > table.columns())
+                    throw error("Too many arguments.");
+                else if (times < table.columns())
+                    throw error("Too few arguments.");
+                else if (_input.nextIf(")") == false)
+                    throw error("Syntax error, insert \") Statement\" to complete InsertionStatement.");
+                else
+                    table.add(new Row(values.toArray(new String[values.size()])));
+            } 
+        } while (_input.nextIf(","));
         _input.next(";");
     }
 
@@ -215,7 +233,12 @@ class CommandInterpreter {
 
     /** Parse and execute a print statement from the token stream. */
     void printStatement() {
-        // FILL THIS IN
+        _input.next("print");
+        String s = _input.peek();
+        Table table = tableName();
+        System.out.println("Table " + s + ":");
+        table.print();
+        _input.next(";");
     }
 
     /** Parse and execute a select statement from the token stream. */

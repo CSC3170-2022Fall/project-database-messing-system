@@ -54,13 +54,13 @@
 
 - [x] size-**AZH**
 
-- [ ] add
+- [x] add-**HTC** **BUGS: equal(row) is true and with same hashCode but hashSet thinks they are different.**
 
 - [ ] readTable
 
 - [ ] writeTable
 
-- [ ] print
+- [x] print
 
 - [ ] Table select(`List<String> columnNames, List<Condition> conditions`)
 
@@ -76,8 +76,20 @@
 
 - [x] table column title-**HTC**
 
+- [ ] insert values-**HTC** **Failed**
+
 ### Syntax Error
 
 - [x] Bracket (create table)-**HTC**
+
+## Advance
+
+### Operation
+
+- [x] insert rows with mulit columns-**HTC**
+
+### Beautify
+
+- [x] print (MySQL style)-**HTC**
 
 

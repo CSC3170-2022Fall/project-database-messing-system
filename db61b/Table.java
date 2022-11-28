@@ -76,7 +76,11 @@ class Table implements Iterable<Row> {
     /** Add ROW to THIS if no equal row already exists.  Return true if anything
      *  was added, false otherwise. */
     public boolean add(Row row) {
-        return false;   // REPLACE WITH SOLUTION
+        if(!(_rows.contains(row))){
+            _rows.add(row);
+            return true;
+        }
+        return false; //duplicate row
     }
 
     /** Read the contents of the file NAME.db, and return as a Table.
@@ -130,8 +134,57 @@ class Table implements Iterable<Row> {
     }
 
     /** Print my contents on the standard output. */
+    final int MAX_ROW = 100; // The maxinum of output rows
+    int[] find_max_length(){
+        int[] max_length = new int[_column_titles.length];
+        int rows = 0;
+        for (int i = 0; i < _column_titles.length; i++)
+            max_length[i] = Math.max(4, _column_titles[i].length());
+        Iterator<Row> it = _rows.iterator();
+        while (it.hasNext() && rows < MAX_ROW) {
+            Row tmp = it.next();
+            rows += 1;
+            for (int i = 0; i < _column_titles.length; i++)
+                max_length[i] = Math.max(max_length[i],tmp.get(i).length());
+        }        
+        return max_length;
+    }
+    void print_titles(int[] max_length){
+        for (int i = 0; i < _column_titles.length; i++)
+            System.out.printf("|%" + max_length[i] + "s", _column_titles[i]);
+        System.out.println("|");
+    }
+    void print_separator(int[] max_length){
+        for (int i = 0; i < max_length.length; i++){
+            System.out.print("+");
+            for (int j = 0; j < max_length[i]; j++)
+                System.out.print("-");
+        }
+        System.out.println("+");
+    }
+    void print_row(int[] max_length){
+        Iterator<Row> it = _rows.iterator();
+        int rows = 0;
+        while (it.hasNext() && rows < MAX_ROW) {
+            Row tmp = it.next();
+            for (int i = 0; i < _column_titles.length; i++){
+                if (tmp.get(i) != null)
+                    System.out.printf("|%" + max_length[i] + "s", tmp.get(i));
+                else
+                    System.out.printf("|%" + max_length[i] + "s", "NULL");
+            }
+            System.out.println("|");
+        }
+        if(rows == MAX_ROW)
+            System.out.print(" .\n .\n .\n");
+    }
     void print() {
-        // FILL IN
+        int[] max_length = find_max_length();
+        print_separator(max_length);
+        print_titles(max_length);
+        print_separator(max_length);
+        print_row(max_length);
+        print_separator(max_length);
     }
 
     /** Return a new Table whose columns are COLUMNNAMES, selected from
