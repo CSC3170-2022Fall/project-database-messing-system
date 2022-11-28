@@ -4,7 +4,7 @@
 
 ### CommandInterpreter.java
 
-- [ ] loadStatement-**XYY**
+- [x] loadStatement-**XYY**
 
 - [ ] storeStatement
 
@@ -60,7 +60,7 @@
 
 - [ ] writeTable
 
-- [ ] print
+- [x] print-**XYY**
 
 - [ ] Table select(`List<String> columnNames, List<Condition> conditions`)
 
