@@ -196,18 +196,18 @@ class Table implements Iterable<Row> {
         print_separator(max_length);
         print_titles(max_length);
         print_separator(max_length);
-        for (int i = 0; i < _column_titles.length; i++){
-            System.out.print(_column_titles[i]);
-            if(i!=_column_titles.length-1)System.out.print(",");
-        }
-        System.out.println("");
-        for(Row s:_rows){
-            for (int i = 0; i < _column_titles.length; i++){
-                System.out.print(s.get(i));
-                if(i!=_column_titles.length-1)System.out.print(",");
-            }
-                System.out.println("");
-        }
+        // for (int i = 0; i < _column_titles.length; i++){
+        //     System.out.print(_column_titles[i]);
+        //     if(i!=_column_titles.length-1)System.out.print(",");
+        // }
+        // System.out.println("");
+        // for(Row s:_rows){
+        //     for (int i = 0; i < _column_titles.length; i++){
+        //         System.out.print(s.get(i));
+        //         if(i!=_column_titles.length-1)System.out.print(",");
+        //     }
+        //         System.out.println("");
+        // }
         print_row(max_length);
         print_separator(max_length);
     }
