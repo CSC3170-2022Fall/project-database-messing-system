@@ -97,6 +97,19 @@ class Table implements Iterable<Row> {
                 throw error("missing header in DB file");
             }
             String[] columnNames = header.split(",");
+            table=new Table(columnNames);
+            header = input.readLine();
+            while(header != null){
+                String[] value=header.split(",");
+                if(value.length!=columnNames.length){
+                    throw error("wrong data in DB file");
+                }
+                //System.out.println(header+"?????");
+                table._rows.add(new Row(value));
+                if(input==null) break;
+                header = input.readLine();
+            }
+            input.close();
             // FILL IN
         } catch (FileNotFoundException e) {
             throw error("could not find %s.db", name);
@@ -183,6 +196,18 @@ class Table implements Iterable<Row> {
         print_separator(max_length);
         print_titles(max_length);
         print_separator(max_length);
+        for (int i = 0; i < _column_titles.length; i++){
+            System.out.print(_column_titles[i]);
+            if(i!=_column_titles.length-1)System.out.print(",");
+        }
+        System.out.println("");
+        for(Row s:_rows){
+            for (int i = 0; i < _column_titles.length; i++){
+                System.out.print(s.get(i));
+                if(i!=_column_titles.length-1)System.out.print(",");
+            }
+                System.out.println("");
+        }
         print_row(max_length);
         print_separator(max_length);
     }
@@ -211,8 +236,7 @@ class Table implements Iterable<Row> {
      *  that the columns in COMMON1 apply to this table, those in
      *  COMMON2 to another, and that ROW1 and ROW2 come, respectively,
      *  from those tables. */
-    private static boolean equijoin(List<Column> common1, List<Column> common2,
-                                    Row row1, Row row2) {
+    private static boolean equijoin(List<Column> common1, List<Column> common2,Row row1, Row row2) {
         return true; // REPLACE WITH SOLUTION
     }
 

@@ -218,6 +218,15 @@ class CommandInterpreter {
 
     /** Parse and execute a load statement from the token stream. */
     void loadStatement() {
+        _input.next("load");
+        String name=name();
+        System.out.println("Loaded "+name+".db");
+        Table table=Table.readTable(name);//System.out.println("!!");
+        //table.print();
+        _database.put(name,table);
+        //System.out.println("!!!");
+        _input.next(";");
+        
         // FILL THIS IN
     }
 

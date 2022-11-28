@@ -4,7 +4,7 @@
 
 ### CommandInterpreter.java
 
-- [ ] loadStatement
+- [x] loadStatement-**XYY**
 
 - [ ] storeStatement
 
@@ -56,11 +56,11 @@
 
 - [x] add-**HTC** **BUGS: equal(row) is true and with same hashCode but hashSet thinks they are different.**
 
-- [ ] readTable
+- [x] readTable-**XYY**
 
 - [ ] writeTable
 
-- [x] print
+- [x] print-**XYY** **HTC**
 
 - [ ] Table select(`List<String> columnNames, List<Condition> conditions`)
 
