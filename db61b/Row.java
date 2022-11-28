@@ -62,8 +62,9 @@ class Row {
     public boolean equals(Object obj) {
         if (!(obj instanceof Row) || !(_data.length == ((Row) obj).size())) return false;
         for (int i = 0; i< (_data.length); i++){
-            if (_data[i] != ((Row) obj).get(i))
+            if (!this.get(i).equals(((Row) obj).get(i))){
                 return false;
+            }
         }
         return true; // REPLACE WITH SOLUTION
     }

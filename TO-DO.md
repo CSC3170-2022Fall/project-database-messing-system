@@ -32,7 +32,7 @@
 
 - [x] put-**HTC**
 
-- [ ] get
+- [x] get-**HTC**
 
 ### Row.java
 
@@ -40,7 +40,7 @@
 
 - [x] get-**AZH**
 
-- [ ] equals
+- [x] equals-**HTC**
 
 ### Table.java
 
@@ -54,7 +54,7 @@
 
 - [x] size-**AZH**
 
-- [x] add-**HTC** **BUGS: equal(row) is true and with same hashCode but hashSet thinks they are different.**
+- [x] add-**HTC** 
 
 - [x] readTable-**XYY**
 
@@ -76,7 +76,7 @@
 
 - [x] table column title-**HTC**
 
-- [ ] insert values-**HTC** **Failed**
+- [x] insert values-**HTC**
 
 ### Syntax Error
 
