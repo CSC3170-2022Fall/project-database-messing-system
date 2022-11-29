@@ -133,9 +133,19 @@ class Table implements Iterable<Row> {
         PrintStream output;
         output = null;
         try {
-            String sep;
-            sep = "";
             output = new PrintStream(name + ".db");
+            for (int i = 0; i < _column_titles.length; i++){
+                output.print(_column_titles[i]);
+                if(i!=_column_titles.length-1)System.out.print(",");
+            }
+            output.println("");
+            for(Row s:_rows){
+                for (int i = 0; i < _column_titles.length; i++){
+                    output.print(s.get(i));
+                    if(i!=_column_titles.length-1)output.print(",");
+                }
+                output.println("");
+            }
             // FILL THIS IN
         } catch (IOException e) {
             throw error("trouble writing to %s.db", name);
@@ -196,18 +206,7 @@ class Table implements Iterable<Row> {
         print_separator(max_length);
         print_titles(max_length);
         print_separator(max_length);
-        // for (int i = 0; i < _column_titles.length; i++){
-        //     System.out.print(_column_titles[i]);
-        //     if(i!=_column_titles.length-1)System.out.print(",");
-        // }
-        // System.out.println("");
-        // for(Row s:_rows){
-        //     for (int i = 0; i < _column_titles.length; i++){
-        //         System.out.print(s.get(i));
-        //         if(i!=_column_titles.length-1)System.out.print(",");
-        //     }
-        //         System.out.println("");
-        // }
+        
         print_row(max_length);
         print_separator(max_length);
     }
@@ -216,6 +215,7 @@ class Table implements Iterable<Row> {
      *  rows of this table that satisfy CONDITIONS. */
     Table select(List<String> columnNames, List<Condition> conditions) {
         Table result = new Table(columnNames);
+
         // FILL IN
         return result;
     }

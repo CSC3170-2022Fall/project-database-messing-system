@@ -220,24 +220,24 @@ class CommandInterpreter {
     void loadStatement() {
         _input.next("load");
         String name=name();
+        //System.out.println("!!!");
+        _input.next(";");
         System.out.println("Loaded "+name+".db");
         Table table=Table.readTable(name);//System.out.println("!!");
         //table.print();
         _database.put(name,table);
-        //System.out.println("!!!");
-        _input.next(";");
-        
         // FILL THIS IN
     }
 
     /** Parse and execute a store statement from the token stream. */
     void storeStatement() {
         _input.next("store");
-        String name = _input.peek();
+        String name = _input.next();
         Table table = tableName();
+        _input.next(";");
+        table.writeTable(name);
         // FILL THIS IN
         System.out.printf("Stored %s.db%n", name);
-        _input.next(";");
     }
 
     /** Parse and execute a print statement from the token stream. */
@@ -252,6 +252,11 @@ class CommandInterpreter {
 
     /** Parse and execute a select statement from the token stream. */
     void selectStatement() {
+        _input.next("select");
+        while(!_input.nextIf("from")){
+            String name= name();
+
+        }
         // FILL THIS IN
     }
 
@@ -282,8 +287,8 @@ class CommandInterpreter {
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     Table selectClause() {
+        
         return null;         // REPLACE WITH SOLUTION
-
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
