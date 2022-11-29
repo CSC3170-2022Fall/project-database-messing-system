@@ -6,7 +6,7 @@
 
 - [x] loadStatement-**XYY**
 
-- [ ] storeStatement
+- [x] storeStatement-**XYY**
 
 - [ ] printStatement
 
@@ -58,7 +58,7 @@
 
 - [x] readTable-**XYY**
 
-- [ ] writeTable
+- [x] writeTable-**XYY**
 
 - [x] print-**XYY** **HTC**
 
