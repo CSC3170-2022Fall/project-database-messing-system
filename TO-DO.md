@@ -14,7 +14,7 @@
 
 - [ ] tableDefinition  
 	- [x] if part-**HTC**
-	- [x] else part-**AZH**
+	- [ ] else part-**AZH** (`AS`)
 
 - [ ] selectClause
 
