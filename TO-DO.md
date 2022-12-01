@@ -8,17 +8,17 @@
 
 - [x] storeStatement-**XYY**
 
-- [ ] printStatement
+- [ ] printStatement-**SCH**
 
-- [ ] selectStatement
+- [ ] selectStatement-**SCH**
 
-- [ ] tableDefinition  
+- [ ] tableDefinition 
 	- [x] if part-**HTC**
 	- [ ] else part-**AZH** (`AS`)
 
-- [ ] selectClause
+- [ ] selectClause-**SCH**
 
-- [ ] conditionClause
+- [ ] conditionClause-**SCH**
 
 - [ ] condition
 
