@@ -24,7 +24,7 @@
 
 ### Condition.java
 
-- [ ] boolean test(Row... rows)
+- [ ] boolean test(Row... rows) -**XYY**
 
 ### Database.java
 
