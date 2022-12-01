@@ -132,6 +132,7 @@ class CommandInterpreter {
     /** Parse and execute one statement from the token stream.  Return true
      *  iff the command is something other than quit or exit. */
     boolean statement() {
+       // System.out.println("???");
         switch (_input.peek()) {
         case "create":
             createStatement();
@@ -222,10 +223,18 @@ class CommandInterpreter {
         String name=name();
         //System.out.println("!!!");
         _input.next(";");
-        System.out.println("Loaded "+name+".db");
-        Table table=Table.readTable(name);//System.out.println("!!");
+        try{
+            Table table=Table.readTable(name);
+            _database.put(name,table);
+            System.out.println("Loaded "+name+".db");
+        }
+        catch(DBException e){
+            System.out.printf("Error: %s%n", e.getMessage());
+            return ;
+        }
+
+        //System.out.println("!!");
         //table.print();
-        _database.put(name,table);
         // FILL THIS IN
     }
 
@@ -235,9 +244,16 @@ class CommandInterpreter {
         String name = _input.next();
         Table table = tableName();
         _input.next(";");
-        table.writeTable(name);
+        try{
+            table.writeTable(name);
+            System.out.printf("Stored %s.db%n", name);
+        }
+        catch(DBException e){
+            System.out.printf("Error: %s%n", e.getMessage());
+            return ;
+        }
         // FILL THIS IN
-        System.out.printf("Stored %s.db%n", name);
+        
     }
 
     /** Parse and execute a print statement from the token stream. */
@@ -245,9 +261,10 @@ class CommandInterpreter {
         _input.next("print");
         String s = _input.peek();
         Table table = tableName();
+        _input.next(";");
         System.out.println("Table " + s + ":");
         table.print();
-        _input.next(";");
+        
     }
 
     /** Parse and execute a select statement from the token stream. */
@@ -255,7 +272,7 @@ class CommandInterpreter {
         _input.next("select");
         while(!_input.nextIf("from")){
             String name= name();
-
+            
         }
         // FILL THIS IN
     }
