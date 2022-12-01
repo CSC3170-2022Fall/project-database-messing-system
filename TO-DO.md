@@ -20,7 +20,7 @@
 
 - [ ] conditionClause-**SCH**
 
-- [ ] condition
+- [ ] condition -**XYY**
 
 ### Condition.java
 
