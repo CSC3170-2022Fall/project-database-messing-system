@@ -57,7 +57,7 @@ class Table implements Iterable<Row> {
      *  there isn't one. */
     public int findColumn(String title) {
         for (int i = 0; i < _column_titles.length; i++)
-            if (_column_titles[i] == title)
+            if (_column_titles[i].equals(title))
                 return i;
         return -1;
     }
