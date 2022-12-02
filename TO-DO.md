@@ -8,7 +8,7 @@
 
 - [x] storeStatement-**XYY**
 
-- [ ] printStatement-**SCH**
+- [x] printStatement-**SCH**
 
 - [ ] selectStatement-**SCH**
 
