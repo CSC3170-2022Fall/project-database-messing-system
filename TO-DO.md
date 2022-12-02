@@ -16,7 +16,7 @@
 	- [x] if part-**HTC**
 	- [ ] else part-**AZH** (`AS`)
 
-- [ ] selectClause-**SCH**
+- [x] selectClause-**SCH**
 
 - [ ] conditionClause-**SCH**
 

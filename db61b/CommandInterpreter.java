@@ -11,6 +11,7 @@ package db61b;
 import java.io.PrintStream;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static db61b.Utils.*;
@@ -212,7 +213,7 @@ class CommandInterpreter {
                     throw error("Syntax error, insert \") Statement\" to complete InsertionStatement.");
                 else
                     table.add(new Row(values.toArray(new String[values.size()])));
-            } 
+            }
         } while (_input.nextIf(","));
         _input.next(";");
     }
@@ -253,7 +254,7 @@ class CommandInterpreter {
             return ;
         }
         // FILL THIS IN
-        
+
     }
 
     /** Parse and execute a print statement from the token stream. */
@@ -264,16 +265,16 @@ class CommandInterpreter {
         _input.next(";");
         System.out.println("Table " + s + ":");
         table.print();
-        
+
     }
 
     /** Parse and execute a select statement from the token stream. */
     void selectStatement() {
         _input.next("select");
-        while(!_input.nextIf("from")){
-            String name= name();
-            
-        }
+        Table selectTable = selectClause();
+        _input.next(";");
+        System.out.println("Search results:");
+        selectTable.print();
         // FILL THIS IN
     }
 
@@ -283,7 +284,7 @@ class CommandInterpreter {
         Table table;
         if (_input.nextIf("(")) {
             ArrayList<String> columnTitles = new ArrayList<String>();
-            do{ 
+            do{
                 columnTitles.add(columnName());
             } while (_input.nextIf(","));
             if(_input.nextIf(")")==false) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
@@ -304,8 +305,32 @@ class CommandInterpreter {
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     Table selectClause() {
-        
-        return null;         // REPLACE WITH SOLUTION
+        ArrayList<String> columnTitle = new ArrayList<String>();
+        while(!_input.nextIf("from")){
+            String colName= columnName();
+            columnTitle.add(colName);
+            _input.nextIf(",");
+        }
+
+        Table Table1 = tableName();
+        Table Table2 = null;
+        if (_input.nextIf(",")) {
+            Table2 = tableName();
+        }
+
+        ArrayList<Condition> conditions;
+        if (null != Table2) {
+            conditions = conditionClause(Table1, Table2);
+        } else {
+            conditions = conditionClause(Table1);
+        }
+
+        if (null != Table2) {
+            Table1.select(Table2, columnTitle, conditions);
+        } else {
+            Table1.select(columnTitle, conditions);
+        }
+        return Table1;  // REPLACE WITH SOLUTION
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
