@@ -66,7 +66,7 @@
 
 - [ ] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)-**SCH**
 
-- [ ] equijoin
+- [ ] equijoin -**ZYQ**
 
 ## Additional Test
 
@@ -91,5 +91,10 @@
 ### Beautify
 
 - [x] print (MySQL style)-**HTC**
+
+### Application
+
+- [ ] re-implement in Assignment 2-**ZYQ**
+
 
 
