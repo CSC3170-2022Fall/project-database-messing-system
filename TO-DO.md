@@ -18,7 +18,7 @@
 
 - [x] selectClause-**SCH**
 
-- [ ] conditionClause-**SCH**
+- [ ] conditionClause
 
 - [ ] condition -**XYY**
 
@@ -62,9 +62,9 @@
 
 - [x] print-**XYY** **HTC**
 
-- [ ] Table select(`List<String> columnNames, List<Condition> conditions`)-**SCH**
+- [ ] Table select(`List<String> columnNames, List<Condition> conditions`)
 
-- [ ] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)-**SCH**
+- [ ] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)
 
 - [ ] equijoin -**ZYQ**
 
