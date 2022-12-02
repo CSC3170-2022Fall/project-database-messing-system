@@ -6,25 +6,25 @@
 
 - [x] loadStatement-**XYY**
 
-- [ ] storeStatement
+- [x] storeStatement-**XYY**
 
-- [ ] printStatement
+- [x] printStatement-**SCH**
 
-- [ ] selectStatement
+- [x] selectStatement-**SCH**
 
-- [ ] tableDefinition  
+- [ ] tableDefinition 
 	- [x] if part-**HTC**
-	- [x] else part-**AZH**
+	- [ ] else part-**AZH** (`AS`)
 
-- [ ] selectClause
+- [x] selectClause-**SCH**
 
 - [ ] conditionClause
 
-- [ ] condition
+- [ ] condition -**XYY**
 
 ### Condition.java
 
-- [ ] boolean test(Row... rows)
+- [ ] boolean test(Row... rows) -**XYY**
 
 ### Database.java
 
@@ -58,7 +58,7 @@
 
 - [x] readTable-**XYY**
 
-- [ ] writeTable
+- [x] writeTable-**XYY**
 
 - [x] print-**XYY** **HTC**
 
@@ -66,7 +66,7 @@
 
 - [ ] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)
 
-- [ ] equijoin
+- [ ] equijoin -**ZYQ**
 
 ## Additional Test
 
@@ -86,10 +86,15 @@
 
 ### Operation
 
-- [x] insert rows with mulit columns-**HTC**
+- [x] insert rows with multiple columns-**HTC**
 
 ### Beautify
 
 - [x] print (MySQL style)-**HTC**
+
+### Application
+
+- [ ] re-implement in Assignment 2-**ZYQ**
+
 
 

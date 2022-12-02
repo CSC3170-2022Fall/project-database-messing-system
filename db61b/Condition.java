@@ -17,6 +17,9 @@ class Condition {
      *  are column designators. and RELATION is one of the
      *  strings "<", ">", "<=", ">=", "=", or "!=". */
     Condition(Column col1, String relation, Column col2) {
+        _col1=col1;
+        _relation=relation;
+        _col2=col2;
         // YOUR CODE HERE
     }
 
@@ -34,8 +37,121 @@ class Condition {
      *  my columns are selected, returns the result of performing the test I
      *  denote. */
     boolean test(Row... rows) {
+        for(Row tmp:rows){
+            if(_col2==null){
+                switch(_relation){
+                    case "=":
+                    if(!(_col1.getFrom(tmp).equals(_val2))){return false;}
+                    break;
+
+                    case "!=":
+                    if(_col1.getFrom(tmp).equals(_val2)){return false;}
+                    break;
+
+                    case ">=":// try to transfer to integer
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(_val2);
+                        if(num1<num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(_val2)<0)return false;
+                    }
+                    break;
+
+                    case "<=":
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(_val2);
+                        if(num1>num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(_val2)>0)return false;
+                    }
+                    break;
+
+                    case ">":
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(_val2);
+                        if(num1<=num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(_val2)<=0)return false;
+                    }
+                    break;
+
+                    case "<":
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(_val2);
+                        if(num1>=num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(_val2)>=0)return false;
+                    }
+                    break;
+                }
+            }
+            else{
+                String val2=_col2.getFrom(tmp);
+                switch(_relation){
+                    case "=":
+                    if(!(_col1.getFrom(tmp).equals(val2))){return false;}
+                    break;
+
+                    case "!=":
+                    if(_col1.getFrom(tmp).equals(val2)){return false;}
+                    break;
+
+                    case ">=":// try to transfer to integer
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(val2);
+                        if(num1<num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(val2)<0)return false;
+                    }
+                    break;
+
+                    case "<=":
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(val2);
+                        if(num1>num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(val2)>0)return false;
+                    }
+                    break;
+
+                    case ">":
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(val2);
+                        if(num1<=num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(val2)<=0)return false;
+                    }
+                    break;
+
+                    case "<":
+                    try{
+                        int num1=Integer.parseInt(_col1.getFrom(tmp));
+                        int num2=Integer.parseInt(val2);
+                        if(num1>=num2)return false;
+                    }
+                    catch(Exception e){// if can not transfer to integer, then compare directly
+                        if(_col1.getFrom(tmp).compareTo(val2)>=0)return false;
+                    }
+                    break;
+                }
+            }
+        }
         // REPLACE WITH SOLUTION
-        return false;
+        return true;
     }
 
     /** Return true iff ROWS satisfies all CONDITIONS. */
@@ -52,6 +168,6 @@ class Condition {
      *  is a literal. */
     private Column _col1, _col2;
     /** Second operand, if literal (otherwise null). */
-    private String _val2;
+    private String _val2, _relation;
     // ADD ADDITIONAL FIELDS HERE
 }
