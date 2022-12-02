@@ -10,7 +10,7 @@
 
 - [x] printStatement-**SCH**
 
-- [ ] selectStatement-**SCH**
+- [x] selectStatement-**SCH**
 
 - [ ] tableDefinition 
 	- [x] if part-**HTC**
