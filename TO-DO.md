@@ -66,7 +66,7 @@
 
 - [ ] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)-**SCH**
 
-- [ ] equijoin
+- [ ] equijoin -**ZYQ**
 
 ## Additional Test
 
