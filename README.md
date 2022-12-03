@@ -44,4 +44,4 @@ Advance coding:\
 &emsp;2.The syntax like **“A.x = B.x”** is supported.\
 &emsp;3.Implement the operations including **inner join, left join, right join, full join.**\
 &emsp;4.Implement functions include **max(), min(), mid(), having, As, between, where, in, order by,log, exist**.\
-&emsp;5.Application:**re-implement Assignmnet 2**.\
+&emsp;5.Application:**re-implement Assignmnet 2**.
