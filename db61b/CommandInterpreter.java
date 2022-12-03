@@ -313,6 +313,9 @@ class CommandInterpreter {
             columnTitle.add(colName);
             _input.nextIf(",");
         }
+        if (columnTitle.size() == 0) {
+            throw error("missing argument(s) for statement SELECT: select at least one column.");
+        }
         Table Table1 = tableName();
         Table Table2 = null;
         if (_input.nextIf(",")) {
@@ -381,7 +384,10 @@ class CommandInterpreter {
                         }
                         catch(DBException e){
                             //System.out.println(tables[1].size());
-                            alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
+                            if (tables.length != 1)
+                                alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
+                            else
+                                throw error("column '%s' does not exist.", col1);
                         }
                     }
                     else{
@@ -390,7 +396,10 @@ class CommandInterpreter {
                             alfa.add(new Condition(new Column(col1,0,tables[0]),relation,new Column(col2,1,tables[0],tables[1])));
                         }
                         catch(DBException e){
-                            alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,new Column(col2,0,tables[0])));
+                            if (tables.length >= 2)
+                                alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,new Column(col2,0,tables[0])));
+                            else
+                                throw error("too few tables to satisfy the statement WHERE: please include two tables.");
                         }
                     }
                 }

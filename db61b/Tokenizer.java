@@ -59,11 +59,11 @@ class Tokenizer {
                 token = "*EOF*";
             } else if (token.startsWith("'")) {
                 if (token.length() == 1 || !token.endsWith("'")) {
-                    throw error("unterminated literal constant");
+                    throw error("unterminated literal constant.");
                 }
             } else if (token.startsWith("/*")) {
                 if (token.length() < 4 || !token.endsWith("*/")) {
-                    throw error("unterminated comment");
+                    throw error("unterminated comment.");
                 }
                 continue;
             } else if (token.endsWith("\n")) {// If there is newline, that means the user
@@ -102,7 +102,7 @@ class Tokenizer {
     String next(Pattern p) {
         if (!nextIs(p)) {
             if (nextIs("*EOF*")) {
-                throw error("unexpected end of input");
+                throw error("unexpected end of input.");
             } else {
                 throw error("unexpected token: '%s'", peek());
             }

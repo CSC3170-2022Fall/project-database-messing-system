@@ -54,7 +54,7 @@ class Row {
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
     String get(int k) {
         if (k < 0 || k >= _data.length)
-            throw error("Error: index out of range.");
+            throw error("Error: column index out of range.");
         return _data[k];
     }
 
