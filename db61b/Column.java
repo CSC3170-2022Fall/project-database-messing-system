@@ -16,17 +16,40 @@ class Column {
         for (_table = 0; _table < tables.length; _table += 1) {
             _column = tables[_table].findColumn(name);
             if (_column != -1) {
+                //System.out.print(name);
+                //System.out.print(_column);
                 return;
             }
         }
+        //System.out.print(name);
+        //System.out.print(_column);
         throw error("unknown column: %s", name);
     }
 
+
+    Column(String name,int id, Table... tables) {
+        _name = name;
+        //for (_table = 0; _table < tables.length; _table += 1) {
+            _table=id;
+            _column = tables[_table].findColumn(name);
+            if (_column != -1) {
+                //System.out.print(name);
+                //System.out.print(_column);
+                return;
+            }
+        //}
+        //System.out.print(name);
+        //System.out.print(tables[_table].columns());
+        throw error("unknown column: %s", name);
+    }
     /** Return my name. */
     String getName() {
         return _name;
     }
 
+    int gettableid() {
+        return _table;
+    }
 
     /** Returns the value of this Column from ROWS[_table]. Assumes that
      *  ROWS[_table] is from the same table that was provided to the

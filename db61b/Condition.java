@@ -36,128 +36,93 @@ class Condition {
     /** Assuming that ROWS are rows from the respective tables from which
      *  my columns are selected, returns the result of performing the test I
      *  denote. */
-    boolean test(Row... rows) {
-        for(Row tmp:rows){
+    boolean teststr(Row... rows){
             if(_col2==null){
                 switch(_relation){
                     case "=":
-                    if(!(_col1.getFrom(tmp).equals(_val2))){return false;}
+                    if(!(_col1.getFrom(rows).equals(_val2))){return false;}
                     break;
 
                     case "!=":
-                    if(_col1.getFrom(tmp).equals(_val2)){return false;}
+                    if(_col1.getFrom(rows).equals(_val2)){return false;}
                     break;
 
                     case ">=":// try to transfer to integer
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(_val2);
-                        if(num1<num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(_val2)<0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(_val2)<0)return false;
                     break;
 
                     case "<=":
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(_val2);
-                        if(num1>num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(_val2)>0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(_val2)>0)return false;
                     break;
 
                     case ">":
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(_val2);
-                        if(num1<=num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(_val2)<=0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(_val2)<=0)return false;
                     break;
 
                     case "<":
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(_val2);
-                        if(num1>=num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(_val2)>=0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(_val2)>=0)return false;
                     break;
                 }
             }
+
             else{
-                String val2=_col2.getFrom(tmp);
+                String val2=_col2.getFrom(rows);
                 switch(_relation){
                     case "=":
-                    if(!(_col1.getFrom(tmp).equals(val2))){return false;}
+                    if(!(_col1.getFrom(rows).equals(val2))){return false;}
                     break;
 
                     case "!=":
-                    if(_col1.getFrom(tmp).equals(val2)){return false;}
+                    if(_col1.getFrom(rows).equals(val2)){return false;}
                     break;
 
                     case ">=":// try to transfer to integer
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(val2);
-                        if(num1<num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(val2)<0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(val2)<0)return false;
                     break;
 
                     case "<=":
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(val2);
-                        if(num1>num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(val2)>0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(val2)>0)return false;
                     break;
 
                     case ">":
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(val2);
-                        if(num1<=num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(val2)<=0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(val2)<=0)return false;
                     break;
 
                     case "<":
-                    try{
-                        int num1=Integer.parseInt(_col1.getFrom(tmp));
-                        int num2=Integer.parseInt(val2);
-                        if(num1>=num2)return false;
-                    }
-                    catch(Exception e){// if can not transfer to integer, then compare directly
-                        if(_col1.getFrom(tmp).compareTo(val2)>=0)return false;
-                    }
+                    if(_col1.getFrom(rows).compareTo(val2)>=0)return false;
                     break;
                 }
             }
+        return true;
+    }
+    boolean testint(Row... rows){
+        return true;
+    }
+    boolean testdouble(Row... rows){
+        return true;
+    }
+    boolean test(int type,Row... rows) {
+        if(type==0){
+            return teststr(rows);
+        }
+        else if(type==1){
+            return testint(rows);
+        }
+        else if(type==2){
+            return testdouble(rows);
+        }
+        else{
+            System.out.printf("unknown type %d%n", type);
+            return false;
         }
         // REPLACE WITH SOLUTION
-        return true;
     }
 
     /** Return true iff ROWS satisfies all CONDITIONS. */
     static boolean test(List<Condition> conditions, Row... rows) {
         for (Condition cond : conditions) {
-            if (!cond.test(rows)) {
+            System.out.println(cond._relation);
+            if (!cond.test(0,rows)) {
                 return false;
             }
         }

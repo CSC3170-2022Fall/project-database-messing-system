@@ -306,7 +306,7 @@ class Table implements Iterable<Row> {
      *  there isn't one. */
     public int findColumn(String title) {
         for (int i = 0; i < _column_titles.length; i++)
-            if (_column_titles[i] == title)
+            if (_column_titles[i].equals(title))
                 return i;
         return -1;
     }
@@ -343,6 +343,7 @@ class Table implements Iterable<Row> {
             input = new BufferedReader(new FileReader(name + ".db"));
             String header = input.readLine();
             if (header == null) {
+                input.close();
                 throw error("missing header in DB file");
             }
             String[] columnNames = header.split(",");
@@ -351,6 +352,7 @@ class Table implements Iterable<Row> {
             while(header != null){
                 String[] value=header.split(",");
                 if(value.length!=columnNames.length){
+                    input.close();
                     throw error("wrong data in DB file");
                 }
                 //System.out.println(header+"?????");
@@ -361,6 +363,7 @@ class Table implements Iterable<Row> {
             input.close();
             // FILL IN
         } catch (FileNotFoundException e) {
+            //System.out.println("???");
             throw error("could not find %s.db", name);
         } catch (IOException e) {
             throw error("problem reading from %s.db", name);
@@ -464,7 +467,27 @@ class Table implements Iterable<Row> {
      *  rows of this table that satisfy CONDITIONS. */
     Table select(List<String> columnNames, List<Condition> conditions) {
         Table result = new Table(columnNames);
-
+        //System.out.println("????");
+        for(Row row:_rows){
+            int flag=1;
+            if(conditions!=null){
+                for(Condition cond:conditions){
+                    if(!cond.test(0,row)){
+                        flag=0;
+                        break;
+                        //result.add(row);
+                    }
+                }
+            }
+            if(flag==1){
+                String[] data = new String[columnNames.size()];
+                for(int i=0;i<columnNames.size();i++){
+                    int id=findColumn(columnNames.get(i));
+                    data[i]=row.get(id);
+                }
+                result.add(new Row(data));
+            }
+        }
         // FILL IN
         return result;
     }
@@ -474,7 +497,54 @@ class Table implements Iterable<Row> {
      *  on all columns with identical names and satisfy CONDITIONS. */
     Table select(Table table2, List<String> columnNames,
                  List<Condition> conditions) {
+           //System.out.println("????"); 
         Table result = new Table(columnNames);
+        List<Column> column1= new ArrayList<Column>();
+        List<Column> column2= new ArrayList<Column>();
+        for(int i=0;i<columns();i++){
+            for(int j=0;j<table2.columns();j++){
+                if(getTitle(i).equals(table2.getTitle(j))){
+                    column1.add(new Column(getTitle(i),0,this,table2));
+                    column2.add(new Column(table2.getTitle(j),1,this,table2));
+                }
+            }
+        }
+        
+        for(Row row1: _rows){
+            for(Row row2: table2._rows){
+                int flag=1;
+                if(conditions!=null){
+                    for(Condition cond:conditions){
+                        if(!cond.test(0,row1,row2)){
+                            flag=0;
+                            break;
+                            //result.add(row);
+                        }
+                    }
+                }
+                if(flag==1){
+                    
+                    if(!equijoin(column1, column2, row1, row2)){
+                        //System.out.println("????");
+                        continue;
+                    }
+                    String[] data = new String[columnNames.size()];
+                    for(int i=0;i<columnNames.size();i++){
+                        int id=findColumn(columnNames.get(i));
+                        if(id!=-1){
+                            data[i]=row1.get(id);
+                        }
+                        else{
+                            id=table2.findColumn(columnNames.get(i));
+                            data[i]=row2.get(id);
+                        }
+                    }
+                    Row tmp=new Row(data);
+                    result.add(tmp);
+                }
+                //result.contains(tmp);
+            }
+        }
         // FILL IN
         return result;
     }
@@ -486,6 +556,21 @@ class Table implements Iterable<Row> {
      *  COMMON2 to another, and that ROW1 and ROW2 come, respectively,
      *  from those tables. */
     private static boolean equijoin(List<Column> common1, List<Column> common2,Row row1, Row row2) {
+        if(common1.size()==0)return true;
+        for(Column c1:common1){
+            int flag=0;
+            for(Column c2:common2){
+                if(c1.getName().equals(c2.getName())){
+                    flag=1;
+                    if(!(c1.getFrom(row1,row2).equals(c2.getFrom(row1,row2)))){
+                        return false;
+                    }
+                    break;
+                }
+            }
+            if(flag==0)return false;
+        }
+        
         return true; // REPLACE WITH SOLUTION
     }
 

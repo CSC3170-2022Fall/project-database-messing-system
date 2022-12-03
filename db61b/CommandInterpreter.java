@@ -133,7 +133,6 @@ class CommandInterpreter {
     /** Parse and execute one statement from the token stream.  Return true
      *  iff the command is something other than quit or exit. */
     boolean statement() {
-       // System.out.println("???");
         switch (_input.peek()) {
         case "create":
             createStatement();
@@ -157,6 +156,9 @@ class CommandInterpreter {
             break;
         case "store":
             storeStatement();
+            break;
+        case ";":
+            _input.next();
             break;
         default:
             throw error("unrecognizable command");
@@ -230,8 +232,7 @@ class CommandInterpreter {
             System.out.println("Loaded "+name+".db");
         }
         catch(DBException e){
-            System.out.printf("Error: %s%n", e.getMessage());
-            return ;
+            throw error("%s", e.getMessage());
         }
 
         //System.out.println("!!");
@@ -250,8 +251,7 @@ class CommandInterpreter {
             System.out.printf("Stored %s.db%n", name);
         }
         catch(DBException e){
-            System.out.printf("Error: %s%n", e.getMessage());
-            return ;
+            throw error("%s", e.getMessage());
         }
         // FILL THIS IN
 
@@ -269,6 +269,7 @@ class CommandInterpreter {
     }
 
     /** Parse and execute a select statement from the token stream. */
+    
     void selectStatement() {
         _input.next("select");
         Table selectTable = selectClause();
@@ -304,6 +305,7 @@ class CommandInterpreter {
 
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
+    /*select SID, Firstname from students */
     Table selectClause() {
         ArrayList<String> columnTitle = new ArrayList<String>();
         while(!_input.nextIf("from")){
@@ -311,26 +313,22 @@ class CommandInterpreter {
             columnTitle.add(colName);
             _input.nextIf(",");
         }
-
         Table Table1 = tableName();
         Table Table2 = null;
         if (_input.nextIf(",")) {
             Table2 = tableName();
         }
-
         ArrayList<Condition> conditions;
         if (null != Table2) {
             conditions = conditionClause(Table1, Table2);
         } else {
             conditions = conditionClause(Table1);
         }
-
         if (null != Table2) {
-            Table1.select(Table2, columnTitle, conditions);
+            return Table1.select(Table2, columnTitle, conditions);
         } else {
-            Table1.select(columnTitle, conditions);
+            return Table1.select(columnTitle, conditions);
         }
-        return Table1;  // REPLACE WITH SOLUTION
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
@@ -367,12 +365,52 @@ class CommandInterpreter {
      *  token stream.  This denotes the conjunction (`and') zero
      *  or more Conditions. */
     ArrayList<Condition> conditionClause(Table... tables) {
-        return null;        // REPLACE WITH SOLUTION
+        ArrayList<Condition> alfa=new ArrayList<Condition>();
+        if(_input.nextIf("where")){
+            String col1,relation,col2,val;
+            while(!(_input.peek().equals(";"))){
+                try{
+                    col1=columnName();
+                    relation = _input.next();
+                    String tmp = _input.peek();
+                    if(tmp.charAt(0) =='\''){
+                        tmp=_input.next();
+                        val=tmp.substring(1,tmp.length()-1);
+                        try{
+                            alfa.add(new Condition(new Column(col1,0,tables[0]),relation,val));
+                        }
+                        catch(DBException e){
+                            //System.out.println(tables[1].size());
+                            alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
+                        }
+                    }
+                    else{
+                        col2=columnName();
+                        try{
+                            alfa.add(new Condition(new Column(col1,0,tables[0]),relation,new Column(col2,1,tables[0],tables[1])));
+                        }
+                        catch(DBException e){
+                            alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,new Column(col2,0,tables[0])));
+                        }
+                    }
+                }
+                catch(DBException e){
+                    throw error("%s", e.getMessage());
+                }
+                _input.nextIf("and");
+                //System.out.println(_input.peek());
+            }
+            return alfa; 
+        }
+        else{
+            return null;
+        }       // REPLACE WITH SOLUTION
     }
 
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
+
         return null;        // REPLACE WITH SOLUTION
     }
 
