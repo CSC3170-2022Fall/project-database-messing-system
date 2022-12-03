@@ -36,3 +36,12 @@ After thorough discussion, our team made the choice and the specification inform
 ## Project Abstract
 
 <!-- TODO -->
+This project involves writing a miniature relational database management system (DBMS) that stores tables of data, where a table consists of some number of labeled columns of information. Our system will include a very simple query language for extracting information from these tables. For the purposes of this project, we will deal only with very small databases, and therefore will not consider speed and efficiency at all. Here's what we implemented in this system：
+Basic coding:
+  Filling the code templates provided by UCB
+Advance coding:
+  1.Take **type** into consideration while creating the table.
+  2.The syntax like **“A.x = B.x”** is supported.
+  3.Implement the operations including **inner join, left join, right join, full join.**
+  4.Implement functions include **max(), min(), mid(), having, As, between, where, in, order by,log, exist**.
+  5.Application:**re-implement Assignmnet 2**.
