@@ -157,6 +157,9 @@ class CommandInterpreter {
         case "store":
             storeStatement();
             break;
+        case ";":
+            _input.next();
+            break;
         default:
             throw error("unrecognizable command");
         }
