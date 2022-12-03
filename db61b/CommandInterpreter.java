@@ -229,8 +229,7 @@ class CommandInterpreter {
             System.out.println("Loaded "+name+".db");
         }
         catch(DBException e){
-            System.out.printf("Error: %s%n", e.getMessage());
-            return ;
+            throw error("%s", e.getMessage());
         }
 
         //System.out.println("!!");
@@ -249,8 +248,7 @@ class CommandInterpreter {
             System.out.printf("Stored %s.db%n", name);
         }
         catch(DBException e){
-            System.out.printf("Error: %s%n", e.getMessage());
-            return ;
+            throw error("%s", e.getMessage());
         }
         // FILL THIS IN
 
