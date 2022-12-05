@@ -36,12 +36,22 @@ After thorough discussion, our team made the choice and the specification inform
 ## Project Abstract
 
 <!-- TODO -->
-&emsp;&emsp; project involves writing a miniature relational database management system (DBMS) that stores tables of data, where a table consists of some number of labeled columns of information. Our system will include a very simple query language for extracting information from these tables. For the purposes of this project, we will deal only with very small databases, and therefore will not consider speed and efficiency at all. Here's what we implemented in this system：\
-Basic coding:\
-&emsp;Filling the code templates provided by UCB\
-Advance coding:\
-&emsp;1.Take **type** into consideration while creating the table.\
-&emsp;2.The syntax like **“A.x = B.x”** is supported.\
-&emsp;3.Implement the operations including **inner join, left join, right join, full join.**\
-&emsp;4.Implement functions include **max(), min(), mid(), having, As, between, where, in, order by,log, exist**.\
-&emsp;5.Application:**re-implement Assignmnet 2**.
+This project involves writing a miniature relational database management system (DBMS) that stores tables of data, where a table consists of some number of labeled columns of information. Our system will include a very simple query language for extracting information from these tables. For the purposes of this project, we will deal only with very small databases, and therefore will not consider speed and efficiency at all. Here's what we implemented in this system:
+
+Basic coding:
+
+- Filling the code templates provided by UCB.
+
+Advance coding:
+
+- Take **data type** into consideration while creating the table;
+
+- The syntax like **“A.x = B.x”** is supported;
+
+- Implement the operations including **inner join, left join, right join, full join**;
+
+- Implement functions include **max(), min(), mid(), having, as, between, where, in, order by,exist**;
+	
+- Application:**re-implement Assignmnet 2**;
+
+- Using **snapshot** to support **version** and **rollback**.
