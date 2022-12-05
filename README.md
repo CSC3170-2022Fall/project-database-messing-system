@@ -16,7 +16,7 @@ Our team consists of the following members, listed in the table below (the team 
 
 <!-- change the info below to be the real case -->
 
-| Student ID | Student Name | GitHub Account (in Email) | GiHub Username   |
+| Student ID | Student Name | GitHub Account (in Email) | GitHub Username   |
 | ---------- | ------------ | ------------------------- | ---------------- |
 | 121090001  | 安子航 🚩    | 2284874018@qq.com         | i-cookie         |
 | 121090184  | 侯天赐       | enderturtle@foxmail.com    | EnderturtleOrz   |
