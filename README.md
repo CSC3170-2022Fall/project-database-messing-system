@@ -16,14 +16,14 @@ Our team consists of the following members, listed in the table below (the team 
 
 <!-- change the info below to be the real case -->
 
-| Student ID | Student Name | GitHub Account (in Email) |
-| ---------- | ------------ | ------------------------- |
-| 121090001  | 安子航 🚩    | 2284874018@qq.com         |
-| 121090184  | 侯天赐       | enderturtle@foxmail.com    |
-| 121020163 | 沈驰皓     | stevenshen3641@outlook.com |
-| 121090519  | 涂喻钊       | 121090519@link.cuhk.edu.cn |
-| 121090628  | 夏禹扬       | 2467925095@qq.com          |
-| 121090841  | 郑莹琪       | 121090841@link.cuhk.edu.cn |
+| Student ID | Student Name | GitHub Account (in Email) | GiHub Username   |
+| ---------- | ------------ | ------------------------- | ---------------- |
+| 121090001  | 安子航 🚩    | 2284874018@qq.com         | i-cookie         |
+| 121090184  | 侯天赐       | enderturtle@foxmail.com    | EnderturtleOrz   |
+| 121020163  | 沈驰皓       | stevenshen3641@outlook.com | StevenShen3641   |
+| 121090519  | 涂喻钊       | 121090519@link.cuhk.edu.cn | tyzzzzzzzzz      |
+| 121090628  | 夏禹扬       | 2467925095@qq.com          | xqbf             |
+| 121090841  | 郑莹琪       | 121090841@link.cuhk.edu.cn | Aurora121090841  |
 
 ## Project Specification
 
