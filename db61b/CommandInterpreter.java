@@ -285,11 +285,16 @@ class CommandInterpreter {
         Table table;
         if (_input.nextIf("(")) {
             ArrayList<String> columnTitles = new ArrayList<String>();
+            ArrayList<String> columnTypes = new ArrayList<String>();
             do{
                 columnTitles.add(columnName());
+                String type_string = columnName();
+                int type = gettype(type_string);
+                if (type == -1) throw error("Syntax error, every column needs a data type(int,double or string)");
+                columnTypes.add(type_string);
             } while (_input.nextIf(","));
             if(_input.nextIf(")")==false) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
-            else table = new Table(columnTitles);
+            else table = new Table(columnTitles,columnTypes);
         } else {
             table = null;
             if (_input.nextIf(";"))

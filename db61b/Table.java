@@ -27,7 +27,7 @@ import static db61b.Utils.*;
 class Table implements Iterable<Row> {
     /** A new Table whose columns are given by COLUMNTITLES, which may
      *  not contain dupliace names. */
-    Table(String[] columnTitles) {
+    Table(String[] columnTitles,String[] columnTypes) {
         for (int i = columnTitles.length - 1; i >= 1; i -= 1) {
             for (int j = i - 1; j >= 0; j -= 1) {
                 if (columnTitles[i].equals(columnTitles[j])) {
@@ -35,13 +35,15 @@ class Table implements Iterable<Row> {
                                 columnTitles[i]);
                 }
             }
+            if (gettype(columnTypes[i]) == -1) throw error("wrong data type");
         }
+        _column_types = columnTypes;
         _column_titles = columnTitles;
     }
 
     /** A new Table whose columns are give by COLUMNTITLES. */
-    Table(List<String> columnTitles) {
-        this(columnTitles.toArray(new String[columnTitles.size()]));
+    Table(List<String> columnTitles,List<String> columnTypes) {
+        this(columnTitles.toArray(new String[columnTitles.size()]),columnTypes.toArray(new String[columnTypes.size()]));
     }
 
     /** Return the number of columns in this table. */
@@ -100,7 +102,13 @@ class Table implements Iterable<Row> {
                 throw error("missing header in DB file");
             }
             String[] columnNames = header.split(",");
-            table=new Table(columnNames);
+            String types = input.readLine();
+            if (types == null) {
+                input.close();
+                throw error("missing data types in DB file");
+            }
+            String[] columnTypes = types.split(",");
+            table=new Table(columnNames,columnTypes);
             header = input.readLine();
             while(header != null){
                 String[] value=header.split(",");
@@ -216,10 +224,22 @@ class Table implements Iterable<Row> {
         print_separator(max_length);
     }
 
+    public String get_type(int i){
+        return _column_types[i];
+    }
     /** Return a new Table whose columns are COLUMNNAMES, selected from
      *  rows of this table that satisfy CONDITIONS. */
     Table select(List<String> columnNames, List<Condition> conditions) {
-        Table result = new Table(columnNames);
+        List<String> columnTypes = new ArrayList<String>();
+        for (int i = 0; i < columnNames.size(); i++) {
+            int id = findColumn(columnNames.get(i));
+            if (id == -1) {
+                throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+            }
+            String type = this.getTitle(id);
+            columnTypes.add(type);
+        }
+        Table result = new Table(columnNames,columnTypes);
         //System.out.println("????");
         for(Row row:_rows){
             int flag=1;
@@ -254,7 +274,24 @@ class Table implements Iterable<Row> {
     Table select(Table table2, List<String> columnNames,
                  List<Condition> conditions) {
            //System.out.println("????"); 
-        Table result = new Table(columnNames);
+        List<String> columnTypes = new ArrayList<String>();
+        for (int i = 0; i < columnNames.size(); i++) {
+            int id = findColumn(columnNames.get(i));
+            if (id != -1) {
+                String type = this.get_type(id);
+                columnTypes.add(type);
+            } else {
+                id = table2.findColumn(columnNames.get(i));
+                if (id == -1) {
+                    throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                }
+                else{
+                    String type = table2.get_type(id);
+                    columnTypes.add(type);
+                }
+            }
+        }
+        Table result = new Table(columnNames,columnTypes);
         List<Column> column1= new ArrayList<Column>();
         List<Column> column2= new ArrayList<Column>();
         for(int i=0;i<columns();i++){
@@ -336,5 +373,9 @@ class Table implements Iterable<Row> {
     /** My rows. */
     private HashSet<Row> _rows = new HashSet<>();
     private String[] _column_titles;
+    private String[] _column_types;
+    // int
+    // double
+    // string
 }
 

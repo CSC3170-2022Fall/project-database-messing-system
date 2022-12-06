@@ -18,13 +18,13 @@
 
 - [x] selectClause-**SCH**
 
-- [ ] conditionClause
+- [x] conditionClause
 
-- [ ] condition -**XYY**
+- [x] condition -**XYY**
 
 ### Condition.java
 
-- [ ] boolean test(Row... rows) -**XYY**
+- [x] boolean test(Row... rows) -**XYY**
 
 ### Database.java
 
@@ -62,11 +62,11 @@
 
 - [x] print-**XYY** **HTC**
 
-- [ ] Table select(`List<String> columnNames, List<Condition> conditions`)
+- [x] Table select(`List<String> columnNames, List<Condition> conditions`)
 
-- [ ] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)
+- [x] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)
 
-- [ ] equijoin -**ZYQ**
+- [x] equijoin -**ZYQ**
 
 ## Additional Test
 
@@ -87,6 +87,12 @@
 ### Operation
 
 - [x] insert rows with multiple columns-**HTC**
+
+- [x] data types(int,double,string)-**HTC**
+
+- [x] trie-**HTC**
+
+- [x] SHA-1-**HTC**
 
 ### Beautify
 

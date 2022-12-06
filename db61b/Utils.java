@@ -25,6 +25,12 @@ class Utils {
         return new DBException(format(s, args));
     }
 
+    static int gettype(String s){
+        if (s.equals("int")) return 0;
+        if (s.equals("double")) return 1;
+        if (s.equals("string")) return 2;
+        return -1; 
+    }
 }
 
 
