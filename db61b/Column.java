@@ -16,6 +16,7 @@ class Column {
         for (_table = 0; _table < tables.length; _table += 1) {
             _column = tables[_table].findColumn(name);
             if (_column != -1) {
+                _type = tables[_table].get_type(_column);
                 //System.out.print(name);
                 //System.out.print(_column);
                 return;
@@ -33,6 +34,7 @@ class Column {
             _table=id;
             _column = tables[_table].findColumn(name);
             if (_column != -1) {
+                _type = tables[_table].get_type(_column);
                 //System.out.print(name);
                 //System.out.print(_column);
                 return;
@@ -51,6 +53,9 @@ class Column {
         return _table;
     }
 
+    String get_type(){
+        return _type;
+    }
     /** Returns the value of this Column from ROWS[_table]. Assumes that
      *  ROWS[_table] is from the same table that was provided to the
      *  constructor of this Column. More generally, this method is intended
@@ -65,7 +70,7 @@ class Column {
     }
 
     /** Column name denoted by THIS. */
-    private String _name;
+    private String _name,_type;
     /** Index of the table and column from which to extract a value. */
     private int _table, _column;
 }

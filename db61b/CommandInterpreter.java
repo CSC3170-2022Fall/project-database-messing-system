@@ -335,6 +335,7 @@ class CommandInterpreter {
         if (null != Table2) {
             return Table1.select(Table2, columnTitle, conditions);
         } else {
+            //System.out.println("???");
             return Table1.select(columnTitle, conditions);
         }
     }

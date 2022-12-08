@@ -239,17 +239,14 @@ class Table implements Iterable<Row> {
             String type = this.get_type(id);
             columnTypes.add(type);
         }
+       // System.out.println(columnTypes);
         Table result = new Table(columnNames,columnTypes);
         //System.out.println("????");
         for(Row row:_rows){
             int flag=1;
             if(conditions!=null){
-                for(Condition cond:conditions){
-                    if(!cond.test(0,row)){
-                        flag=0;
-                        break;
-                        //result.add(row);
-                    }
+                if(!Condition.test(conditions,row)){
+                    flag=0;
                 }
             }
             if(flag==1){
@@ -307,12 +304,8 @@ class Table implements Iterable<Row> {
             for(Row row2: table2._rows){
                 int flag=1;
                 if(conditions!=null){
-                    for(Condition cond:conditions){
-                        if(!cond.test(0,row1,row2)){
-                            flag=0;
-                            break;
-                            //result.add(row);
-                        }
+                    if(!Condition.test(conditions,row1,row2)){
+                        flag=0;
                     }
                 }
                 if(flag==1){

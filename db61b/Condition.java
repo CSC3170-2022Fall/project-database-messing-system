@@ -8,7 +8,7 @@
 package db61b;
 
 import java.util.List;
-
+import static db61b.Utils.*;
 /** Represents a single 'where' condition in a 'select' command.
  *  @author */
 class Condition {
@@ -38,6 +38,7 @@ class Condition {
      *  denote. */
     boolean teststr(Row... rows){
             if(_col2==null){
+                //System.out.println(_val2);
                 switch(_relation){
                     case "=":
                     if(!(_col1.getFrom(rows).equals(_val2))){return false;}
@@ -96,12 +97,131 @@ class Condition {
         return true;
     }
     boolean testint(Row... rows){
+        if(_col2==null){
+            int val2=Integer.parseInt(_val2);
+            int val1=Integer.parseInt(_col1.getFrom(rows));
+            switch(_relation){
+                case "=":
+                if(val1!=val2){return false;}
+                break;
+
+                case "!=":
+                if(val1==val2){return false;}
+                break;
+
+                case ">=":// try to transfer to integer
+                if(val1<val2)return false;
+                break;
+
+                case "<=":
+                if(val1>val2)return false;
+                break;
+
+                case ">":
+                if(val1<=val2)return false;
+                break;
+
+                case "<":
+                if(val1>=val2)return false;
+                break;
+            }
+        }
+
+        else{
+            int val2=Integer.parseInt(_col2.getFrom(rows));
+            int val1=Integer.parseInt(_col1.getFrom(rows));
+            switch(_relation){
+                case "=":
+                if(val1!=val2){return false;}
+                break;
+
+                case "!=":
+                if(val1==val2){return false;}
+                break;
+
+                case ">=":// try to transfer to integer
+                if(val1<val2)return false;
+                break;
+
+                case "<=":
+                if(val1>val2)return false;
+                break;
+
+                case ">":
+                if(val1<=val2)return false;
+                break;
+
+                case "<":
+                if(val1>=val2)return false;
+                break;
+            }
+        }
         return true;
     }
     boolean testdouble(Row... rows){
+       if(_col2==null){
+            double val2=Double.parseDouble(_val2);
+            double val1=Double.parseDouble(_col1.getFrom(rows));
+            switch(_relation){
+                case "=":
+                if(val1!=val2){return false;}
+                break;
+
+                case "!=":
+                if(val1==val2){return false;}
+                break;
+
+                case ">=":// try to transfer to integer
+                if(val1<val2)return false;
+                break;
+
+                case "<=":
+                if(val1>val2)return false;
+                break;
+
+                case ">":
+                if(val1<=val2)return false;
+                break;
+
+                case "<":
+                if(val1>=val2)return false;
+                break;
+            }
+        }
+
+        else{
+            double val2=Double.parseDouble(_col2.getFrom(rows));
+            double val1=Double.parseDouble(_col1.getFrom(rows));
+            switch(_relation){
+                case "=":
+                if(val1!=val2){return false;}
+                break;
+
+                case "!=":
+                if(val1==val2){return false;}
+                break;
+
+                case ">=":// try to transfer to integer
+                if(val1<val2)return false;
+                break;
+
+                case "<=":
+                if(val1>val2)return false;
+                break;
+
+                case ">":
+                if(val1<=val2)return false;
+                break;
+
+                case "<":
+                if(val1>=val2)return false;
+                break;
+            }
+        }
         return true;
     }
     boolean test(int type,Row... rows) {
+       // System.out.println(type);
         if(type==0){
             return teststr(rows);
         }
@@ -121,9 +241,30 @@ class Condition {
     /** Return true iff ROWS satisfies all CONDITIONS. */
     static boolean test(List<Condition> conditions, Row... rows) {
         for (Condition cond : conditions) {
-            System.out.println(cond._relation);
-            if (!cond.test(0,rows)) {
-                return false;
+            //System.out.println(cond._relation);
+            try{
+                switch(cond._col1.get_type()){
+                    case "int":
+                    if (!cond.test(1,rows)) {
+                        return false;
+                    }
+                    break;
+                    case "string":
+                    if (!cond.test(0,rows)) {
+                        return false;
+                    }
+                    break;
+                    case "double":
+                    if (!cond.test(2,rows)) {
+                        return false;
+                    }
+                    break;
+                    default:
+                    throw error("unknown type %d%n", cond._col1.get_type());
+                }
+            }
+            catch(DBException e){
+                throw error("%s", e.getMessage());
             }
         }
         return true;
