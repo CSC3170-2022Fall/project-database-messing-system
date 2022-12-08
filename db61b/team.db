@@ -1,0 +1,14 @@
+name,stu_id
+AZH,121090001
+HTC,19260817
+ZYQ,Aurora233
+XYY,XYYTXDY
+TYZ,TYZZZZZZZ
+SCH,1145141919
+
+create table team(name, stu_id);
+create table members(stud_id, gender, score);
+insert into team values('AZH', '121090001'), ('HTC', '1145141919');
+insert into members values('Aurora233', 'F', 'A'), ('1145141919', 'F', 'A'), ('121090001', 'M', 'A-');
+select name, gender from team, members
+where stud_id = stu_id;
