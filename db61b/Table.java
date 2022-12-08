@@ -236,7 +236,7 @@ class Table implements Iterable<Row> {
             if (id == -1) {
                 throw error("column \"" + columnNames.get(i) + "\" does not exist.");
             }
-            String type = this.getTitle(id);
+            String type = this.get_type(id);
             columnTypes.add(type);
         }
         Table result = new Table(columnNames,columnTypes);
