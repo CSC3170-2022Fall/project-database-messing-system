@@ -1,6 +1,8 @@
 package db61b;
 
 import java.util.Scanner;
+import static db61b.FileOperation.*;
+import java.io.File;
 
 /** The main program for db61b.
  *  @author P. N. Hilfinger
@@ -16,6 +18,16 @@ public class Main {
     public static void main(String[] unused) {
         // Version statement
         System.out.printf("DB61B System.  Version %s.%n", VERSION);
+
+        File snapshots = new File("./snapshots");
+        judge_dir_exists(snapshots);
+        // String s="****";
+        // String version_name = Trie.encrypt_sha_1(s);
+        // File version = new File("./snapshots/"+version_name);
+        // judge_file_exists(version);
+        // Trie version_tree = new Trie();
+        // version_tree.Insert(version_name);
+        // System.out.println(version_tree.Find("f442327a"));
 
         Scanner input = new Scanner(System.in);
         // Pass input into "CommandInterpreter"

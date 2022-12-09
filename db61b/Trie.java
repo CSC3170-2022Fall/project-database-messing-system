@@ -79,12 +79,12 @@ class Trie {
 			Character c = s.charAt(i);
 			int next_number = character_to_number(c);
 			if (now.next[next_number] == null) {
-				return "0"; // no such prefix
+				return "Version Not Found"; // no such prefix
 			}
 			now = now.next[next_number];
 		}
 		if (now.sum > 1) {
-			return "1"; //more than one string
+			return "More than one version shares the same name"; //more than one string
 		}
 		while (now.sum == 1) {
 			now = now.next[now.only];
