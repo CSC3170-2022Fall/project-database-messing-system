@@ -1,5 +1,5 @@
 *.class
 sentinel
 .vscode/*
-snapshots/
+snapshots/*
 !snapshots/.gitkeep
