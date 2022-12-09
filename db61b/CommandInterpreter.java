@@ -270,6 +270,11 @@ class CommandInterpreter {
             //update snapshots
             String version_name = table.updateSnapshots(name);
 
+            // update version_tree
+            if (_database.version_tree.Find(version_name).equals("Version Not Found")) {
+                _database.version_tree.Insert(version_name);
+            }
+            
             //update logs
             table.updateLogs(name, version_name);
 
