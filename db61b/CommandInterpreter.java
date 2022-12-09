@@ -156,6 +156,8 @@ class CommandInterpreter {
             break;
         case "store":
             storeStatement();
+        case "commit":
+            commitStatement();
             break;
         case ";":
             _input.next();
@@ -243,7 +245,7 @@ class CommandInterpreter {
     /** Parse and execute a store statement from the token stream. */
     void storeStatement() {
         _input.next("store");
-        String name = _input.next();
+        String name = _input.peek();
         Table table = tableName();
         _input.next(";");
         try{
@@ -255,6 +257,23 @@ class CommandInterpreter {
         }
         // FILL THIS IN
 
+    }
+
+    /** Parse and execute a commit statement from the token stream. */
+    void commitStatement() {
+        System.out.println("233");
+        _input.next("commit");
+        String name = _input.peek();
+        Table table = tableName();
+        _input.next(";");
+        try{
+            String version_name = table.updateSnapshots(name);
+            System.out.printf("Committed %s.db%n", name);
+            System.out.println("Snapshot version name:" + version_name);
+        }
+        catch(DBException e){
+            throw error("%s", e.getMessage());
+        }
     }
 
     /** Parse and execute a print statement from the token stream. */

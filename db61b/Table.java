@@ -149,7 +149,7 @@ class Table implements Iterable<Row> {
             output = new PrintStream(name + ".db");
             for (int i = 0; i < _column_titles.length; i++){
                 output.print(_column_titles[i]);
-                if(i!=_column_titles.length-1)System.out.print(",");
+                if(i!=_column_titles.length-1)output.print(",");
             }
             output.println("");
             for(Row s:_rows){
@@ -167,6 +167,47 @@ class Table implements Iterable<Row> {
                 output.close();
             }
         }
+    }
+
+    String updateSnapshots(String name) {
+        // get version name
+        String str = "";
+        for (int i = 0; i < _column_titles.length; i++){
+            str += _column_titles[i];
+        }
+        for(Row s:_rows){
+            for (int i = 0; i < _column_titles.length; i++){
+                str += s.get(i);
+            }
+        }
+        str = Trie.encrypt_sha_1(str);
+
+        // update Snapshots folder
+        PrintStream output;
+        output = null;
+        try {
+            output = new PrintStream("snapshots/" + str + ".db");
+            for (int i = 0; i < _column_titles.length; i++){
+                output.print(_column_titles[i]);
+                if(i!=_column_titles.length-1)output.print(",");
+            }
+            output.println("");
+            for(Row s:_rows){
+                for (int i = 0; i < _column_titles.length; i++){
+                    output.print(s.get(i));
+                    if(i!=_column_titles.length-1)output.print(",");
+                }
+                output.println("");
+            }
+            // FILL THIS IN
+        } catch (IOException e) {
+            throw error("trouble writing to %s.db", name);
+        } finally {
+            if (output != null) {
+                output.close();
+            }
+        }
+        return str;
     }
 
     /** Print my contents on the standard output. */
