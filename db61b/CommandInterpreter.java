@@ -226,7 +226,8 @@ class CommandInterpreter {
     void loadStatement() {
         _input.next("load");
         String name=name();
-        _input.next(";");
+        if(!_input.peek().equals(";"))
+            throw error("Too many auguments");
         try{
             Table table=Table.readTable(name);
             _database.put(name,table);
@@ -235,6 +236,7 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
+        _input.next(";");
     }
 
     /** Parse and execute a store statement from the token stream. */
@@ -242,7 +244,8 @@ class CommandInterpreter {
         _input.next("store");
         String name = _input.peek();
         Table table = tableName();
-        _input.next(";");
+        if (!_input.peek().equals(";")) 
+            throw error("Too many auguments");
         try{
             table.writeTable(name);
             System.out.printf("Stored %s.db%n", name);
@@ -250,7 +253,7 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
-        // FILL THIS IN
+        _input.next(";");
 
     }
 
@@ -259,7 +262,8 @@ class CommandInterpreter {
         _input.next("commit");
         String name = _input.peek();
         Table table = tableName();
-        _input.next(";");
+        if (!_input.peek().equals(";"))
+            throw error("Too many auguments");
         try{
             String version_name = table.updateSnapshots(name);
             System.out.printf("Committed %s.db%n", name);
@@ -268,6 +272,7 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
+        _input.next(";");
     }
 
     /** Parse and execute a print statement from the token stream. */
