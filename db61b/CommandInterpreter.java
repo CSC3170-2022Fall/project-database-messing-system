@@ -227,7 +227,7 @@ class CommandInterpreter {
         _input.next("load");
         String name=name();
         if(!_input.peek().equals(";"))
-            throw error("Too many auguments");
+            throw error("Too many arguments");
         try{
             Table table=Table.readTable(name);
             _database.put(name,table);
@@ -245,7 +245,7 @@ class CommandInterpreter {
         String name = _input.peek();
         Table table = tableName();
         if (!_input.peek().equals(";")) 
-            throw error("Too many auguments");
+            throw error("Too many arguments");
         try{
             table.writeTable(name);
             System.out.printf("Stored %s.db%n", name);
@@ -263,7 +263,7 @@ class CommandInterpreter {
         String name = _input.peek();
         Table table = tableName();
         if (!_input.peek().equals(";"))
-            throw error("Too many auguments");
+            throw error("Too many arguments");
         try{
             String version_name = table.updateSnapshots(name);
             System.out.printf("Committed %s.db%n", name);
