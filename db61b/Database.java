@@ -38,6 +38,7 @@ class Database {
             _database.put(name,table);
         }
     }
+    public Trie version_tree = new Trie();
     private HashMap<String,Table> _database = null;
     // FILL IN?
 }
