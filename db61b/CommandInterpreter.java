@@ -379,7 +379,39 @@ class CommandInterpreter {
             String col1,relation,col2,val;
             while(!(_input.peek().equals(";"))){
                 try{
-                    col1=columnName();
+                    col1 = columnName();
+
+                    /* BETWEEN clause.
+                     * between 'left_bound' and 'right_bound'*/ 
+                    if (_input.nextIf("between")) { 
+
+                        // add Condition(col1, '>=', 'left_bound')
+                        relation = ">=";
+                        String bound = _input.next();
+                        val = bound.substring(1, bound.length() - 1);
+                        try{
+                            alfa.add(new Condition(new Column(col1, 0, tables[0]), relation, val));
+                        }
+                        catch(DBException e){
+                            throw error("column '%s' does not exist.", col1);
+                        }
+
+                        // add Condition(col1, '<=', 'right_bound')
+                        _input.next();
+                        relation = "<=";
+                        bound = _input.next();
+                        val = bound.substring(1, bound.length() - 1);
+                        try{
+                            alfa.add(new Condition(new Column(col1, 0, tables[0]), relation, val));
+                        }
+                        catch(DBException e){
+                            throw error("column '%s' does not exist.", col1);
+                        }
+
+                        continue;
+                    }
+                    
+                    // single RELATION cause
                     relation = _input.next();
                     String tmp = _input.peek();
                     if(tmp.charAt(0) =='\''){
