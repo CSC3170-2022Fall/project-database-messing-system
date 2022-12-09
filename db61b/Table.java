@@ -13,11 +13,14 @@ import java.io.FileReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Date;
 
 import static db61b.Utils.*;
 
@@ -239,6 +242,103 @@ class Table implements Iterable<Row> {
         }
         return str;
     }
+
+    /** Removes the last line of the version file. */
+    void removeCurrentVersion(String name, String version_name) {
+
+        // If NAME doesn't have a version list, create one.
+        File file = new File("versions/" + name + ".db");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw error("Cannot initialize a version file for %s", name);
+            }
+            return;
+        }
+        try {
+            RandomAccessFile f = new RandomAccessFile("versions/" + name + ".db", "rw");
+            long fileLength = f.length();
+            f.seek(fileLength);
+            f.writeBytes(version_name);
+            f.close();
+        } catch (IOException e) {
+            throw error("trouble adding version to %s", name);
+        } 
+
+        // If NAME already has a version list, delete the last line.
+        try {
+            RandomAccessFile f = new RandomAccessFile("versions/" + name + ".db", "rw");
+            System.out.println(f.length());
+            long length = f.length() - 1;
+            byte b = 0;
+            do {                     
+                length -= 1;
+                f.seek(length);
+                b = f.readByte();
+            } while(b != 10 && length > 0);
+            if (length == 0) { 
+                f.setLength(length);
+            } else {
+                f.setLength(length + 1);
+            }
+            f.close();
+        } catch (IOException e) {
+            throw error("trouble removing version from %s", name);
+        } 
+    }
+
+    void addVersion(String name, String version_name) {
+        try {
+            RandomAccessFile f = new RandomAccessFile("versions/" + name + ".db", "rw");
+            long fileLength = f.length();
+            f.seek(fileLength);
+            f.writeBytes("\n");
+            f.writeBytes(version_name);
+            
+            f.close();
+        } catch (IOException e) {
+            throw error("trouble adding version to %s", name);
+        } 
+    }
+
+    void updateLogs(String name, String version_name) {
+        // PrintStream output;
+        // output = null;
+        // try {
+        //     output = new PrintStream("logs/" + name + ".db");
+        //     Date date = new Date();
+        //     output.println(date.toString() + "," + version_name);
+
+        // } catch (IOException e) {
+        //     throw error("trouble updating %s.db", name);
+        // } finally {
+        //     if (output != null) {
+        //         output.close();
+        //     }
+        // }
+        // If NAME doesn't have a log, create one.
+        File file = new File("logs/" + name + ".db");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw error("Cannot initialize a log for %s", name);
+            }
+        }
+        try {
+            RandomAccessFile f = new RandomAccessFile("logs/" + name + ".db", "rw");
+            long fileLength = f.length();
+            f.seek(fileLength);
+            Date date = new Date();
+            f.writeBytes(date.toString() + "," + version_name);
+            f.writeBytes("\n");
+            f.close();
+        } catch (IOException e) {
+            throw error("trouble updating %s.db", name);
+        } 
+    }
+
 
     /** Print my contents on the standard output. */
     final int MAX_ROW = 100; // The maxinum of output rows

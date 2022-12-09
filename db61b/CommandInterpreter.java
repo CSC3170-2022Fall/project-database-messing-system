@@ -267,7 +267,22 @@ class CommandInterpreter {
         if (!_input.peek().equals(";"))
             throw error("Too many arguments");
         try{
+            //update snapshots
             String version_name = table.updateSnapshots(name);
+
+            //update logs
+            table.updateLogs(name, version_name);
+
+            // update versions
+            table.removeCurrentVersion(name, version_name);
+            if (_database.version_tree.Find(version_name).equals("Version Not Found")) {
+                table.addVersion(name, version_name);
+                // System.out.println("new version");
+            }
+            table.addVersion(name, version_name);
+            // System.out.println("current version");
+
+
             System.out.printf("Committed %s.db%n", name);
             System.out.println("Snapshot version name:" + version_name);
         }
@@ -333,12 +348,19 @@ class CommandInterpreter {
     /*select SID, Firstname from students */
     Table selectClause() {
         ArrayList<String> columnTitle = new ArrayList<String>();
+        int flag=0;
         while(!_input.nextIf("from")){
-            String colName= columnName();
-            columnTitle.add(colName);
+            if(_input.nextIf("*")){
+                flag=1;
+                
+            }
+            else{
+                String colName= columnName();
+                columnTitle.add(colName);
+            }
             _input.nextIf(",");
         }
-        if (columnTitle.size() == 0) {
+        if (columnTitle.size() == 0 && flag==0) {
             throw error("missing argument(s) for statement SELECT: select at least one column.");
         }
         Table Table1 = tableName();
@@ -353,8 +375,20 @@ class CommandInterpreter {
             conditions = conditionClause(Table1);
         }
         if (null != Table2) {
+            if(flag==1){
+                for(int i=0;i<Table1.columns();i++){
+                    columnTitle.add(Table1.getTitle(i));
+                }
+                for(int i=0;i<Table2.columns();i++){
+                    if(columnTitle.contains(Table2.getTitle(i)))continue;
+                    columnTitle.add(Table2.getTitle(i));
+                }
+            }
             return Table1.select(Table2, columnTitle, conditions);
         } else {
+            for(int i=0;i<Table1.columns();i++){
+                columnTitle.add(Table1.getTitle(i));
+            }
             //System.out.println("???");
             return Table1.select(columnTitle, conditions);
         }
