@@ -227,7 +227,7 @@ class CommandInterpreter {
     void loadStatement() {
         _input.next("load");
         String name=name();
-        if(!_input.nextIf(";"))
+        if(!_input.peek().equals(";"))
             throw error("Too many arguments");
         try{
             Table table=Table.readTable(name);
@@ -237,6 +237,7 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
+        _input.nextIf(";");
     }
 
     /** Parse and execute a store statement from the token stream. */
@@ -244,7 +245,7 @@ class CommandInterpreter {
         _input.next("store");
         String name = _input.next();
         Table table = tableName();
-        if (!_input.nextIf(";")) 
+        if (!_input.peek().equals(";"))
             throw error("Too many arguments");
         try{
             table.writeTable(name);
@@ -253,6 +254,7 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
+        _input.nextIf(";");
         //System.out.println("???");
         //System.out.println(_input.peek());
     }
