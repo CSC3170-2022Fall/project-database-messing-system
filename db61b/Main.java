@@ -24,6 +24,9 @@ public class Main {
 
         File logs = new File("./logs");
         judge_dir_exists(logs);
+
+        File versions = new File("./versions");
+        judge_dir_exists(versions);
         // String s="****";
         // String version_name = Trie.encrypt_sha_1(s);
         // File version = new File("./snapshots/"+version_name);

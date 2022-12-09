@@ -267,7 +267,22 @@ class CommandInterpreter {
         if (!_input.peek().equals(";"))
             throw error("Too many arguments");
         try{
+            //update snapshots
             String version_name = table.updateSnapshots(name);
+
+            //update logs
+            table.updateLogs(name, version_name);
+
+            // update versions
+            table.removeCurrentVersion(name, version_name);
+            if (_database.version_tree.Find(version_name).equals("Version Not Found")) {
+                table.addVersion(name, version_name);
+                // System.out.println("new version");
+            }
+            table.addVersion(name, version_name);
+            // System.out.println("current version");
+
+
             System.out.printf("Committed %s.db%n", name);
             System.out.println("Snapshot version name:" + version_name);
         }
