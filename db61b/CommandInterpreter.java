@@ -156,6 +156,7 @@ class CommandInterpreter {
             break;
         case "store":
             storeStatement();
+            break;
         case "commit":
             commitStatement();
             break;
@@ -226,7 +227,7 @@ class CommandInterpreter {
     void loadStatement() {
         _input.next("load");
         String name=name();
-        if(!_input.peek().equals(";"))
+        if(!_input.nextIf(";"))
             throw error("Too many arguments");
         try{
             Table table=Table.readTable(name);
@@ -236,15 +237,14 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
-        _input.next(";");
     }
 
     /** Parse and execute a store statement from the token stream. */
     void storeStatement() {
         _input.next("store");
-        String name = _input.peek();
+        String name = _input.next();
         Table table = tableName();
-        if (!_input.peek().equals(";")) 
+        if (!_input.nextIf(";")) 
             throw error("Too many arguments");
         try{
             table.writeTable(name);
@@ -253,8 +253,8 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
-        _input.next(";");
-
+        //System.out.println("???");
+        //System.out.println(_input.peek());
     }
 
     /** Parse and execute a commit statement from the token stream. */
