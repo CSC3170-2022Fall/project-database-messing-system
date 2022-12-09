@@ -21,29 +21,35 @@ import java.util.List;
 
 import static db61b.Utils.*;
 
-/** A single table in a database.
- *  @author P. N. Hilfinger
+/**
+ * A single table in a database.
+ * 
+ * @author P. N. Hilfinger
  */
 class Table implements Iterable<Row> {
-    /** A new Table whose columns are given by COLUMNTITLES, which may
-     *  not contain dupliace names. */
-    Table(String[] columnTitles,String[] columnTypes) {
+    /**
+     * A new Table whose columns are given by COLUMNTITLES, which may
+     * not contain dupliace names.
+     */
+    Table(String[] columnTitles, String[] columnTypes) {
         for (int i = columnTitles.length - 1; i >= 1; i -= 1) {
             for (int j = i - 1; j >= 0; j -= 1) {
                 if (columnTitles[i].equals(columnTitles[j])) {
                     throw error("duplicate column name: %s",
-                                columnTitles[i]);
+                            columnTitles[i]);
                 }
             }
-            if (gettype(columnTypes[i]) == -1) throw error("wrong data type");
+            if (gettype(columnTypes[i]) == -1)
+                throw error("wrong data type");
         }
         _column_types = columnTypes;
         _column_titles = columnTitles;
     }
 
     /** A new Table whose columns are give by COLUMNTITLES. */
-    Table(List<String> columnTitles,List<String> columnTypes) {
-        this(columnTitles.toArray(new String[columnTitles.size()]),columnTypes.toArray(new String[columnTypes.size()]));
+    Table(List<String> columnTitles, List<String> columnTypes) {
+        this(columnTitles.toArray(new String[columnTitles.size()]),
+                columnTypes.toArray(new String[columnTypes.size()]));
     }
 
     /** Return the number of columns in this table. */
@@ -51,13 +57,15 @@ class Table implements Iterable<Row> {
         return _column_titles.length;
     }
 
-    /** Return the title of the Kth column.  Requires 0 <= K < columns(). */
+    /** Return the title of the Kth column. Requires 0 <= K < columns(). */
     public String getTitle(int k) {
         return _column_titles[k];
     }
 
-    /** Return the number of the column whose title is TITLE, or -1 if
-     *  there isn't one. */
+    /**
+     * Return the number of the column whose title is TITLE, or -1 if
+     * there isn't one.
+     */
     public int findColumn(String title) {
         for (int i = 0; i < _column_titles.length; i++)
             if (_column_titles[i].equals(title))
@@ -67,7 +75,7 @@ class Table implements Iterable<Row> {
 
     /** Return the number of Rows in this table. */
     public int size() {
-        return _rows.size();  // REPLACE WITH SOLUTION
+        return _rows.size(); // REPLACE WITH SOLUTION
     }
 
     /** Returns an iterator that returns my rows in an unspecfied order. */
@@ -76,25 +84,29 @@ class Table implements Iterable<Row> {
         return _rows.iterator();
     }
 
-    /** Add ROW to THIS if no equal row already exists.  Return true if anything
-     *  was added, false otherwise. */
+    /**
+     * Add ROW to THIS if no equal row already exists. Return true if anything
+     * was added, false otherwise.
+     */
     public boolean add(Row row) {
-        if(!(_rows.contains(row))){
+        if (!(_rows.contains(row))) {
             _rows.add(row);
             return true;
         }
-        return false; //duplicate row
+        return false; // duplicate row
     }
 
-    /** Read the contents of the file NAME.db, and return as a Table.
-     *  Format errors in the .db file cause a DBException. */
+    /**
+     * Read the contents of the file NAME.db, and return as a Table.
+     * Format errors in the .db file cause a DBException.
+     */
     static Table readTable(String name) {
         BufferedReader input;
         Table table;
         input = null;
         table = null;
         try {
-            File file = new File(name+".db");
+            File file = new File(name + ".db");
             input = new BufferedReader(new FileReader(file));
             String header = input.readLine();
             if (header == null) {
@@ -108,23 +120,24 @@ class Table implements Iterable<Row> {
                 throw error("missing data types in DB file");
             }
             String[] columnTypes = types.split(",");
-            table=new Table(columnNames,columnTypes);
+            table = new Table(columnNames, columnTypes);
             header = input.readLine();
-            while(header != null){
-                String[] value=header.split(",");
-                if(value.length!=columnNames.length){
+            while (header != null) {
+                String[] value = header.split(",");
+                if (value.length != columnNames.length) {
                     input.close();
                     throw error("wrong data in DB file");
                 }
-                //System.out.println(header+"?????");
+                // System.out.println(header+"?????");
                 table._rows.add(new Row(value));
-                if(input==null) break;
+                if (input == null)
+                    break;
                 header = input.readLine();
             }
             input.close();
             // FILL IN
         } catch (FileNotFoundException e) {
-            //System.out.println("???");
+            // System.out.println("???");
             throw error("could not find %s.db", name);
         } catch (IOException e) {
             throw error("problem reading from %s.db", name);
@@ -140,26 +153,35 @@ class Table implements Iterable<Row> {
         return table;
     }
 
-    /** Write the contents of TABLE into the file NAME.db. Any I/O errors
-     *  cause a DBException. */
+    /**
+     * Write the contents of TABLE into the file NAME.db. Any I/O errors
+     * cause a DBException.
+     */
     void writeTable(String name) {
         PrintStream output;
         output = null;
         try {
             output = new PrintStream(name + ".db");
-            for (int i = 0; i < _column_titles.length; i++){
+            for (int i = 0; i < _column_titles.length; i++) {
                 output.print(_column_titles[i]);
-                if(i!=_column_titles.length-1)output.print(",");
+                if (i != _column_titles.length - 1)
+                    output.print(",");
             }
             output.println("");
-            for(Row s:_rows){
-                for (int i = 0; i < _column_titles.length; i++){
+            for (int i = 0; i < _column_titles.length; i++) {
+                output.print(_column_types[i]);
+                if (i != _column_titles.length - 1)
+                    output.print(",");
+            }
+            output.println("");
+            for (Row s : _rows) {
+                for (int i = 0; i < _column_titles.length; i++) {
                     output.print(s.get(i));
-                    if(i!=_column_titles.length-1)output.print(",");
+                    if (i != _column_titles.length - 1)
+                        output.print(",");
                 }
                 output.println("");
             }
-            // FILL THIS IN
         } catch (IOException e) {
             throw error("trouble writing to %s.db", name);
         } finally {
@@ -172,11 +194,11 @@ class Table implements Iterable<Row> {
     String updateSnapshots(String name) {
         // get version name
         String str = "";
-        for (int i = 0; i < _column_titles.length; i++){
+        for (int i = 0; i < _column_titles.length; i++) {
             str += _column_titles[i];
         }
-        for(Row s:_rows){
-            for (int i = 0; i < _column_titles.length; i++){
+        for (Row s : _rows) {
+            for (int i = 0; i < _column_titles.length; i++) {
                 str += s.get(i);
             }
         }
@@ -187,15 +209,23 @@ class Table implements Iterable<Row> {
         output = null;
         try {
             output = new PrintStream("snapshots/" + str + ".db");
-            for (int i = 0; i < _column_titles.length; i++){
+            for (int i = 0; i < _column_titles.length; i++) {
                 output.print(_column_titles[i]);
-                if(i!=_column_titles.length-1)output.print(",");
+                if (i != _column_titles.length - 1)
+                    output.print(",");
             }
             output.println("");
-            for(Row s:_rows){
-                for (int i = 0; i < _column_titles.length; i++){
+            for (int i = 0; i < _column_titles.length; i++) {
+                output.print(_column_types[i]);
+                if (i != _column_titles.length - 1)
+                    output.print(",");
+            }
+            output.println("");
+            for (Row s : _rows) {
+                for (int i = 0; i < _column_titles.length; i++) {
                     output.print(s.get(i));
-                    if(i!=_column_titles.length-1)output.print(",");
+                    if (i != _column_titles.length - 1)
+                        output.print(",");
                 }
                 output.println("");
             }
@@ -212,7 +242,8 @@ class Table implements Iterable<Row> {
 
     /** Print my contents on the standard output. */
     final int MAX_ROW = 100; // The maxinum of output rows
-    int[] find_max_length(){
+
+    int[] find_max_length() {
         int[] max_length = new int[_column_titles.length];
         int rows = 0;
         for (int i = 0; i < _column_titles.length; i++)
@@ -222,29 +253,32 @@ class Table implements Iterable<Row> {
             Row tmp = it.next();
             rows += 1;
             for (int i = 0; i < _column_titles.length; i++)
-                max_length[i] = Math.max(max_length[i],tmp.get(i).length());
-        }        
+                max_length[i] = Math.max(max_length[i], tmp.get(i).length());
+        }
         return max_length;
     }
-    void print_titles(int[] max_length){
+
+    void print_titles(int[] max_length) {
         for (int i = 0; i < _column_titles.length; i++)
             System.out.printf("|%" + max_length[i] + "s", _column_titles[i]);
         System.out.println("|");
     }
-    void print_separator(int[] max_length){
-        for (int i = 0; i < max_length.length; i++){
+
+    void print_separator(int[] max_length) {
+        for (int i = 0; i < max_length.length; i++) {
             System.out.print("+");
             for (int j = 0; j < max_length[i]; j++)
                 System.out.print("-");
         }
         System.out.println("+");
     }
-    void print_row(int[] max_length){
+
+    void print_row(int[] max_length) {
         Iterator<Row> it = _rows.iterator();
         int rows = 0;
         while (it.hasNext() && rows < MAX_ROW) {
             Row tmp = it.next();
-            for (int i = 0; i < _column_titles.length; i++){
+            for (int i = 0; i < _column_titles.length; i++) {
                 if (tmp.get(i) != null)
                     System.out.printf("|%" + max_length[i] + "s", tmp.get(i));
                 else
@@ -252,24 +286,28 @@ class Table implements Iterable<Row> {
             }
             System.out.println("|");
         }
-        if(rows == MAX_ROW)
+        if (rows == MAX_ROW)
             System.out.print(" .\n .\n .\n");
     }
+
     void print() {
         int[] max_length = find_max_length();
         print_separator(max_length);
         print_titles(max_length);
         print_separator(max_length);
-        
+
         print_row(max_length);
         print_separator(max_length);
     }
 
-    public String get_type(int i){
+    public String get_type(int i) {
         return _column_types[i];
     }
-    /** Return a new Table whose columns are COLUMNNAMES, selected from
-     *  rows of this table that satisfy CONDITIONS. */
+
+    /**
+     * Return a new Table whose columns are COLUMNNAMES, selected from
+     * rows of this table that satisfy CONDITIONS.
+     */
     Table select(List<String> columnNames, List<Condition> conditions) {
         List<String> columnTypes = new ArrayList<String>();
         for (int i = 0; i < columnNames.size(); i++) {
@@ -280,24 +318,24 @@ class Table implements Iterable<Row> {
             String type = this.get_type(id);
             columnTypes.add(type);
         }
-       // System.out.println(columnTypes);
-        Table result = new Table(columnNames,columnTypes);
-        //System.out.println("????");
-        for(Row row:_rows){
-            int flag=1;
-            if(conditions!=null){
-                if(!Condition.test(conditions,row)){
-                    flag=0;
+        // System.out.println(columnTypes);
+        Table result = new Table(columnNames, columnTypes);
+        // System.out.println("????");
+        for (Row row : _rows) {
+            int flag = 1;
+            if (conditions != null) {
+                if (!Condition.test(conditions, row)) {
+                    flag = 0;
                 }
             }
-            if(flag==1){
+            if (flag == 1) {
                 String[] data = new String[columnNames.size()];
-                for(int i=0;i<columnNames.size();i++){
-                    int id=findColumn(columnNames.get(i));
+                for (int i = 0; i < columnNames.size(); i++) {
+                    int id = findColumn(columnNames.get(i));
                     if (id == -1) {
-                        throw error("column \""+columnNames.get(i)+"\" does not exist.");
+                        throw error("column \"" + columnNames.get(i) + "\" does not exist.");
                     }
-                    data[i]=row.get(id);
+                    data[i] = row.get(id);
                 }
                 result.add(new Row(data));
             }
@@ -306,12 +344,14 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-    /** Return a new Table whose columns are COLUMNNAMES, selected
-     *  from pairs of rows from this table and from TABLE2 that match
-     *  on all columns with identical names and satisfy CONDITIONS. */
+    /**
+     * Return a new Table whose columns are COLUMNNAMES, selected
+     * from pairs of rows from this table and from TABLE2 that match
+     * on all columns with identical names and satisfy CONDITIONS.
+     */
     Table select(Table table2, List<String> columnNames,
-                 List<Condition> conditions) {
-           //System.out.println("????"); 
+            List<Condition> conditions) {
+        // System.out.println("????");
         List<String> columnTypes = new ArrayList<String>();
         for (int i = 0; i < columnNames.size(); i++) {
             int id = findColumn(columnNames.get(i));
@@ -322,85 +362,85 @@ class Table implements Iterable<Row> {
                 id = table2.findColumn(columnNames.get(i));
                 if (id == -1) {
                     throw error("column \"" + columnNames.get(i) + "\" does not exist.");
-                }
-                else{
+                } else {
                     String type = table2.get_type(id);
                     columnTypes.add(type);
                 }
             }
         }
-        Table result = new Table(columnNames,columnTypes);
-        List<Column> column1= new ArrayList<Column>();
-        List<Column> column2= new ArrayList<Column>();
-        for(int i=0;i<columns();i++){
-            for(int j=0;j<table2.columns();j++){
-                if(getTitle(i).equals(table2.getTitle(j))){
-                    column1.add(new Column(getTitle(i),0,this,table2));
-                    column2.add(new Column(table2.getTitle(j),1,this,table2));
+        Table result = new Table(columnNames, columnTypes);
+        List<Column> column1 = new ArrayList<Column>();
+        List<Column> column2 = new ArrayList<Column>();
+        for (int i = 0; i < columns(); i++) {
+            for (int j = 0; j < table2.columns(); j++) {
+                if (getTitle(i).equals(table2.getTitle(j))) {
+                    column1.add(new Column(getTitle(i), 0, this, table2));
+                    column2.add(new Column(table2.getTitle(j), 1, this, table2));
                 }
             }
         }
-        
-        for(Row row1: _rows){
-            for(Row row2: table2._rows){
-                int flag=1;
-                if(conditions!=null){
-                    if(!Condition.test(conditions,row1,row2)){
-                        flag=0;
+
+        for (Row row1 : _rows) {
+            for (Row row2 : table2._rows) {
+                int flag = 1;
+                if (conditions != null) {
+                    if (!Condition.test(conditions, row1, row2)) {
+                        flag = 0;
                     }
                 }
-                if(flag==1){
-                    
-                    if(!equijoin(column1, column2, row1, row2)){
-                        //System.out.println("????");
+                if (flag == 1) {
+
+                    if (!equijoin(column1, column2, row1, row2)) {
+                        // System.out.println("????");
                         continue;
                     }
                     String[] data = new String[columnNames.size()];
-                    for(int i=0;i<columnNames.size();i++){
-                        int id=findColumn(columnNames.get(i));
-                        if(id!=-1){
-                            data[i]=row1.get(id);
-                        }
-                        else{
-                            id=table2.findColumn(columnNames.get(i));
+                    for (int i = 0; i < columnNames.size(); i++) {
+                        int id = findColumn(columnNames.get(i));
+                        if (id != -1) {
+                            data[i] = row1.get(id);
+                        } else {
+                            id = table2.findColumn(columnNames.get(i));
                             if (id == -1) {
-                                throw error("column \""+columnNames.get(i)+"\" does not exist.");
+                                throw error("column \"" + columnNames.get(i) + "\" does not exist.");
                             }
-                            data[i]=row2.get(id);
+                            data[i] = row2.get(id);
                         }
                     }
-                    Row tmp=new Row(data);
+                    Row tmp = new Row(data);
                     result.add(tmp);
                 }
-                //result.contains(tmp);
             }
         }
-        // FILL IN
         return result;
     }
 
-    /** Return true if the columns COMMON1 from ROW1 and COMMON2 from
-     *  ROW2 all have identical values.  Assumes that COMMON1 and
-     *  COMMON2 have the same number of elements and the same names,
-     *  that the columns in COMMON1 apply to this table, those in
-     *  COMMON2 to another, and that ROW1 and ROW2 come, respectively,
-     *  from those tables. */
-    private static boolean equijoin(List<Column> common1, List<Column> common2,Row row1, Row row2) {
-        if(common1.size()==0)return true;
-        for(Column c1:common1){
-            int flag=0;
-            for(Column c2:common2){
-                if(c1.getName().equals(c2.getName())){
-                    flag=1;
-                    if(!(c1.getFrom(row1,row2).equals(c2.getFrom(row1,row2)))){
+    /**
+     * Return true if the columns COMMON1 from ROW1 and COMMON2 from
+     * ROW2 all have identical values. Assumes that COMMON1 and
+     * COMMON2 have the same number of elements and the same names,
+     * that the columns in COMMON1 apply to this table, those in
+     * COMMON2 to another, and that ROW1 and ROW2 come, respectively,
+     * from those tables.
+     */
+    private static boolean equijoin(List<Column> common1, List<Column> common2, Row row1, Row row2) {
+        if (common1.size() == 0)
+            return true;
+        for (Column c1 : common1) {
+            int flag = 0;
+            for (Column c2 : common2) {
+                if (c1.getName().equals(c2.getName())) {
+                    flag = 1;
+                    if (!(c1.getFrom(row1, row2).equals(c2.getFrom(row1, row2)))) {
                         return false;
                     }
                     break;
                 }
             }
-            if(flag==0)return false;
+            if (flag == 0)
+                return false;
         }
-        
+
         return true; // REPLACE WITH SOLUTION
     }
 
@@ -412,4 +452,3 @@ class Table implements Iterable<Row> {
     // double
     // string
 }
-

@@ -226,7 +226,6 @@ class CommandInterpreter {
     void loadStatement() {
         _input.next("load");
         String name=name();
-        //System.out.println("!!!");
         _input.next(";");
         try{
             Table table=Table.readTable(name);
@@ -236,10 +235,6 @@ class CommandInterpreter {
         catch(DBException e){
             throw error("%s", e.getMessage());
         }
-
-        //System.out.println("!!");
-        //table.print();
-        // FILL THIS IN
     }
 
     /** Parse and execute a store statement from the token stream. */
@@ -261,7 +256,6 @@ class CommandInterpreter {
 
     /** Parse and execute a commit statement from the token stream. */
     void commitStatement() {
-        System.out.println("233");
         _input.next("commit");
         String name = _input.peek();
         Table table = tableName();

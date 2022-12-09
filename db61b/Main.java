@@ -45,7 +45,7 @@ public class Main {
                 }
             } catch (DBException e) {// When the dbms throws an error, use e.getMessage() to get error message
                 System.out.printf("Error: %s%n", e.getMessage());
-                System.out.println("Please enter a ';' to continue correctly");
+            //    System.out.println("Please enter a ';' to continue correctly");
                 interpreter.skipCommand();// Skip the command rather than shutting down the whole program
             }
         }
