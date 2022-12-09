@@ -320,7 +320,6 @@ class CommandInterpreter {
             if (_input.nextIf("as")) {
                 _input.next("select");
                 table = selectClause();
-                _input.next(";");
             }
             else {
                 throw error("Error: A table must have at least one visible column.");
