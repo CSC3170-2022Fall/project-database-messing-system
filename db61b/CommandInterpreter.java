@@ -315,12 +315,13 @@ class CommandInterpreter {
             else table = new Table(columnTitles,columnTypes);
         } else {
             table = null;
-            if (_input.nextIf(";"))
-                throw error("Error: A table must have at least one visible column.");
+            if (_input.nextIf("as")) {
+                _input.next("select");
+                table = selectClause();
+                _input.next(";");
+            }
             else {
-                while (!_input.nextIf(";"))
-                        _input.next();
-                throw error("Syntax error: \'(\' is expected after table name.");
+                throw error("Error: A table must have at least one visible column.");
             }
         }
         return table;

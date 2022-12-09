@@ -1,4 +1,5 @@
 stu_id,gender,score
+string,string,string
 TYZ,F,A
 SCH,M,A
 XYY,M,A
