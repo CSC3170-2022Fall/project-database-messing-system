@@ -1,4 +1,4 @@
 *.class
 sentinel
 .vscode/*
-snapshots/*
+snapshots/
