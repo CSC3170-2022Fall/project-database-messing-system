@@ -160,6 +160,9 @@ class CommandInterpreter {
         case "commit":
             commitStatement();
             break;
+        case "rollback":
+            rollbackStatement();
+            break;
         case ";":
             _input.next();
             break;
@@ -269,11 +272,6 @@ class CommandInterpreter {
         try{
             //update snapshots
             String version_name = table.updateSnapshots(name);
-
-            // update version_tree
-            if (_database.version_tree.Find(version_name).equals("Version Not Found")) {
-                _database.version_tree.Insert(version_name);
-            }
             
             //update logs
             table.updateLogs(name, version_name);
@@ -287,6 +285,10 @@ class CommandInterpreter {
             table.addVersion(name, version_name);
             // System.out.println("current version");
 
+            // update version_tree
+            if (_database.version_tree.Find(version_name).equals("Version Not Found")) {
+                _database.version_tree.Insert(version_name);
+            }
 
             System.out.printf("Committed %s.db%n", name);
             System.out.println("Snapshot version name:" + version_name);
@@ -296,6 +298,31 @@ class CommandInterpreter {
         }
         _input.next(";");
     }
+
+    /** Parse and execute a rollback statement from the token stream.
+     *  rollback TABLE to 'VERSION_PREFIX'
+     */
+    void rollbackStatement() {
+        _input.next("rollback");
+        String table_name = name();
+        _input.next("to");
+        String version_prefix = literal();
+        String version_name = _database.version_tree.Find(version_prefix);
+        if (version_name.equals("Version Not Found") || version_name.equals("More than one version shares the same name")) {
+            throw error(version_name);
+        } else {
+            try {
+                version_name = "snapshots/" + version_name;
+                Table table=Table.readTable(version_name);
+                _database.put(table_name,table);
+                System.out.println("Rollbacked "+table_name+".db");
+            }
+            catch(DBException e){
+                throw error("%s", e.getMessage());
+            }
+        }
+        _input.nextIf(";");
+    }    
 
     /** Parse and execute a print statement from the token stream. */
     void printStatement() {

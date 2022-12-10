@@ -269,7 +269,7 @@ class Table implements Iterable<Row> {
         // If NAME already has a version list, delete the last line.
         try {
             RandomAccessFile f = new RandomAccessFile("versions/" + name + ".db", "rw");
-            System.out.println(f.length());
+            //System.out.println(f.length());
             long length = f.length() - 1;
             byte b = 0;
             do {                     
