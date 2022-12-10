@@ -1,7 +1,6 @@
 package db61b;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import static db61b.Utils.*;
@@ -50,8 +49,8 @@ class Trie {
 
 	public void Insert(String s) {
 		Node now = _root;
-		if(s.length()<32){
-			throw error("Wrong SHA-1");
+		if(s.length()!=32){
+			throw error("Invalid SHA-1 code");
 		}
 		else{
 			for (int i = 0; i < s.length(); i++) {
@@ -75,9 +74,15 @@ class Trie {
 
 	public String Find(String s) {
 		Node now = _root;
+		if(s.length()>32) {
+			throw error("Invalid SHA-1 code.");
+		}
 		for (int i = 0; i < s.length(); i++) {
 			Character c = s.charAt(i);
 			int next_number = character_to_number(c);
+			if (next_number == -1) {
+				throw error("Invalid SHA-1 code.");
+			}
 			if (now.next[next_number] == null) {
 				return "Version Not Found"; // no such prefix
 			}
