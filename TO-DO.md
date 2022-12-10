@@ -100,6 +100,8 @@
 
 - [x] as-**AZH**
 
+- [x] primary key-**HTC**
+
 - [ ] min
 
 - [ ] max

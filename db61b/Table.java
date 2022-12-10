@@ -93,6 +93,12 @@ class Table implements Iterable<Row> {
      */
     public boolean add(Row row) {
         if (!(_rows.contains(row))) {
+            if(_primary_key != -1){
+                if(_primary_key_set.contains(row.get(_primary_key))){
+                    return false; // duplicate primary key
+                }
+                _primary_key_set.add(row.get(_primary_key));
+            }
             _rows.add(row);
             return true;
         }
@@ -339,6 +345,27 @@ class Table implements Iterable<Row> {
         } 
     }
 
+    /** Return the version_name of table NAME at TIME */
+    static String findVersionAt(String time, String name) {
+        String version_name = "Invalid time";
+        File file = new File("logs/" + name + ".log");
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(time)) {
+                    version_name = line.substring(time.length() + 1);
+                    reader.close();
+                    return version_name;
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return version_name;
+    }
 
     /** Print my contents on the standard output. */
     final int MAX_ROW = 100; // The maxinum of output rows
@@ -402,6 +429,14 @@ class Table implements Iterable<Row> {
 
     public String get_type(int i) {
         return _column_types[i];
+    }
+    public void primary_key(String s){
+        for (int i = 0; i < _column_titles.length; i++) {
+            if (_column_titles[i].equals(s)){
+                _primary_key = i;
+                break;
+            }
+        }
     }
 
     /**
@@ -551,4 +586,6 @@ class Table implements Iterable<Row> {
     // int
     // double
     // string
+    private int _primary_key = -1;
+    private HashSet<String> _primary_key_set = new HashSet<>();
 }

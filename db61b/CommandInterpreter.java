@@ -301,14 +301,21 @@ class CommandInterpreter {
 
     /** Parse and execute a rollback statement from the token stream.
      *  rollback TABLE to 'VERSION_PREFIX'
+     *  rollback TABLE at 'TIME'
      */
     void rollbackStatement() {
         _input.next("rollback");
         String table_name = name();
-        _input.next("to");
-        String version_prefix = literal();
-        String version_name = _database.version_tree.Find(version_prefix);
-        if (version_name.equals("Version Not Found") || version_name.equals("More than one version shares the same name")) {
+        String version_name = "";
+        if (_input.nextIf("to")) {
+            String version_prefix = literal();
+            version_name = _database.version_tree.Find(version_prefix);
+        } else {
+            _input.next("at");
+            String time = literal();
+            version_name = Table.findVersionAt(time, table_name);
+        }
+        if (version_name.equals("Invalid time") || version_name.equals("Version Not Found") || version_name.equals("More than one version shares the same name")) {
             throw error(version_name);
         } else {
             try {
@@ -353,7 +360,13 @@ class CommandInterpreter {
         if (_input.nextIf("(")) {
             ArrayList<String> columnTitles = new ArrayList<String>();
             ArrayList<String> columnTypes = new ArrayList<String>();
+            String primary_key = null;
             do{
+                if(_input.nextIf("primary")){
+                    _input.next("key");
+                    primary_key = columnName();
+                    break;
+                }
                 columnTitles.add(columnName());
                 String type_string = columnName();
                 int type = gettype(type_string);
@@ -362,6 +375,7 @@ class CommandInterpreter {
             } while (_input.nextIf(","));
             if(_input.nextIf(")")==false) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
             else table = new Table(columnTitles,columnTypes);
+            if(primary_key!=null) table.primary_key(primary_key);
         } else {
             table = null;
             if (_input.nextIf("as")) {
