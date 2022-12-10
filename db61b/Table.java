@@ -318,7 +318,7 @@ class Table implements Iterable<Row> {
         //     }
         // }
         // If NAME doesn't have a log, create one.
-        File file = new File("logs/" + name + ".db");
+        File file = new File("logs/" + name + ".log");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -327,7 +327,7 @@ class Table implements Iterable<Row> {
             }
         }
         try {
-            RandomAccessFile f = new RandomAccessFile("logs/" + name + ".db", "rw");
+            RandomAccessFile f = new RandomAccessFile("logs/" + name + ".log", "rw");
             long fileLength = f.length();
             f.seek(fileLength);
             Date date = new Date();
@@ -335,7 +335,7 @@ class Table implements Iterable<Row> {
             f.writeBytes("\n");
             f.close();
         } catch (IOException e) {
-            throw error("trouble updating %s.db", name);
+            throw error("trouble updating %s.log", name);
         } 
     }
 

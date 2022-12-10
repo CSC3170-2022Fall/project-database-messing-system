@@ -49,38 +49,31 @@ class Trie {
 
 	public void Insert(String s) {
 		Node now = _root;
-		if(s.length()!=32){
-			throw error("Invalid SHA-1 code");
-		}
-		else{
-			for (int i = 0; i < s.length(); i++) {
-				now.sum++;
-				Character c = s.charAt(i);
-				int next_number = character_to_number(c);
-				if (now.next[next_number] == null) {
-					now.next[next_number] = new Node();
-				}
-				if (now.sum == 1) {
-					now.only = next_number;
-				}
-				else{
-					now.only = -1;
-				}
-				now = now.next[next_number];
+		for (int i = 0; i < s.length(); i++) {
+			now.sum++;
+			Character c = s.charAt(i);
+			int next_number = character_to_number(c);
+			if (now.next[next_number] == null) {
+				now.next[next_number] = new Node();
 			}
-			now.ans = s;
+			if (now.sum == 1) {
+				now.only = next_number;
+			}
+			else{
+				now.only = -1;
+			}
+			now = now.next[next_number];
 		}
+		now.ans = s;
 	}
 
 	public String Find(String s) {
 		Node now = _root;
-		if(s.length()>32) {
-			throw error("Invalid SHA-1 code.");
-		}
 		for (int i = 0; i < s.length(); i++) {
 			Character c = s.charAt(i);
 			int next_number = character_to_number(c);
 			if (next_number == -1) {
+				System.out.println(s);
 				throw error("Invalid SHA-1 code.");
 			}
 			if (now.next[next_number] == null) {
