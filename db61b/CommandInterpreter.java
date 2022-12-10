@@ -391,8 +391,10 @@ class CommandInterpreter {
             }
             return Table1.select(Table2, columnTitle, conditions);
         } else {
-            for(int i=0;i<Table1.columns();i++){
-                columnTitle.add(Table1.getTitle(i));
+            if (flag == 1){
+                for(int i=0;i<Table1.columns();i++){
+                    columnTitle.add(Table1.getTitle(i));
+                }
             }
             //System.out.println("???");
             return Table1.select(columnTitle, conditions);
@@ -477,6 +479,20 @@ class CommandInterpreter {
                         }
 
                         continue;
+                    }
+                    // Like RELATION cause
+                    if (_input.nextIf("like")) { 
+                        relation = "like";
+                        String tmp_val = literal();
+                        val = tmp_val.replaceAll("%", ".*");
+                        val = val.replaceAll("_", ".");
+                        try{
+                            alfa.add(new Condition(new Column(col1, 0, tables[0]), relation, val));
+                        } catch(DBException e){
+                            throw error("column '%s' does not exist.", col1);
+                        }
+                        continue;
+
                     }
                     
                     // single RELATION cause

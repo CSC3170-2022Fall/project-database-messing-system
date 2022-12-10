@@ -40,6 +40,13 @@ class Condition {
             if(_col2==null){
                 //System.out.println(_val2);
                 switch(_relation){
+                    case "like":
+                    try{
+                        if(!(_col1.getFrom(rows).matches(_val2))){return false;}
+                    }catch(java.util.regex.PatternSyntaxException e){
+                        throw error("Syntax error in LikeStatement");
+                    }
+                    break;
                     case "=":
                     if(!(_col1.getFrom(rows).equals(_val2))){return false;}
                     break;
