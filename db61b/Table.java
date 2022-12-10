@@ -283,11 +283,7 @@ class Table implements Iterable<Row> {
                 f.seek(length);
                 b = f.readByte();
             } while(b != 10 && length > 0);
-            if (length == 0) { 
-                f.setLength(length);
-            } else {
-                f.setLength(length + 1);
-            }
+            f.setLength(length);
             f.close();
         } catch (IOException e) {
             throw error("trouble removing version from %s", name);
