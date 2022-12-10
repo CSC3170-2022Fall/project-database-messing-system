@@ -12,13 +12,13 @@
 
 - [x] selectStatement-**SCH**
 
-- [ ] tableDefinition 
+- [x] tableDefinition 
 	- [x] if part-**HTC**
-	- [ ] else part-**AZH** (`AS`)
+	- [x] else part-**AZH** (`AS`)
 
 - [x] selectClause-**SCH**
 
-- [x] conditionClause
+- [x] conditionClause-**XXY**
 
 - [x] condition -**XYY**
 
@@ -94,9 +94,33 @@
 
 - [x] SHA-1-**HTC**
 
+- [x] like-**HTC**
+
+- [x] * -**XXY**
+
+- [x] as-**AZH**
+
+- [ ] min
+
+- [ ] max
+
+- [ ] avg
+
+- [ ] round
+
+- [ ] count
+
+- [ ] order by
+
+- [ ] group by
+
+- [ ] having
+
 ### Beautify
 
 - [x] print (MySQL style)-**HTC**
+
+- [ ] WebSSH-**HTC**
 
 ### Application
 
