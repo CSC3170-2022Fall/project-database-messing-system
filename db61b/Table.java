@@ -93,6 +93,12 @@ class Table implements Iterable<Row> {
      */
     public boolean add(Row row) {
         if (!(_rows.contains(row))) {
+            if(_primary_key != -1){
+                if(_primary_key_set.contains(row.get(_primary_key))){
+                    return false; // duplicate primary key
+                }
+                _primary_key_set.add(row.get(_primary_key));
+            }
             _rows.add(row);
             return true;
         }
@@ -403,6 +409,14 @@ class Table implements Iterable<Row> {
     public String get_type(int i) {
         return _column_types[i];
     }
+    public void primary_key(String s){
+        for (int i = 0; i < _column_titles.length; i++) {
+            if (_column_titles[i].equals(s)){
+                _primary_key = i;
+                break;
+            }
+        }
+    }
 
     /**
      * Return a new Table whose columns are COLUMNNAMES, selected from
@@ -551,4 +565,6 @@ class Table implements Iterable<Row> {
     // int
     // double
     // string
+    private int _primary_key = -1;
+    private HashSet<String> _primary_key_set = new HashSet<>();
 }

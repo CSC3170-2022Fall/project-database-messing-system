@@ -353,7 +353,13 @@ class CommandInterpreter {
         if (_input.nextIf("(")) {
             ArrayList<String> columnTitles = new ArrayList<String>();
             ArrayList<String> columnTypes = new ArrayList<String>();
+            String primary_key = null;
             do{
+                if(_input.nextIf("primary")){
+                    _input.next("key");
+                    primary_key = columnName();
+                    break;
+                }
                 columnTitles.add(columnName());
                 String type_string = columnName();
                 int type = gettype(type_string);
@@ -362,6 +368,7 @@ class CommandInterpreter {
             } while (_input.nextIf(","));
             if(_input.nextIf(")")==false) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
             else table = new Table(columnTitles,columnTypes);
+            if(primary_key!=null) table.primary_key(primary_key);
         } else {
             table = null;
             if (_input.nextIf("as")) {
