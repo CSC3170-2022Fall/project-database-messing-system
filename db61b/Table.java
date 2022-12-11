@@ -116,6 +116,21 @@ class Table implements Iterable<Row> {
         return avg;
     }
 
+    public Double sumColumn(Table table, int colId) {
+        if (table._column_types[colId].equals("string")) {
+            throw error("cannot apply AVG to column \'%s\' with type string.", table.getTitle(colId));
+        }
+        double sum = 0;
+        for (Row row : _rows) {
+            try{
+                sum += Double.parseDouble(row.get(colId));
+            } catch (java.lang.NumberFormatException e) {
+                throw error("Data type error. Cannot do the operation \"average\" on it.");
+            }
+        }
+        return sum;
+    }
+
     public ArrayList<String> conductFunctions(ArrayList<Integer> functions, ArrayList<String> names, Table table) {
         // since for SELECT with aggregated functions, the result can only be one row,
         // we just need to store all the data in one list and return.
@@ -134,6 +149,9 @@ class Table implements Iterable<Row> {
                 case 4:
                     res.add(Double.toString(minColumn(table, table.findColumn(names.get(i)))));
                     break;
+                case 5:
+                    res.add(Double.toString(sumColumn(table, table.findColumn(names.get(i)))));
+                    break;
             }
         }
         return res;
@@ -142,9 +160,20 @@ class Table implements Iterable<Row> {
     public Table conductRound(ArrayList<Integer> rounds, Table table, ArrayList<String> q1, ArrayList<String> q2,
             ArrayList<String> q3) {
         ArrayList<String> newColTitle = new ArrayList<String>();
-        for (int i = 0; i < table._column_titles.length; ++i) {
-            if (rounds.get(i) == 1)
-                newColTitle.add("ROUND(" + table._column_titles[i] + ")");
+        for (int i = 0, index = 0; i < table._column_titles.length; ++i) {
+            if (rounds.get(i) == 1) {
+                String temp = q2.get(index);
+                switch(temp) {
+                    case "plus": temp = "+"; break;
+                    case "minus": temp = "-"; break;
+                    case "times": temp = "*"; break;
+                    case "divided_by": temp = "/"; break;
+                    default:
+                        throw error("invalid operator \'%s\'.", q2.get(index));
+                }
+                newColTitle.add("ROUND(" + table._column_titles[i] + temp + q1.get(index) + ")");
+                index++;
+            }
             else
                 newColTitle.add(table._column_titles[i]);
         }

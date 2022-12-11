@@ -463,6 +463,10 @@ class CommandInterpreter {
                         functions.add(4);
                         _input.next();
                         break;
+                    case "sum":
+                        functions.add(5);
+                        _input.next();
+                        break;
                     case "round":
                         rounds.add(1); // this column needs ROUND
                         special_round = true; // for this column, the user uses ROUND function.
@@ -481,16 +485,8 @@ class CommandInterpreter {
                     String temp = _input.next();
                     operator.add(temp);
                     operand.add(_input.next());
+                    _input.nextIf("reserve");
                     reservedDigit.add(_input.next());
-                    
-                    switch(temp) {
-                        case "plus": temp = "+"; break;
-                        case "minus": temp = "-"; break;
-                        case "times": temp = "*"; break;
-                        case "divided_by": temp = "/"; break;
-                        default:
-                            throw error("invalid operator \'%s\'.", operator);
-                    }
                 }
                 if ((!haveFunc || !columnTitle.contains(colName)) && !colName.equals("*"))
                     columnTitle.add(colName);
