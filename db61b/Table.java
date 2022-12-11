@@ -55,6 +55,113 @@ class Table implements Iterable<Row> {
     public int columns() {
         return _column_titles.length;
     }
+    
+    public void setColumnTitle(int i, String newName) {
+        _column_titles[i] = newName;
+        return;
+    }
+
+    public Double maxColumn(Table table, int colId) {
+        int flag = 0;
+        Double max = 0.0d;
+        for (Row row : _rows) {
+            double temp = Double.parseDouble(row.get(colId));
+            if (flag == 0) {
+                max = temp;
+                flag = 1;
+            }
+            else if (temp > max)
+                max = temp;
+        }
+        return max;
+    }
+    public Double minColumn(Table table, int colId) {
+        int flag = 0;
+        Double min = 0.0d;
+        for (Row row : _rows) {
+            double temp = Double.parseDouble(row.get(colId));
+            if (flag == 0) {
+                min = temp;
+                flag = 1;
+            }
+            else if (temp < min)
+                min = temp;
+        }
+        return min;
+    }
+
+    public Double avgColumn(Table table, int colId) {
+        double avg = 0;
+        for (Row row : _rows) {
+            avg += Double.parseDouble(row.get(colId));
+        }
+        avg /= _rows.size();
+        return avg;
+    }
+
+    public ArrayList<String> conductFunctions(ArrayList<Integer> functions, ArrayList<String> names, Table table) {
+        ArrayList<String> res = new ArrayList<String>();
+        for (int i = 0; i < functions.size(); ++i) {
+            switch(functions.get(i)) {
+                case 1:
+                    res.add(Double.toString(avgColumn(table, table.findColumn(names.get(i)))));
+                    break;
+                case 2:
+                    res.add(Double.toString(maxColumn(table, table.findColumn(names.get(i)))));
+                    break;
+                case 3:
+                    res.add(Integer.toString(table.size()));
+                    break;
+                case 4:
+                    res.add(Double.toString(minColumn(table, table.findColumn(names.get(i)))));
+                    break;
+            }
+        }
+        return res;
+    }
+
+    public Table conductRound(ArrayList<Integer> rounds, Table table, ArrayList<String> q1, ArrayList<String> q2, ArrayList<String> q3 ) {
+        ArrayList<String> newColTitle = new ArrayList<String>();
+        for (int i = 0; i < table._column_titles.length; ++i) {
+            if (rounds.get(i) == 1) 
+                newColTitle.add("ROUND("+table._column_titles[i]+")");
+            else
+                newColTitle.add(table._column_titles[i]);
+        }
+
+        Table res = new Table(newColTitle.toArray(new String[newColTitle.size()]), table._column_types);
+
+        for (Row row : table._rows) {            
+            ArrayList<String> newRow = new ArrayList<String>();
+            for (int i = 0, index = 0; i < row.size(); i++){
+                if (rounds.get(i) == 0) {
+                    newRow.add(row.get(i));
+                }
+                else{
+                    int limit = Integer.parseInt(q3.get(index));
+                    double num = Double.parseDouble(q1.get(index));
+                    double calc = 0.0d;
+                    String op = q2.get(index);
+                    switch (op) {
+                        case "plus": calc = Double.parseDouble(row.get(i)) + num; break;
+                        case "minus": calc = Double.parseDouble(row.get(i)) - num; break;
+                        case "times": calc = Double.parseDouble(row.get(i)) * num; break;
+                        case "divided_by": calc = Double.parseDouble(row.get(i)) / num; break;
+                        default:
+                            throw error("invalid operator \'%s\'.", op);
+                    }
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    nf.setMaximumFractionDigits(limit);
+                    newRow.add(nf.format(calc));
+                    index++;
+                }
+            }
+            res.add(new Row(newRow.toArray(new String[newRow.size()])));
+            
+        }
+        return res;
+    }
+
 
     /** Return the title of the Kth column. Requires 0 <= K < columns(). */
     public String getTitle(int k) {
