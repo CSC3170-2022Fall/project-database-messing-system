@@ -15,18 +15,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static db61b.Utils.*;
 
 /**
  * A single table in a database.
- * 
+ *
  * @author P. N. Hilfinger
  */
 class Table implements Iterable<Row> {
@@ -270,7 +266,7 @@ class Table implements Iterable<Row> {
             f.close();
         } catch (IOException e) {
             throw error("trouble adding version to %s", name);
-        } 
+        }
 
         // If NAME already has a version list, delete the last line.
         try {
@@ -278,7 +274,7 @@ class Table implements Iterable<Row> {
             //System.out.println(f.length());
             long length = f.length() - 1;
             byte b = 0;
-            do {                     
+            do {
                 length -= 1;
                 f.seek(length);
                 b = f.readByte();
@@ -287,7 +283,7 @@ class Table implements Iterable<Row> {
             f.close();
         } catch (IOException e) {
             throw error("trouble removing version from %s", name);
-        } 
+        }
     }
 
     void addVersion(String name, String version_name) {
@@ -297,11 +293,11 @@ class Table implements Iterable<Row> {
             f.seek(fileLength);
             f.writeBytes("\n");
             f.writeBytes(version_name);
-            
+
             f.close();
         } catch (IOException e) {
             throw error("trouble adding version to %s", name);
-        } 
+        }
     }
 
     void updateLogs(String name, String version_name) {
@@ -338,7 +334,7 @@ class Table implements Iterable<Row> {
             f.close();
         } catch (IOException e) {
             throw error("trouble updating %s.log", name);
-        } 
+        }
     }
 
     /** Return the version_name of table NAME at TIME */
@@ -413,6 +409,20 @@ class Table implements Iterable<Row> {
             System.out.print(" .\n .\n .\n");
     }
 
+    void print_row(int[] max_length, List<Row> list) {
+        int rows = 0;
+        while (rows < list.size() && rows < MAX_ROW) {
+            Row tmp = list.get(rows);
+            for (int i = 0; i < _column_titles.length; i++) {
+                if (tmp.get(i) != null) System.out.printf("|%" + max_length[i] + "s", tmp.get(i));
+                else System.out.printf("|%" + max_length[i] + "s", "NULL");
+            }
+            System.out.println("|");
+            rows++;
+        }
+        if (rows == MAX_ROW) System.out.print(" .\n .\n .\n");
+    }
+
     void print() {
         int[] max_length = find_max_length();
         print_separator(max_length);
@@ -420,6 +430,16 @@ class Table implements Iterable<Row> {
         print_separator(max_length);
 
         print_row(max_length);
+        print_separator(max_length);
+    }
+
+    void print(List<Row> list) {
+        int[] max_length = find_max_length();
+        print_separator(max_length);
+        print_titles(max_length);
+        print_separator(max_length);
+
+        print_row(max_length, list);
         print_separator(max_length);
     }
 
@@ -540,6 +560,95 @@ class Table implements Iterable<Row> {
                     }
                     Row tmp = new Row(data);
                     result.add(tmp);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Return a list from the original table, whose order is changed
+     * by ORDER. Because _row uses hashset to store data, thus we cannot
+     * directly change the order of a table.
+     */
+    List<Row> order(List<String> order) {
+        List<Row> result = new ArrayList<Row>();
+        ArrayList<String> columns = new ArrayList<String>();
+        ArrayList<String> directions = new ArrayList<String>();
+        for (int i = 0; i < order.size(); i++) {
+            if (i % 2 == 0) columns.add(order.get(i));
+            else directions.add(order.get(i));
+        }
+        int index = 0;
+
+        ArrayList<Row> records = new ArrayList<Row>();
+        String currentColumn = columns.get(index);
+        String columnOrder = directions.get(index++);
+        int columnIndex = findColumn(currentColumn);
+        Map<Integer, String> map = new HashMap<>();
+
+        int ind = 0;
+        for (Row row : _rows) {
+            map.put(ind++, row.get(columnIndex));
+            records.add(row);
+        }
+        if (Objects.equals(columnOrder, "asc")) {
+            map = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        } else {
+            map = map.entrySet().stream().sorted((Map.Entry.<Integer, String>comparingByValue().reversed())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        }
+
+        for (int i : map.keySet()) result.add(records.get(i));
+
+        while (index != columns.size()) {
+            currentColumn = columns.get(index);
+            columnIndex = findColumn(currentColumn);
+            columnOrder = directions.get(index++);
+
+            int[] indexSet = new int[index - 1];
+            for (int i = 0; i <= index - 2; i++) {
+                indexSet[i] = findColumn(columns.get(i));
+            }
+            ArrayList<String[]> stringSet = new ArrayList<>();
+            for (Row row : result) {
+                String[] s = new String[index - 1];
+                for (int j = 0; j <= index - 2; j++) {
+                    s[j] = row.get(indexSet[j]);
+                }
+                stringSet.add(s);
+            }
+            ind = 0;
+            while (ind != result.size()) {
+                Row currentRow = result.remove(0);
+                if (ind == result.size()) {
+                    result.add(currentRow);
+                    ind++;
+                    continue;
+                }
+                if (!Arrays.equals(stringSet.get(ind), stringSet.get(ind + 1))) {
+                    result.add(currentRow);
+                    ind++;
+                } else {
+                    ArrayList<Row> sameValue = new ArrayList<Row>();
+                    Map<Integer, String> m = new HashMap<>();
+                    int localInd = 0;
+                    String[] v = stringSet.get(ind);
+                    sameValue.add(currentRow);
+                    m.put(localInd++, currentRow.get(columnIndex));
+                    ind++;
+                    while ((ind != stringSet.size()) && (!result.isEmpty()) && (Arrays.equals(v, stringSet.get(ind)))) {
+                        currentRow = result.remove(0);
+                        sameValue.add(currentRow);
+                        m.put(localInd++, currentRow.get(columnIndex));
+                        ind++;
+                    }
+                    if (Objects.equals(columnOrder, "asc")) {
+                        m = m.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                    }
+                    else {
+                        m = m.entrySet().stream().sorted((Map.Entry.<Integer, String>comparingByValue().reversed())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                    }
+                    for (int i : m.keySet()) result.add(sameValue.get(i));
                 }
             }
         }

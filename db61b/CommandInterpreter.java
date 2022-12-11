@@ -272,7 +272,7 @@ class CommandInterpreter {
         try{
             //update snapshots
             String version_name = table.updateSnapshots(name);
-            
+
             //update logs
             table.updateLogs(name, version_name);
 
@@ -329,7 +329,7 @@ class CommandInterpreter {
             }
         }
         _input.nextIf(";");
-    }    
+    }
 
     /** Parse and execute a print statement from the token stream. */
     void printStatement() {
@@ -343,13 +343,22 @@ class CommandInterpreter {
     }
 
     /** Parse and execute a select statement from the token stream. */
-    
+
     void selectStatement() {
         _input.next("select");
         Table selectTable = selectClause();
-        _input.next(";");
-        System.out.println("Search results:");
-        selectTable.print();
+        if(_input.nextIs("order")) {
+            ArrayList<String> Order;
+            Order = orderByClause(selectTable);
+            List<Row> result = selectTable.order(Order);
+            _input.next(";");
+            System.out.println("Search results:");
+            selectTable.print(result);
+        } else {
+            _input.next(";");
+            System.out.println("Search results:");
+            selectTable.print();
+        }
         // FILL THIS IN
     }
 
@@ -398,7 +407,7 @@ class CommandInterpreter {
         while(!_input.nextIf("from")){
             if(_input.nextIf("*")){
                 flag=1;
-                
+
             }
             else{
                 String colName= columnName();
@@ -439,6 +448,43 @@ class CommandInterpreter {
             }
             //System.out.println("???");
             return Table1.select(columnTitle, conditions);
+        }
+    }
+
+    /** Parse and execute an order by clause from the token stream, returning the
+     *  resulting list containing the order information. */
+    ArrayList<String> orderByClause(Table table) {
+        ArrayList<String> Order = new ArrayList<String>();
+        if (_input.nextIf("order") && _input.nextIf("by")) {
+            String columnName = name();
+            int id = table.findColumn(columnName);
+            if (id == -1) {
+                throw error("unknown column: %s", columnName);
+            } else {
+                Order.add(columnName);
+                if (_input.nextIs("desc") || _input.nextIs("asc")) {
+                    Order.add(name());
+                } else {
+                    Order.add("asc");
+                }
+            }
+            while (_input.nextIf(",")) {
+                columnName = columnName();
+                id = table.findColumn(columnName);
+                if (id == -1) {
+                    throw error("unknown column: %s", columnName);
+                } else {
+                    Order.add(columnName);
+                    if (_input.nextIs("desc") || _input.nextIs("asc")) {
+                        Order.add(name());
+                    } else {
+                        Order.add("asc");
+                    }
+                }
+            }
+            return Order;
+        } else {
+            return null;
         }
     }
 
@@ -484,8 +530,8 @@ class CommandInterpreter {
                     col1 = columnName();
 
                     /* BETWEEN clause.
-                     * between 'left_bound' and 'right_bound'*/ 
-                    if (_input.nextIf("between")) { 
+                     * between 'left_bound' and 'right_bound'*/
+                    if (_input.nextIf("between")) {
 
                         // add Condition(col1, '>=', 'left_bound')
                         relation = ">=";
@@ -522,7 +568,7 @@ class CommandInterpreter {
                         continue;
                     }
                     // Like RELATION cause
-                    if (_input.nextIf("like")) { 
+                    if (_input.nextIf("like")) {
                         relation = "like";
                         String tmp_val = literal();
                         val = tmp_val.replaceAll("%", ".*");
@@ -535,7 +581,7 @@ class CommandInterpreter {
                         continue;
 
                     }
-                    
+
                     // single RELATION cause
                     relation = _input.next();
                     String tmp = _input.peek();
@@ -572,7 +618,7 @@ class CommandInterpreter {
                 _input.nextIf("and");
                 //System.out.println(_input.peek());
             }
-            return alfa; 
+            return alfa;
         }
         else{
             return null;
