@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.text.NumberFormat;
 
 import static db61b.Utils.*;
 
