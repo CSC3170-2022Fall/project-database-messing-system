@@ -401,21 +401,96 @@ class CommandInterpreter {
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     /*select SID, Firstname from students */
+    /*Grammar for integrate function: select avg columnName from table */
+    
     Table selectClause() {
+        ArrayList<String> operator = new ArrayList<String>();
+        ArrayList<String> operand = new ArrayList<String>();
+        ArrayList<String> reservedDigit = new ArrayList<String>();
         ArrayList<String> columnTitle = new ArrayList<String>();
-        int flag=0;
+        ArrayList<String> changedTitle = new ArrayList<String>();
+        ArrayList<String> changedType = new ArrayList<String>();
+        ArrayList<String> computed = new ArrayList<String>();
+        ArrayList<Integer> functions = new ArrayList<Integer>();
+        ArrayList<Integer> rounds = new ArrayList<Integer>();
+        ArrayList<String> funcToColName = new ArrayList<String>();
+        int flag=0, countStar = -1, haveRound = 0;
         while(!_input.nextIf("from")){
             if(_input.nextIf("*")){
                 flag=1;
-
             }
             else{
-                String colName= columnName();
-                columnTitle.add(colName);
+                boolean haveFunc = true, special_round = false;
+                switch (_input.peek()){
+                    case "avg":
+                        functions.add(1);
+                        _input.next();
+                        break;
+                    case "max":
+                        functions.add(2);
+                        _input.next();
+                        break;
+                    case "count":
+                        functions.add(3);
+                        _input.next();
+                        if (_input.nextIs("*"))
+                            countStar = functions.size()-1;
+                        break;
+                    case "min":
+                        functions.add(4);
+                        _input.next();
+                        break;
+                    case "round":
+                        rounds.add(1);
+                        special_round = true;
+                        
+                        haveFunc = false;
+                        _input.next();
+                        break;
+                    default:
+                        rounds.add(0);
+                        haveFunc = false;
+                }
+                if (!haveFunc && functions.size() > 0) {
+                    throw error("aggregated SELECT list contains nonaggregated column, which is incompatible.");
+                }
+                String colName = columnName();
+                if (special_round) {
+                    String temp = _input.next();
+                    operator.add(temp);
+                    operand.add(_input.next());
+                    reservedDigit.add(_input.next());
+                    
+                    switch(temp) {
+                        case "plus": temp = "+"; break;
+                        case "minus": temp = "-"; break;
+                        case "times": temp = "*"; break;
+                        case "divided_by": temp = "/"; break;
+                        default:
+                            throw error("invalid operator \'%s\'.", operator);
+                    }
+                }
+                if ((!haveFunc || !columnTitle.contains(colName)) && !colName.equals("*"))
+                    columnTitle.add(colName);
+                if (haveFunc) {
+                    funcToColName.add(colName);
+                    switch(functions.get(functions.size()-1)) {
+                        case 1: colName = "AVG("+colName+")";
+                            break;
+                        case 2: colName = "MAX("+colName+")";
+                            break;
+                        case 3: colName = "COUNT("+colName+")";
+                            break;  
+                        case 4: colName = "MIN("+colName+")";
+                            break;  
+                    }
+                    changedTitle.add(colName);
+                }
+                changedType.add("double");
             }
             _input.nextIf(",");
         }
-        if (columnTitle.size() == 0 && flag==0) {
+        if (columnTitle.size() == 0 && flag==0 && countStar == -1){
             throw error("missing argument(s) for statement SELECT: select at least one column.");
         }
         Table Table1 = tableName();
@@ -430,6 +505,7 @@ class CommandInterpreter {
             conditions = conditionClause(Table1);
         }
         if (null != Table2) {
+            ArrayList<String> tempTitle = new ArrayList<String>();
             if(flag==1){
                 for(int i=0;i<Table1.columns();i++){
                     columnTitle.add(Table1.getTitle(i));
@@ -439,7 +515,30 @@ class CommandInterpreter {
                     columnTitle.add(Table2.getTitle(i));
                 }
             }
-            return Table1.select(Table2, columnTitle, conditions);
+
+            for(int i=0;i<Table1.columns();i++){
+                tempTitle.add(Table1.getTitle(i));
+            }
+            for(int i=0;i<Table2.columns();i++){
+                if(tempTitle.contains(Table2.getTitle(i)))continue;
+                tempTitle.add(Table2.getTitle(i));
+            }
+
+            Table selectRes = Table1.select(Table2, columnTitle, conditions);
+            Table joinRes = Table1.select(Table2, tempTitle, conditions);
+            if (functions.size() > 0) {
+                computed = joinRes.conductFunctions(functions, funcToColName, joinRes);
+            }
+            if (functions.size() > 0) {
+                Table res = new Table(changedTitle, changedType);
+                res.add(new Row(computed.toArray(new String[computed.size()])));
+                return res;
+            }
+            if (operator.size() > 0) {
+                Table res = selectRes.conductRound(rounds, selectRes, operand, operator, reservedDigit);
+                return res;
+            }
+            return selectRes;
         } else {
             if (flag == 1){
                 for(int i=0;i<Table1.columns();i++){
@@ -447,9 +546,29 @@ class CommandInterpreter {
                 }
             }
             //System.out.println("???");
-            return Table1.select(columnTitle, conditions);
+            
+            if (columnTitle.size() == 0) {
+                funcToColName.set(countStar, Table1.getTitle(0));
+                columnTitle.add(Table1.getTitle(0));
+            }
+            else if (countStar != -1){
+                funcToColName.set(countStar, columnTitle.get(0));
+            }
+            Table selectRes = Table1.select(columnTitle, conditions);
+            if (functions.size() > 0) {
+                computed = Table1.conductFunctions(functions, funcToColName, Table1);
+                Table res = new Table(changedTitle, changedType);
+                res.add(new Row(computed.toArray(new String[computed.size()])));
+                return res;
+            }
+            if (operator.size() > 0) {
+                Table res = selectRes.conductRound(rounds, selectRes, operand, operator, reservedDigit);
+                return res;
+            }
+            return selectRes;
         }
     }
+
 
     /** Parse and execute an order by clause from the token stream, returning the
      *  resulting list containing the order information. */
