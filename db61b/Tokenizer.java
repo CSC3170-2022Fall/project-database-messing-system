@@ -15,18 +15,19 @@ class Tokenizer {
     /** Text of regular expressions that represent literals (possibly
      *  unterminated), identifiers, and comments (possibly
      *  unterminated). */
-    private static final String
+     private static final String
         LITERAL_TEXT = "'(?:[^,'\n\r]*)'?",
-        IDENTIFIER_TEXT = "[\\p{Alpha}_]\\w*",
-        COMMENT_TEXT = "(?:/\\*.*?\\*/|/\\*.*)";
+        IDENTIFIER_TEXT = "[\\p{Alpha}_*]\\w*",
+        COMMENT_TEXT = "(?:/\\*.*?\\*/|/\\*.*)",
+        NUMBER_TEXT = "(?:[0-9]+)";
     /** Matches potential tokens, including valid or unterminated
      *  literals, valid or unterminated comments, identifiers,
      *  relation symbols (=, <, <=, >=, and !=), end-of-line
      *  sequences, or other single characters.  The pattern matches a
      *  prefix of any string. */
     private static final Pattern
-        TOKEN_PATN = mkPatn("(?s)[<>!]?=|%s|%s|%s|\r?\n|\\S",
-                            LITERAL_TEXT, IDENTIFIER_TEXT, COMMENT_TEXT);
+        TOKEN_PATN = mkPatn("(?s)[<>!]?=|%s|%s|%s|%s|\r?\n|\\S",
+                            LITERAL_TEXT, IDENTIFIER_TEXT, COMMENT_TEXT, NUMBER_TEXT);
 
     /** Patterns matching specific kinds of token.  These are intended
      *  to be used with methods such as CommandInterpreter.name. */
