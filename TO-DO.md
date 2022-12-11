@@ -112,7 +112,7 @@
 
 - [ ] count
 
-- [ ] order by
+- [x] order by - **SCH**
 
 - [ ] group by
 
