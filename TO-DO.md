@@ -18,7 +18,7 @@
 
 - [x] selectClause-**SCH**
 
-- [x] conditionClause-**XXY**
+- [x] conditionClause-**XYY**
 
 - [x] condition -**XYY**
 
@@ -62,11 +62,11 @@
 
 - [x] print-**XYY** **HTC**
 
-- [x] Table select(`List<String> columnNames, List<Condition> conditions`)
+- [x] Table select(`List<String> columnNames, List<Condition> conditions`) -**XYY** **AZH**
 
-- [x] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`)
+- [x] Table select(`Table table2, List<String> columnNames, List<Condition> conditions`) -**XYY** **AZH**
 
-- [x] equijoin -**ZYQ**
+- [x] equijoin -**XYY**
 
 ## Additional Test
 
@@ -88,7 +88,7 @@
 
 - [x] insert rows with multiple columns-**HTC**
 
-- [x] data types(int,double,string)-**HTC**
+- [x] data types(int,double,string)-**HTC** -**XYY**
 
 - [x] trie-**HTC**
 
@@ -96,27 +96,27 @@
 
 - [x] like-**HTC**
 
-- [x] * -**XXY**
+- [x] * -**XYY**
 
 - [x] as-**AZH**
 
 - [x] primary key-**HTC**
 
-- [ ] min
+- [x] min -**ZYQ**
 
-- [ ] max
+- [x] max -**ZYQ**
 
-- [ ] avg
+- [x] avg -**ZYQ**
 
-- [ ] round
+- [x] round -**ZYQ**
 
-- [ ] count
+- [x] count -**ZYQ**
 
 - [x] order by - **SCH**
 
-- [ ] group by
+- [ ] group by -**SCH**
 
-- [ ] having
+- [ ] having -**ZYQ**
 
 ### Beautify
 

@@ -18,6 +18,7 @@ import java.io.RandomAccessFile;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.text.NumberFormat;
+import java.lang.NumberFormatException;
 
 import static db61b.Utils.*;
 
@@ -64,13 +65,16 @@ class Table implements Iterable<Row> {
         int flag = 0;
         Double max = 0.0d;
         for (Row row : _rows) {
-            double temp = Double.parseDouble(row.get(colId));
-            if (flag == 0) {
-                max = temp;
-                flag = 1;
+            try{
+                double temp = Double.parseDouble(row.get(colId));
+                if (flag == 0) {
+                    max = temp;
+                    flag = 1;
+                } else if (temp > max)
+                    max = temp;
+            }catch (java.lang.NumberFormatException e) {
+                throw error("Data type error. Cannot do the operation \"max\" on it.");
             }
-            else if (temp > max)
-                max = temp;
         }
         return max;
     }
@@ -82,13 +86,16 @@ class Table implements Iterable<Row> {
         int flag = 0;
         Double min = 0.0d;
         for (Row row : _rows) {
-            double temp = Double.parseDouble(row.get(colId));
-            if (flag == 0) {
-                min = temp;
-                flag = 1;
+            try{
+                double temp = Double.parseDouble(row.get(colId));
+                if (flag == 0) {
+                    min = temp;
+                    flag = 1;
+                } else if (temp < min)
+                    min = temp;
+            } catch (java.lang.NumberFormatException e) {
+                throw error("Data type error. Cannot do the operation \"min\" on it.");
             }
-            else if (temp < min)
-                min = temp;
         }
         return min;
     }
@@ -99,7 +106,11 @@ class Table implements Iterable<Row> {
         }
         double avg = 0;
         for (Row row : _rows) {
-            avg += Double.parseDouble(row.get(colId));
+            try{
+                avg += Double.parseDouble(row.get(colId));
+            } catch (java.lang.NumberFormatException e) {
+                throw error("Data type error. Cannot do the operation \"average\" on it.");
+            }
         }
         avg /= _rows.size();
         return avg;
@@ -110,7 +121,7 @@ class Table implements Iterable<Row> {
         // we just need to store all the data in one list and return.
         ArrayList<String> res = new ArrayList<String>();
         for (int i = 0; i < functions.size(); ++i) {
-            switch(functions.get(i)) {
+            switch (functions.get(i)) {
                 case 1:
                     res.add(Double.toString(avgColumn(table, table.findColumn(names.get(i)))));
                     break;
@@ -128,11 +139,12 @@ class Table implements Iterable<Row> {
         return res;
     }
 
-    public Table conductRound(ArrayList<Integer> rounds, Table table, ArrayList<String> q1, ArrayList<String> q2, ArrayList<String> q3 ) {
+    public Table conductRound(ArrayList<Integer> rounds, Table table, ArrayList<String> q1, ArrayList<String> q2,
+            ArrayList<String> q3) {
         ArrayList<String> newColTitle = new ArrayList<String>();
         for (int i = 0; i < table._column_titles.length; ++i) {
-            if (rounds.get(i) == 1) 
-                newColTitle.add("ROUND("+table._column_titles[i]+")");
+            if (rounds.get(i) == 1)
+                newColTitle.add("ROUND(" + table._column_titles[i] + ")");
             else
                 newColTitle.add(table._column_titles[i]);
         }
@@ -142,7 +154,7 @@ class Table implements Iterable<Row> {
         // insert result rows into the table "res" one by one.
         for (Row row : table._rows) {            
             ArrayList<String> newRow = new ArrayList<String>();
-            for (int i = 0, index = 0; i < row.size(); i++){
+            for (int i = 0, index = 0; i < row.size(); i++) {
                 if (rounds.get(i) == 0) {
                     newRow.add(row.get(i));
                 }
@@ -155,10 +167,34 @@ class Table implements Iterable<Row> {
                     double calc = 0.0d;
                     String op = q2.get(index);
                     switch (op) {
-                        case "plus": calc = Double.parseDouble(row.get(i)) + num; break;
-                        case "minus": calc = Double.parseDouble(row.get(i)) - num; break;
-                        case "times": calc = Double.parseDouble(row.get(i)) * num; break;
-                        case "divided_by": calc = Double.parseDouble(row.get(i)) / num; break;
+                        case "plus":
+                            try {
+                                calc = Double.parseDouble(row.get(i)) + num;
+                                break;
+                            } catch (java.lang.NumberFormatException e) {
+                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                            }
+                        case "minus":
+                            try {
+                                calc = Double.parseDouble(row.get(i)) - num;
+                                break;
+                            } catch (java.lang.NumberFormatException e) {
+                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                            }
+                        case "times":
+                            try {
+                                calc = Double.parseDouble(row.get(i)) * num;
+                                break;
+                            } catch (java.lang.NumberFormatException e) {
+                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                            }
+                        case "divided_by":
+                            try {
+                                calc = Double.parseDouble(row.get(i)) / num;
+                                break;
+                            } catch (java.lang.NumberFormatException e) {
+                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                            }
                         default:
                             throw error("invalid operator \'%s\'.", op);
                     }
@@ -169,11 +205,10 @@ class Table implements Iterable<Row> {
                 }
             }
             res.add(new Row(newRow.toArray(new String[newRow.size()])));
-            
+
         }
         return res;
     }
-
 
     /** Return the title of the Kth column. Requires 0 <= K < columns(). */
     public String getTitle(int k) {
@@ -208,8 +243,8 @@ class Table implements Iterable<Row> {
      */
     public boolean add(Row row) {
         if (!(_rows.contains(row))) {
-            if(_primary_key != -1){
-                if(_primary_key_set.contains(row.get(_primary_key))){
+            if (_primary_key != -1) {
+                if (_primary_key_set.contains(row.get(_primary_key))) {
                     return false; // duplicate primary key
                 }
                 _primary_key_set.add(row.get(_primary_key));
@@ -390,14 +425,14 @@ class Table implements Iterable<Row> {
         // If NAME already has a version list, delete the last line.
         try {
             RandomAccessFile f = new RandomAccessFile("versions/" + name + ".db", "rw");
-            //System.out.println(f.length());
+            // System.out.println(f.length());
             long length = f.length() - 1;
             byte b = 0;
             do {
                 length -= 1;
                 f.seek(length);
                 b = f.readByte();
-            } while(b != 10 && length > 0);
+            } while (b != 10 && length > 0);
             f.setLength(length);
             f.close();
         } catch (IOException e) {
@@ -423,16 +458,16 @@ class Table implements Iterable<Row> {
         // PrintStream output;
         // output = null;
         // try {
-        //     output = new PrintStream("logs/" + name + ".db");
-        //     Date date = new Date();
-        //     output.println(date.toString() + "," + version_name);
+        // output = new PrintStream("logs/" + name + ".db");
+        // Date date = new Date();
+        // output.println(date.toString() + "," + version_name);
 
         // } catch (IOException e) {
-        //     throw error("trouble updating %s.db", name);
+        // throw error("trouble updating %s.db", name);
         // } finally {
-        //     if (output != null) {
-        //         output.close();
-        //     }
+        // if (output != null) {
+        // output.close();
+        // }
         // }
         // If NAME doesn't have a log, create one.
         File file = new File("logs/" + name + ".log");
@@ -533,13 +568,16 @@ class Table implements Iterable<Row> {
         while (rows < list.size() && rows < MAX_ROW) {
             Row tmp = list.get(rows);
             for (int i = 0; i < _column_titles.length; i++) {
-                if (tmp.get(i) != null) System.out.printf("|%" + max_length[i] + "s", tmp.get(i));
-                else System.out.printf("|%" + max_length[i] + "s", "NULL");
+                if (tmp.get(i) != null)
+                    System.out.printf("|%" + max_length[i] + "s", tmp.get(i));
+                else
+                    System.out.printf("|%" + max_length[i] + "s", "NULL");
             }
             System.out.println("|");
             rows++;
         }
-        if (rows == MAX_ROW) System.out.print(" .\n .\n .\n");
+        if (rows == MAX_ROW)
+            System.out.print(" .\n .\n .\n");
     }
 
     void print() {
@@ -565,9 +603,10 @@ class Table implements Iterable<Row> {
     public String get_type(int i) {
         return _column_types[i];
     }
-    public void primary_key(String s){
+
+    public void primary_key(String s) {
         for (int i = 0; i < _column_titles.length; i++) {
-            if (_column_titles[i].equals(s)){
+            if (_column_titles[i].equals(s)) {
                 _primary_key = i;
                 break;
             }
@@ -695,8 +734,10 @@ class Table implements Iterable<Row> {
         ArrayList<String> columns = new ArrayList<String>();
         ArrayList<String> directions = new ArrayList<String>();
         for (int i = 0; i < order.size(); i++) {
-            if (i % 2 == 0) columns.add(order.get(i));
-            else directions.add(order.get(i));
+            if (i % 2 == 0)
+                columns.add(order.get(i));
+            else
+                directions.add(order.get(i));
         }
         int index = 0;
 
@@ -712,12 +753,15 @@ class Table implements Iterable<Row> {
             records.add(row);
         }
         if (Objects.equals(columnOrder, "asc")) {
-            map = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+            map = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         } else {
-            map = map.entrySet().stream().sorted((Map.Entry.<Integer, String>comparingByValue().reversed())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+            map = map.entrySet().stream().sorted((Map.Entry.<Integer, String>comparingByValue().reversed())).collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         }
 
-        for (int i : map.keySet()) result.add(records.get(i));
+        for (int i : map.keySet())
+            result.add(records.get(i));
 
         while (index != columns.size()) {
             currentColumn = columns.get(index);
@@ -762,12 +806,15 @@ class Table implements Iterable<Row> {
                         ind++;
                     }
                     if (Objects.equals(columnOrder, "asc")) {
-                        m = m.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                        m = m.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors
+                                .toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                    } else {
+                        m = m.entrySet().stream().sorted((Map.Entry.<Integer, String>comparingByValue().reversed()))
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1,
+                                        LinkedHashMap::new));
                     }
-                    else {
-                        m = m.entrySet().stream().sorted((Map.Entry.<Integer, String>comparingByValue().reversed())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-                    }
-                    for (int i : m.keySet()) result.add(sameValue.get(i));
+                    for (int i : m.keySet())
+                        result.add(sameValue.get(i));
                 }
             }
         }
