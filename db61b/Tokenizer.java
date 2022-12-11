@@ -209,7 +209,15 @@ class Tokenizer {
         newCommand();
     }
 
+    /*setPos(), returnPos(): methods that support to read sentences previously */
+    void setPos(){
+        _pos=_k;
+    }
 
+    void returnPos(){
+        _buffer.subList(_pos+1, _k).clear();
+        _k=_pos;
+    }
     /** Matcher used for pattern matching. */
     private Matcher _mat;
     /** The character input source. */
@@ -223,5 +231,5 @@ class Tokenizer {
     /** True iff prompt is needed for the next token. */
     private boolean _shouldPrompt;
     /** Current position in the token stream as an offset within _buffer. */
-    private int _k;
+    private int _k,_pos;
 }
