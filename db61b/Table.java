@@ -56,13 +56,11 @@ class Table implements Iterable<Row> {
     public int columns() {
         return _column_titles.length;
     }
-    
-    public void setColumnTitle(int i, String newName) {
-        _column_titles[i] = newName;
-        return;
-    }
 
     public Double maxColumn(Table table, int colId) {
+        if (table._column_types[colId].equals("string")) {
+            throw error("cannot apply MAX to column \'%s\' with type string.", table.getTitle(colId));
+        }
         int flag = 0;
         Double max = 0.0d;
         for (Row row : _rows) {
@@ -76,7 +74,11 @@ class Table implements Iterable<Row> {
         }
         return max;
     }
+
     public Double minColumn(Table table, int colId) {
+        if (table._column_types[colId].equals("string")) {
+            throw error("cannot apply MIN to column \'%s\' with type string.", table.getTitle(colId));
+        }
         int flag = 0;
         Double min = 0.0d;
         for (Row row : _rows) {
@@ -92,6 +94,9 @@ class Table implements Iterable<Row> {
     }
 
     public Double avgColumn(Table table, int colId) {
+        if (table._column_types[colId].equals("string")) {
+            throw error("cannot apply AVG to column \'%s\' with type string.", table.getTitle(colId));
+        }
         double avg = 0;
         for (Row row : _rows) {
             avg += Double.parseDouble(row.get(colId));
@@ -101,6 +106,8 @@ class Table implements Iterable<Row> {
     }
 
     public ArrayList<String> conductFunctions(ArrayList<Integer> functions, ArrayList<String> names, Table table) {
+        // since for SELECT with aggregated functions, the result can only be one row,
+        // we just need to store all the data in one list and return.
         ArrayList<String> res = new ArrayList<String>();
         for (int i = 0; i < functions.size(); ++i) {
             switch(functions.get(i)) {
@@ -132,6 +139,7 @@ class Table implements Iterable<Row> {
 
         Table res = new Table(newColTitle.toArray(new String[newColTitle.size()]), table._column_types);
 
+        // insert result rows into the table "res" one by one.
         for (Row row : table._rows) {            
             ArrayList<String> newRow = new ArrayList<String>();
             for (int i = 0, index = 0; i < row.size(); i++){
@@ -139,6 +147,9 @@ class Table implements Iterable<Row> {
                     newRow.add(row.get(i));
                 }
                 else{
+                    if (table._column_types[i].equals("string")) {
+                        throw error("cannot apply ROUND to column \'%s\' with type string.", table.getTitle(i));
+                    }
                     int limit = Integer.parseInt(q3.get(index));
                     double num = Double.parseDouble(q1.get(index));
                     double calc = 0.0d;

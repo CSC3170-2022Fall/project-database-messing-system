@@ -29,7 +29,7 @@ class Utils {
         if (s.equals("int")) return 0;
         if (s.equals("double")) return 1;
         if (s.equals("string")) return 2;
-        return -1; 
+        return -1;
     }
 }
 

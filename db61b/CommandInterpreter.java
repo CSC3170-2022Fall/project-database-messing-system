@@ -404,16 +404,39 @@ class CommandInterpreter {
     /*Grammar for integrate function: select avg columnName from table */
     
     Table selectClause() {
+        /* for the aggregated functions (except ROUND), we do not allow nonaggregated columns
+         * selected togerher. e.g. SELECT avg score, name from students; is
+         * not allowed.
+         * 
+         * for the ROUND function, we treat it as a normal column, so it is not allowed
+         * to do SELECT round score plus 100 3, avg age from students;
+         * But it is allowed to do SELECT round score plus 100 3, age from students;
+        */
+
+        // 3 lists used for ROUND columnName operator operand reservedDigit
         ArrayList<String> operator = new ArrayList<String>();
         ArrayList<String> operand = new ArrayList<String>();
         ArrayList<String> reservedDigit = new ArrayList<String>();
+        // columnTitles used to direct the select function
         ArrayList<String> columnTitle = new ArrayList<String>();
+        // for columns with aggregated functions, we have to change the columnTitles and types.
         ArrayList<String> changedTitle = new ArrayList<String>();
         ArrayList<String> changedType = new ArrayList<String>();
+        /* for one-row aggregated functions, return a row with all functions results
+         * e.g. select avg score, max age from students;
+         * the computed list contains a row with data[avg(score), max(age)].
+         * Then it is inserted into a new table called res.
+        */
         ArrayList<String> computed = new ArrayList<String>();
+        // used to contain the functions used. Functions are stored as integers.
+        // Note: the ROUND function is not stored in this list.
         ArrayList<Integer> functions = new ArrayList<Integer>();
+        // used to contain whether a column needs to be rounded. 0 as not, 1 as yes.
         ArrayList<Integer> rounds = new ArrayList<Integer>();
+        //for each function stored in the "functions" list, associate it with the columnName.
         ArrayList<String> funcToColName = new ArrayList<String>();
+        // flag is used for SELECT *, 
+        // and countStar is used to get the columnId to which the COUNT * corresponds.
         int flag=0, countStar = -1, haveRound = 0;
         while(!_input.nextIf("from")){
             if(_input.nextIf("*")){
@@ -441,14 +464,13 @@ class CommandInterpreter {
                         _input.next();
                         break;
                     case "round":
-                        rounds.add(1);
-                        special_round = true;
-                        
+                        rounds.add(1); // this column needs ROUND
+                        special_round = true; // for this column, the user uses ROUND function.
                         haveFunc = false;
                         _input.next();
                         break;
                     default:
-                        rounds.add(0);
+                        rounds.add(0); // this column does not need ROUND
                         haveFunc = false;
                 }
                 if (!haveFunc && functions.size() > 0) {
@@ -482,7 +504,7 @@ class CommandInterpreter {
                         case 3: colName = "COUNT("+colName+")";
                             break;  
                         case 4: colName = "MIN("+colName+")";
-                            break;  
+                            break;
                     }
                     changedTitle.add(colName);
                 }
@@ -523,8 +545,12 @@ class CommandInterpreter {
                 if(tempTitle.contains(Table2.getTitle(i)))continue;
                 tempTitle.add(Table2.getTitle(i));
             }
-
+            // contain the result of select.
             Table selectRes = Table1.select(Table2, columnTitle, conditions);
+            /* the non-repetitive feature of select statement can influence
+             * the result of aggregated functinos.
+             * To avoid this, we need an "original big table" named joinRes.
+            */
             Table joinRes = Table1.select(Table2, tempTitle, conditions);
             if (functions.size() > 0) {
                 computed = joinRes.conductFunctions(functions, funcToColName, joinRes);
@@ -534,6 +560,7 @@ class CommandInterpreter {
                 res.add(new Row(computed.toArray(new String[computed.size()])));
                 return res;
             }
+            // operator.size > 0 means the ROUND function exists.
             if (operator.size() > 0) {
                 Table res = selectRes.conductRound(rounds, selectRes, operand, operator, reservedDigit);
                 return res;
@@ -548,10 +575,15 @@ class CommandInterpreter {
             //System.out.println("???");
             
             if (columnTitle.size() == 0) {
+                // for COUNT *, we do not store "*" as columnTitle,
+                // so we need to specify a column of the given table for COUNT
+                // if there is no other functions.
                 funcToColName.set(countStar, Table1.getTitle(0));
                 columnTitle.add(Table1.getTitle(0));
             }
             else if (countStar != -1){
+                // if there are other functions, just let COUNT deal with
+                // the same column.
                 funcToColName.set(countStar, columnTitle.get(0));
             }
             Table selectRes = Table1.select(columnTitle, conditions);
