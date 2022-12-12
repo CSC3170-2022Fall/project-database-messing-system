@@ -355,9 +355,17 @@ class CommandInterpreter {
             System.out.println("Search results:");
             selectTable.print(result);
         } else {
-            _input.next(";");
-            System.out.println("Search results:");
-            selectTable.print();
+            if (_input.nextIs("as")) {
+                _input.next();
+                String name = name();
+                _database.put(name, selectTable);
+                _input.next(";");
+            }
+            else {
+                _input.next(";");
+                System.out.println("Search results:");
+                selectTable.print();
+            }
         }
         // FILL THIS IN
     }
