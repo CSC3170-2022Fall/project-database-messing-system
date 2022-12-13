@@ -52,6 +52,6 @@ Advance coding:
 
 - Implement additional keyword including **as, like, between, where (not) in, order by, group by, primary key**;
 
-- Version Control: Use **snapshot** strategy with **SHA-1** as version name and **trie** as version tree.
+- Version Control: Use **snapshot** strategy with **SHA-1** as version name and **trie** as version tree;
 	
-- Application: **re-implement Assignmnet 2**;
+- Application: **re-implement Assignmnet 2**.
