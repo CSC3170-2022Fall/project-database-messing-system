@@ -525,10 +525,26 @@ class CommandInterpreter {
             Table2 = tableName();
         }
         ArrayList<Condition> conditions;
+        ArrayList<String> swap = new ArrayList<String>();
+        _swap = null;
         if (null != Table2) {
             conditions = conditionClause(Table1, Table2);
         } else {
             conditions = conditionClause(Table1);
+        }
+        // In statement
+        if(conditions == null  &&  _swap != null){
+            if (_input.nextIf("not")) {
+                Table1.change_to_complement();
+            }
+            _input.next("in");
+            for(String s: _swap){
+                swap.add(s);
+            }
+            _swap = null;
+            if(!_input.nextIf("select")) throw error("Syntax Error. Need a \"select\" after \"in\"");
+            Table2 = selectClause();
+            Table2 = Table2.select(Table2,swap,conditions);
         }
         if (null != Table2) {
             ArrayList<String> tempTitle = new ArrayList<String>();
@@ -737,6 +753,19 @@ class CommandInterpreter {
 
                     }
 
+                    // IN cause
+                    if (_input.peek().equals(",") || _input.peek().equals("in") || _input.peek().equals("not")){
+                        ArrayList<String> swap = new ArrayList<String>();
+                        swap.add(col1);
+                        while(_input.nextIf(",")){
+                            String col = _input.next();
+                            swap.add(col);
+                        }
+                        _swap = swap;
+                        //if(!tmp.next("in")) throw error("too few argument to satisfy the statement WHERE: please include \"in\" or other relation symbols.");
+                        return null;
+                    }
+
                     // single RELATION cause
                     relation = _input.next();
                     String tmp = _input.peek();
@@ -805,4 +834,6 @@ class CommandInterpreter {
     private Tokenizer _input;
     /** Database containing all tables. */
     private Database _database;
+    /** _swap is used to temporarily store the "select where in" keywords */
+    private ArrayList<String> _swap;
 }

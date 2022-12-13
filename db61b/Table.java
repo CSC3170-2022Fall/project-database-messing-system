@@ -750,6 +750,38 @@ class Table implements Iterable<Row> {
                 }
             }
         }
+        if(_is_complement == true){
+            Table result_c = new Table(columnNames, columnTypes);
+            for (Row row1 : _rows) {
+                for (Row row2 : table2._rows) {
+                    int flag = 1;
+                    if (conditions != null) {
+                        if (!Condition.test(conditions, row1, row2)) {
+                            flag = 0;
+                        }
+                    }
+                    if (flag == 1) {
+                        String[] data = new String[columnNames.size()];
+                        for (int i = 0; i < columnNames.size(); i++) {
+                            int id = findColumn(columnNames.get(i));
+                            if (id != -1) {
+                                data[i] = row1.get(id);
+                            } else {
+                                id = table2.findColumn(columnNames.get(i));
+                                if (id == -1) {
+                                    throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                                }
+                                data[i] = row2.get(id);
+                            }
+                        }
+                        Row tmp = new Row(data);
+                        if(!result._rows.contains(tmp))
+                            result_c.add(tmp);
+                    }
+                }
+            }            
+            return result_c;
+        }
         return result;
     }
 
@@ -879,6 +911,10 @@ class Table implements Iterable<Row> {
         return true; // REPLACE WITH SOLUTION
     }
 
+    public void change_to_complement(){
+        _is_complement = true;
+    }
+
     /** My rows. */
     private HashSet<Row> _rows = new HashSet<>();
     private String[] _column_titles;
@@ -886,6 +922,7 @@ class Table implements Iterable<Row> {
     // int
     // double
     // string
+    private boolean _is_complement = false;
     private int _primary_key = -1;
     private HashSet<String> _primary_key_set = new HashSet<>();
 }
