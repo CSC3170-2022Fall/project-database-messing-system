@@ -44,14 +44,14 @@ Basic coding:
 
 Advance coding:
 
-- Take **data type** into consideration while creating the table;
+- Take **data type (int/double/string)** into consideration while creating the table and doing other operations;
 
-- The syntax like **“A.x = B.x”** is supported;
+- Implement the operations including **join, commit, rollback**;
 
-- Implement the operations including **inner join, left join, right join, full join**;
+- Implement aggregate functions including **max(), min(), avg(), round(), count()**;
 
-- Implement functions include **max(), min(), mid(), having, as, between, where, in, order by,exist**;
+- Implement additional keyword including **as, like, between, where (not) in, order by, group by, primary key**;
+
+- Version Control: Use **snapshot** strategy with **SHA-1** as version name and **trie** as version tree.
 	
-- Application:**re-implement Assignmnet 2**;
-
-- Using **snapshot** to support **version** and **rollback**.
+- Application: **re-implement Assignmnet 2**;
