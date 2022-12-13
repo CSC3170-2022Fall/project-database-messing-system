@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import static db61b.Utils.*;
-import static db61b.Tokenizer.*;
 
 /** An object that reads and interprets a sequence of commands from an
  *  input source.
@@ -367,7 +366,6 @@ class CommandInterpreter {
                 selectTable.print();
             }
         }
-        // FILL THIS IN
     }
 
     /** Parse and execute a table definition, returning the specified
@@ -445,7 +443,7 @@ class CommandInterpreter {
         ArrayList<String> funcToColName = new ArrayList<String>();
         // flag is used for SELECT *, 
         // and countStar is used to get the columnId to which the COUNT * corresponds.
-        int flag=0, countStar = -1, haveRound = 0;
+        int flag=0, countStar = -1;
         while(!_input.nextIf("from")){
             if(_input.nextIf("*")){
                 flag=1;
@@ -806,14 +804,13 @@ class CommandInterpreter {
         }
         else{
             return null;
-        }       // REPLACE WITH SOLUTION
+        }
     }
 
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
-
-        return null;        // REPLACE WITH SOLUTION
+        return null;
     }
 
     /** Advance the input past the next semicolon. */

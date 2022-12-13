@@ -13,12 +13,10 @@ import java.io.FileReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.text.NumberFormat;
-import java.lang.NumberFormatException;
 
 import static db61b.Utils.*;
 
@@ -257,7 +255,7 @@ class Table implements Iterable<Row> {
 
     /** Return the number of Rows in this table. */
     public int size() {
-        return _rows.size(); // REPLACE WITH SOLUTION
+        return _rows.size(); 
     }
 
     /** Returns an iterator that returns my rows in an unspecfied order. */
@@ -323,9 +321,7 @@ class Table implements Iterable<Row> {
                 header = input.readLine();
             }
             input.close();
-            // FILL IN
         } catch (FileNotFoundException e) {
-            // System.out.println("???");
             throw error("could not find %s.db", name);
         } catch (IOException e) {
             throw error("problem reading from %s.db", name);
@@ -417,7 +413,6 @@ class Table implements Iterable<Row> {
                 }
                 output.println("");
             }
-            // FILL THIS IN
         } catch (IOException e) {
             throw error("trouble writing to %s.db", name);
         } finally {
@@ -678,7 +673,6 @@ class Table implements Iterable<Row> {
                 result.add(new Row(data));
             }
         }
-        // FILL IN
         return result;
     }
 
@@ -908,7 +902,7 @@ class Table implements Iterable<Row> {
                 return false;
         }
 
-        return true; // REPLACE WITH SOLUTION
+        return true; 
     }
 
     public void change_to_complement(){

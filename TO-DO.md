@@ -78,9 +78,17 @@
 
 - [x] insert values-**HTC**
 
+- [x] join -**AZH**
+
 ### Syntax Error
 
-- [x] Bracket (create table)-**HTC**
+- [x] Parenthesis (create table)-**HTC**
+
+- [x] Data type error in relation -**XXY**
+
+- [x] Column not found -**XXY**
+
+- [ ] Standard Error Messages
 
 ## Advance
 
@@ -94,6 +102,8 @@
 
 - [x] SHA-1-**HTC**
 
+- [x] file operation-**HTC**
+
 - [x] like-**HTC**
 
 - [x] * -**XYY**
@@ -101,6 +111,8 @@
 - [x] as-**AZH**
 
 - [x] primary key-**HTC**
+
+- [x] between -**ZYQ**
 
 - [x] min -**ZYQ**
 
@@ -112,11 +124,13 @@
 
 - [x] count -**ZYQ**
 
-- [x] order by - **SCH**
+- [x] order by -**SCH**
 
 - [ ] group by -**SCH**
 
 - [ ] having -**ZYQ**
+
+- [x] (not) in -**HTC**
 
 ### Beautify
 
@@ -128,7 +142,10 @@
 
 - [ ] re-implement in Assignment 2-**ZYQ**
 
-- [ ] history-**TYZ**
+- [x] version control-**TYZ**
+	- [x] statement
+	- [x] snapshot
+	- [x] log
 
 
 

@@ -242,7 +242,6 @@ class Condition {
             System.out.printf("unknown type %d%n", type);
             return false;
         }
-        // REPLACE WITH SOLUTION
     }
 
     /** Return true iff ROWS satisfies all CONDITIONS. */
