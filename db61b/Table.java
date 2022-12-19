@@ -804,9 +804,17 @@ class Table implements Iterable<Row> {
 
         int ind = 0;
         for (Row row : _rows) {
-            map.put(ind++, row.get(columnIndex));
+            if (Objects.equals(_column_types[columnIndex], "int")) {
+                map.put(ind++, row.get(columnIndex).length() + row.get(columnIndex));
+            } else if (Objects.equals(_column_types[columnIndex], "double")){
+                String pt = Integer.toString(row.get(columnIndex).indexOf('.'));
+                map.put(ind++, pt + row.get(columnIndex));
+            } else {
+                map.put(ind++, row.get(columnIndex));
+            }
             records.add(row);
         }
+
         if (Objects.equals(columnOrder, "asc")) {
             map = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
                     Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
@@ -852,12 +860,26 @@ class Table implements Iterable<Row> {
                     int localInd = 0;
                     String[] v = stringSet.get(ind);
                     sameValue.add(currentRow);
-                    m.put(localInd++, currentRow.get(columnIndex));
+                    if (Objects.equals(_column_types[columnIndex], "int")) {
+                        m.put(localInd++, currentRow.get(columnIndex).length() + currentRow.get(columnIndex));
+                    } else if (Objects.equals(_column_types[columnIndex], "double")){
+                        String pt = Integer.toString(currentRow.get(columnIndex).indexOf('.'));
+                        m.put(localInd++, pt + currentRow.get(columnIndex));
+                    } else {
+                        m.put(localInd++, currentRow.get(columnIndex));
+                    }
                     ind++;
                     while ((ind != stringSet.size()) && (!result.isEmpty()) && (Arrays.equals(v, stringSet.get(ind)))) {
                         currentRow = result.remove(0);
                         sameValue.add(currentRow);
-                        m.put(localInd++, currentRow.get(columnIndex));
+                        if (Objects.equals(_column_types[columnIndex], "int")) {
+                            m.put(localInd++, currentRow.get(columnIndex).length() + currentRow.get(columnIndex));
+                        } else if (Objects.equals(_column_types[columnIndex], "double")){
+                            String pt = Integer.toString(currentRow.get(columnIndex).indexOf('.'));
+                            m.put(localInd++, pt + currentRow.get(columnIndex));
+                        } else {
+                            m.put(localInd++, currentRow.get(columnIndex));
+                        }
                         ind++;
                     }
                     if (Objects.equals(columnOrder, "asc")) {

@@ -411,7 +411,7 @@ class CommandInterpreter {
     
     Table selectClause() {
         /* for the aggregated functions (except ROUND), we do not allow nonaggregated columns
-         * selected togerher. e.g. SELECT avg score, name from students; is
+         * selected together. e.g. SELECT avg score, name from students; is
          * not allowed.
          * 
          * for the ROUND function, we treat it as a normal column, so it is not allowed
@@ -694,7 +694,7 @@ class CommandInterpreter {
         ArrayList<Condition> alfa=new ArrayList<Condition>();
         if(_input.nextIf("where")){
             String col1,relation,col2,val;
-            while(!(_input.peek().equals(";"))){
+            while((!(_input.peek().equals(";"))) && (!(_input.peek().equals("order")))){
                 try{
                     col1 = columnName();
 
