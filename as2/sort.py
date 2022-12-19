@@ -3,10 +3,10 @@ import sys
 with open(os.path.join(sys.path[0],"out.db"),"r") as f:
 	title = []
 	sortfile = []
-	id = 0
+	idx = 0
 	for line in f:
-		id += 1
-		if id <= 2:
+		idx += 1
+		if idx <= 2:
 			title.append(line)
 		else:
 			sortfile.append(line)
