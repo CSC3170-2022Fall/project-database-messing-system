@@ -15,13 +15,18 @@ do
 	echo "Question $i: "
 	if [ -a ./solutions/$i.sql ];then
 		java -ea db61b.Main < ./solutions/$i.sql > msg.log
-		if diff -qw out.db ./answers/$i.db > /dev/null;then
+		python sort.py
+		out="out_sorted.db"
+		if [ $i == 7 ]; then
+			out="out.db"
+		fi
+		if diff -qw $out ./answers/$i.db > /dev/null;then
 			echo "  Passed."
 		else
 			echo "  Failed."
 		fi
 	else
-		echo "  Skip."
+		echo "  Skipped."
 	fi
 	echo "============================"
 done
