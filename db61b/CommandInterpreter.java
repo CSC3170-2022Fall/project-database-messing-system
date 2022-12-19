@@ -633,6 +633,8 @@ class CommandInterpreter {
         }
     }
 
+    /** Parse and execute a group by clause from the token stream, returning the
+     *  resulting table containing grouped information. */
     Table groupByClause(Table table, boolean haveFunc) {
         if (!haveFunc) throw error("no aggregation functions for group by statement");
         ArrayList<String> groupByColumns = new ArrayList<>();
