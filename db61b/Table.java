@@ -58,9 +58,16 @@ class Table implements Iterable<Row> {
         return _column_titles.length;
     }
 
-    public Double maxColumn(Table table, int colId) {
-        if (table._column_types[colId].equals("string")) {
-            throw error("cannot apply MAX to column \'%s\' with type string.", table.getTitle(colId));
+    public Table changeTitle(ArrayList<String> changedTitle) {
+        Table res = new Table(changedTitle.toArray(new String[changedTitle.size()]), _column_types);
+        res._rows = _rows;
+        res._column_types = _column_types;
+        return res;
+    }
+
+    public Double maxColumn( int colId) {
+        if (_column_types[colId].equals("string")) {
+            throw error("cannot apply MAX to column \'%s\' with type string.", getTitle(colId));
         }
         int flag = 0;
         Double max = 0.0d;
@@ -79,9 +86,9 @@ class Table implements Iterable<Row> {
         return max;
     }
 
-    public Double minColumn(Table table, int colId) {
-        if (table._column_types[colId].equals("string")) {
-            throw error("cannot apply MIN to column \'%s\' with type string.", table.getTitle(colId));
+    public Double minColumn(int colId) {
+        if (_column_types[colId].equals("string")) {
+            throw error("cannot apply MIN to column \'%s\' with type string.", getTitle(colId));
         }
         int flag = 0;
         Double min = 0.0d;
@@ -100,9 +107,9 @@ class Table implements Iterable<Row> {
         return min;
     }
 
-    public Double avgColumn(Table table, int colId) {
-        if (table._column_types[colId].equals("string")) {
-            throw error("cannot apply AVG to column \'%s\' with type string.", table.getTitle(colId));
+    public Double avgColumn(int colId) {
+        if (_column_types[colId].equals("string")) {
+            throw error("cannot apply AVG to column \'%s\' with type string.", getTitle(colId));
         }
         double avg = 0;
         for (Row row : _rows) {
@@ -116,9 +123,9 @@ class Table implements Iterable<Row> {
         return avg;
     }
 
-    public Double sumColumn(Table table, int colId) {
-        if (table._column_types[colId].equals("string")) {
-            throw error("cannot apply AVG to column \'%s\' with type string.", table.getTitle(colId));
+    public Double sumColumn(int colId) {
+        if (_column_types[colId].equals("string")) {
+            throw error("cannot apply AVG to column \'%s\' with type string.", getTitle(colId));
         }
         double sum = 0;
         for (Row row : _rows) {
@@ -131,36 +138,36 @@ class Table implements Iterable<Row> {
         return sum;
     }
 
-    public ArrayList<String> conductFunctions(ArrayList<Integer> functions, ArrayList<String> names, Table table) {
+    public ArrayList<String> conductFunctions(ArrayList<Integer> functions, ArrayList<String> names) {
         // since for SELECT with aggregated functions, the result can only be one row,
         // we just need to store all the data in one list and return.
         ArrayList<String> res = new ArrayList<String>();
         for (int i = 0; i < functions.size(); ++i) {
             switch (functions.get(i)) {
                 case 1:
-                    res.add(Double.toString(avgColumn(table, table.findColumn(names.get(i)))));
+                    res.add(Double.toString(avgColumn(this.findColumn(names.get(i)))));
                     break;
                 case 2:
-                    res.add(Double.toString(maxColumn(table, table.findColumn(names.get(i)))));
+                    res.add(Double.toString(maxColumn(this.findColumn(names.get(i)))));
                     break;
                 case 3:
-                    res.add(Integer.toString(table.size()));
+                    res.add(Integer.toString(this.size()));
                     break;
                 case 4:
-                    res.add(Double.toString(minColumn(table, table.findColumn(names.get(i)))));
+                    res.add(Double.toString(minColumn(this.findColumn(names.get(i)))));
                     break;
                 case 5:
-                    res.add(Double.toString(sumColumn(table, table.findColumn(names.get(i)))));
+                    res.add(Double.toString(sumColumn(this.findColumn(names.get(i)))));
                     break;
             }
         }
         return res;
     }
 
-    public Table conductRound(ArrayList<Integer> rounds, Table table, ArrayList<String> q1, ArrayList<String> q2,
+    public Table conductRound(ArrayList<Integer> rounds, ArrayList<String> q1, ArrayList<String> q2,
             ArrayList<String> q3) {
         ArrayList<String> newColTitle = new ArrayList<String>();
-        for (int i = 0, index = 0; i < table._column_titles.length; ++i) {
+        for (int i = 0, index = 0; i < _column_titles.length; ++i) {
             if (rounds.get(i) == 1) {
                 String temp = q2.get(index);
                 switch(temp) {
@@ -171,25 +178,25 @@ class Table implements Iterable<Row> {
                     default:
                         throw error("invalid operator \'%s\'.", q2.get(index));
                 }
-                newColTitle.add("ROUND(" + table._column_titles[i] + temp + q1.get(index) + ")");
+                newColTitle.add("ROUND(" + _column_titles[i] + temp + q1.get(index) + ")");
                 index++;
             }
             else
-                newColTitle.add(table._column_titles[i]);
+                newColTitle.add(_column_titles[i]);
         }
 
-        Table res = new Table(newColTitle.toArray(new String[newColTitle.size()]), table._column_types);
+        Table res = new Table(newColTitle.toArray(new String[newColTitle.size()]), _column_types);
 
         // insert result rows into the table "res" one by one.
-        for (Row row : table._rows) {            
+        for (Row row : _rows) {            
             ArrayList<String> newRow = new ArrayList<String>();
             for (int i = 0, index = 0; i < row.size(); i++) {
                 if (rounds.get(i) == 0) {
                     newRow.add(row.get(i));
                 }
                 else{
-                    if (table._column_types[i].equals("string")) {
-                        throw error("cannot apply ROUND to column \'%s\' with type string.", table.getTitle(i));
+                    if (_column_types[i].equals("string")) {
+                        throw error("cannot apply ROUND to column \'%s\' with type string.", getTitle(i));
                     }
                     int limit = Integer.parseInt(q3.get(index));
                     double num = Double.parseDouble(q1.get(index));

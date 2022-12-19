@@ -34,7 +34,8 @@ class Tokenizer {
     static final Pattern
         IDENTIFIER = mkPatn(IDENTIFIER_TEXT),
         LITERAL = mkPatn("'.*"),
-        RELATION = mkPatn("[<>!]?=|[<>]");
+        RELATION = mkPatn("[<>!]?=|[<>]"),
+        NUMBER = mkPatn(NUMBER_TEXT);
 
     /** A Tokenizer that reads tokens from S, and prompts on PROMPTER,
      *  if it is non-null. */

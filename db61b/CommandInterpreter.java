@@ -355,17 +355,9 @@ class CommandInterpreter {
             System.out.println("Search results:");
             selectTable.print(result);
         } else {
-            if (_input.nextIs("as")) {
-                _input.next();
-                String name = name();
-                _database.put(name, selectTable);
-                _input.next(";");
-            }
-            else {
-                _input.next(";");
-                System.out.println("Search results:");
-                selectTable.print();
-            }
+            _input.next(";");
+            System.out.println("Search results:");
+            selectTable.print();
         }
         // FILL THIS IN
     }
@@ -510,8 +502,12 @@ class CommandInterpreter {
                         case 4: colName = "MIN("+colName+")";
                             break;
                     }
-                    changedTitle.add(colName);
                 }
+                if (_input.nextIs(Tokenizer.LITERAL)) {
+                    colName = _input.peek().substring(1, _input.peek().length() - 1).trim();
+                    _input.next();
+                }
+                changedTitle.add(colName);
                 changedType.add("double");
             }
             _input.nextIf(",");
@@ -535,10 +531,12 @@ class CommandInterpreter {
             if(flag==1){
                 for(int i=0;i<Table1.columns();i++){
                     columnTitle.add(Table1.getTitle(i));
+                    changedTitle.add(Table1.getTitle(i));
                 }
                 for(int i=0;i<Table2.columns();i++){
                     if(columnTitle.contains(Table2.getTitle(i)))continue;
                     columnTitle.add(Table2.getTitle(i));
+                    changedTitle.add(Table1.getTitle(i));
                 }
             }
 
@@ -557,7 +555,7 @@ class CommandInterpreter {
             */
             Table joinRes = Table1.select(Table2, tempTitle, conditions);
             if (functions.size() > 0) {
-                computed = joinRes.conductFunctions(functions, funcToColName, joinRes);
+                computed = joinRes.conductFunctions(functions, funcToColName);
             }
             if (functions.size() > 0) {
                 Table res = new Table(changedTitle, changedType);
@@ -566,14 +564,15 @@ class CommandInterpreter {
             }
             // operator.size > 0 means the ROUND function exists.
             if (operator.size() > 0) {
-                Table res = selectRes.conductRound(rounds, selectRes, operand, operator, reservedDigit);
+                Table res = selectRes.conductRound(rounds, operand, operator, reservedDigit);
                 return res;
             }
-            return selectRes;
+            return selectRes.changeTitle(changedTitle);
         } else {
             if (flag == 1){
                 for(int i=0;i<Table1.columns();i++){
                     columnTitle.add(Table1.getTitle(i));
+                    changedTitle.add(Table1.getTitle(i));
                 }
             }
             //System.out.println("???");
@@ -592,16 +591,16 @@ class CommandInterpreter {
             }
             Table selectRes = Table1.select(columnTitle, conditions);
             if (functions.size() > 0) {
-                computed = Table1.conductFunctions(functions, funcToColName, Table1);
+                computed = Table1.conductFunctions(functions, funcToColName);
                 Table res = new Table(changedTitle, changedType);
                 res.add(new Row(computed.toArray(new String[computed.size()])));
                 return res;
             }
             if (operator.size() > 0) {
-                Table res = selectRes.conductRound(rounds, selectRes, operand, operator, reservedDigit);
+                Table res = selectRes.conductRound(rounds, operand, operator, reservedDigit);
                 return res;
             }
-            return selectRes;
+            return selectRes.changeTitle(changedTitle);
         }
     }
 
@@ -680,7 +679,7 @@ class CommandInterpreter {
         ArrayList<Condition> alfa=new ArrayList<Condition>();
         if(_input.nextIf("where")){
             String col1,relation,col2,val;
-            while(!(_input.peek().equals(";"))){
+            while(!(_input.nextIs(";")) && !_input.nextIs("order")){
                 try{
                     col1 = columnName();
 
@@ -739,10 +738,8 @@ class CommandInterpreter {
 
                     // single RELATION cause
                     relation = _input.next();
-                    String tmp = _input.peek();
-                    if(tmp.charAt(0) =='\''){
-                        tmp=_input.next();
-                        val=tmp.substring(1,tmp.length()-1);
+                    if(_input.nextIs(Tokenizer.NUMBER)){
+                        val = _input.next();
                         try{
                             alfa.add(new Condition(new Column(col1,0,tables[0]),relation,val));
                         }
