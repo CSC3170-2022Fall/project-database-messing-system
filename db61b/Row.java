@@ -58,6 +58,11 @@ class Row {
         return _data[k];
     }
 
+    /** Return the whole value the row. */
+    String[] get() {
+        return _data;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Row) || !(_data.length == ((Row) obj).size())) return false;

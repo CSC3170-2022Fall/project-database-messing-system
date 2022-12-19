@@ -229,6 +229,11 @@ class Table implements Iterable<Row> {
         return _column_titles[k];
     }
 
+    /** Return all titles of the table. */
+    public String[] getTitles() {
+        return _column_titles;
+    }
+
     /**
      * Return the number of the column whose title is TITLE, or -1 if
      * there isn't one.
@@ -613,6 +618,10 @@ class Table implements Iterable<Row> {
 
     public String get_type(int i) {
         return _column_types[i];
+    }
+
+    public String[] get_types() {
+        return _column_types;
     }
 
     public void primary_key(String s) {

@@ -10,9 +10,7 @@ package db61b;
 
 import java.io.PrintStream;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static db61b.Utils.*;
 
@@ -345,6 +343,7 @@ class CommandInterpreter {
 
     void selectStatement() {
         _input.next("select");
+        _input.setPos();
         Table selectTable = selectClause();
         if(_input.nextIs("order")) {
             ArrayList<String> Order;
@@ -436,12 +435,14 @@ class CommandInterpreter {
         // flag is used for SELECT *, 
         // and countStar is used to get the columnId to which the COUNT * corresponds.
         int flag=0, countStar = -1;
+        boolean haveFunc = true, special_round;
         while(!_input.nextIf("from")){
             if(_input.nextIf("*")){
                 flag=1;
             }
             else{
-                boolean haveFunc = true, special_round = false;
+                haveFunc = true;
+                special_round = false;
                 switch (_input.peek()){
                     case "avg":
                         functions.add(1);
@@ -579,6 +580,13 @@ class CommandInterpreter {
             }
             // contain the result of select.
             Table selectRes = Table1.select(Table2, columnTitle, conditions);
+
+            /* group by clause */
+            if (_input.nextIf("group") && _input.nextIf("by")) {
+                selectRes = groupByClause(selectRes, haveFunc);
+                return selectRes;
+            }
+
             /* the non-repetitive feature of select statement can influence
              * the result of aggregated functinos.
              * To avoid this, we need an "original big table" named joinRes.
@@ -620,6 +628,13 @@ class CommandInterpreter {
                 funcToColName.set(countStar, columnTitle.get(0));
             }
             Table selectRes = Table1.select(columnTitle, conditions);
+
+            /* group by clause */
+            if (_input.nextIf("group") && _input.nextIf("by")) {
+                selectRes = groupByClause(selectRes, haveFunc);
+                return selectRes;
+            }
+
             if (functions.size() > 0) {
                 computed = Table1.conductFunctions(functions, funcToColName);
                 Table res = new Table(changedTitle, changedType);
@@ -634,10 +649,128 @@ class CommandInterpreter {
         }
     }
 
+    Table groupByClause(Table table, boolean haveFunc) {
+        if (!haveFunc) throw error("no aggregation functions for group by statement");
+        ArrayList<String> groupByColumns = new ArrayList<>();
 
-    /* Parse and execute an order by clause from the token stream, returning the
-     * resulting list containing the order information. 
-     * 
+        _input.returnPos();
+        ArrayList<String> Order = new ArrayList<>();
+        ArrayList<String> columnNames = new ArrayList<>();
+        Order.add(_input.peek());
+        columnNames.add(_input.next());
+        Order.add("asc");
+        while (_input.nextIf(",")) {
+            if (!_input.nextIs("count") &&
+                    !_input.nextIs("avg") &&
+                    !_input.nextIs("max") &&
+                    !_input.nextIs("min") &&
+                    !_input.nextIs("sum") &&
+                    !_input.nextIs("round")) {
+                Order.add(_input.peek());
+                columnNames.add(_input.next());
+                Order.add("asc");
+            } else break;
+        }
+
+        String agg = _input.next();
+        String col = columnName();
+        ArrayList<String> colNames = new ArrayList<>();
+        colNames.add(col);
+
+        while (!((_input.nextIf("group") && _input.nextIf("by")))) {
+            _input.next();
+        }
+
+        String columnName = columnName();
+        int id = table.findColumn(columnName);
+        if (id == -1) {
+            throw error("unknown column: %s", columnName);
+        } else groupByColumns.add(columnName);
+
+        while (_input.nextIf(",")) {
+            columnName = columnName();
+            id = table.findColumn(columnName);
+            if (id == -1) {
+                throw error("unknown column: %s", columnName);
+            } else groupByColumns.add(columnName);
+        }
+
+        id = table.findColumn(columnName);
+        if (id == -1) {
+            throw error("unknown column: %s", columnName);
+        }
+
+        if (groupByColumns.size() != columnNames.size()) throw error("columns mismatch in group by statement");
+        else {
+            for (String s : groupByColumns) {
+                if (!columnNames.contains(s)) throw error("columns mismatch in group by statement");
+            }
+        }
+        List<Integer> index = new ArrayList<>();
+        List<Row> ordered = table.order(Order);
+        for (int i = 1; i < ordered.size(); i++) {
+            Row temp = ordered.get(i);
+            Row prev = ordered.get(i - 1);
+            for (int j = 0; j < columnNames.size(); j++) {
+                if (!Objects.equals(temp.get(j), prev.get(j))) {
+                    index.add(i);
+                    break;
+                }
+            }
+        }
+        ArrayList<Integer> aggFunc = new ArrayList<>();
+        String[] titles = Arrays.copyOf(table.getTitles(), table.getTitles().length);
+        switch (agg) {
+            case "avg" -> {
+                titles[titles.length - 1] = "AVG(" + col + ")";
+                aggFunc.add(1);
+            }
+            case "max" -> {
+                titles[titles.length - 1] = "MAX(" + col + ")";
+                aggFunc.add(2);
+            }
+            case "sum" -> {
+                aggFunc.add(5);
+            }
+            case "min" -> {
+                titles[titles.length - 1] = "MIN(" + col + ")";
+                aggFunc.add(4);
+            }
+            case "count" -> {
+                titles[titles.length - 1] = "COUNT(" + col + ")";
+                aggFunc.add(3);
+            }
+            case "round" -> throw error("round function does not support group by statement");
+        }
+
+        Table result = new Table(titles, table.get_types());
+        int ind = 0;
+        int size = index.size();
+        for (int i = 0; i < size + 1; i++) {
+            String[] row;
+            Table temp = new Table(table.getTitles(), table.get_types());
+            if (index.isEmpty()) {
+                for (int j = ind; j < ordered.size(); j++) {
+                    temp.add(ordered.get(j));
+                }
+                row = ordered.get(ind).get();
+            } else {
+                for (int j = ind; j < index.get(0); j++) {
+                    temp.add(ordered.get(j));
+                }
+                row = ordered.get(ind).get();
+                ind = index.remove(0);
+            }
+            ArrayList<String> aggRes = temp.conductFunctions(aggFunc, colNames);
+            row[row.length - 1] = aggRes.get(0);
+            result.add(new Row(row));
+        }
+        return result;
+    }
+
+
+    /** Parse and execute an order by clause from the token stream, returning the
+     * resulting list containing the order information.
      * grammar: select <column names> from <tables> where <conditions> order by '<column name>';
      */
     ArrayList<String> orderByClause(Table table) {
@@ -712,7 +845,8 @@ class CommandInterpreter {
         ArrayList<Condition> alfa=new ArrayList<Condition>();
         if(_input.nextIf("where")){
             String col1,relation,col2,val;
-            while((!(_input.peek().equals(";"))) && (!(_input.peek().equals("order")))){
+            while((!(_input.peek().equals(";"))) && (!(_input.peek().equals("order"))) &&
+                    (!(_input.peek().equals("group")))){
                 try{
                     col1 = columnName();
 
