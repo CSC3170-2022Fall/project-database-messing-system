@@ -479,15 +479,26 @@ class CommandInterpreter {
                     throw error("aggregated SELECT list contains nonaggregated column, which is incompatible.");
                 }
                 String colName = columnName();
-                if (special_round) {
-                    String temp = _input.next();
-                    operator.add(temp);
-                    operand.add(_input.next());
-                    _input.nextIf("reserve");
-                    reservedDigit.add(_input.next());
-                }
                 if ((!haveFunc || !columnTitle.contains(colName)) && !colName.equals("*"))
                     columnTitle.add(colName);
+                if (special_round) {
+                    String temp1 = _input.next();
+                    operator.add(temp1);
+                    String temp2 = _input.next();
+                    operand.add(temp2);
+                    _input.nextIf("reserve");
+                    String temp3 = _input.next();
+                    reservedDigit.add(temp3);
+                    switch(temp1) {
+                        case "plus": temp1 = "+"; break;
+                        case "minus": temp1 = "-"; break;
+                        case "times": temp1 = "*"; break;
+                        case "divided_by": temp1 = "/"; break;
+                        default:
+                            throw error("invalid operator \'%s\'.", temp1);
+                    }
+                    changedTitle.add("ROUND(" + colName + temp1 + temp2 + ", " + temp3 + ")");
+                }
                 if (haveFunc) {
                     funcToColName.add(colName);
                     switch(functions.get(functions.size()-1)) {
@@ -504,8 +515,13 @@ class CommandInterpreter {
                 if (_input.nextIs(Tokenizer.LITERAL)) {
                     colName = _input.peek().substring(1, _input.peek().length() - 1).trim();
                     _input.next();
+                    if (special_round) {
+                        changedTitle.remove(changedTitle.size()-1);
+                        changedTitle.add(colName);
+                    }
                 }
-                changedTitle.add(colName);
+                if (!special_round)
+                    changedTitle.add(colName);
                 changedType.add("double");
             }
             _input.nextIf(",");
@@ -579,7 +595,7 @@ class CommandInterpreter {
             // operator.size > 0 means the ROUND function exists.
             if (operator.size() > 0) {
                 Table res = selectRes.conductRound(rounds, operand, operator, reservedDigit);
-                return res;
+                return res.changeTitle(changedTitle);
             }
             return selectRes.changeTitle(changedTitle);
         } else {
@@ -612,7 +628,7 @@ class CommandInterpreter {
             }
             if (operator.size() > 0) {
                 Table res = selectRes.conductRound(rounds, operand, operator, reservedDigit);
-                return res;
+                return res.changeTitle(changedTitle);
             }
             return selectRes.changeTitle(changedTitle);
         }

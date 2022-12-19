@@ -162,29 +162,9 @@ class Table implements Iterable<Row> {
         return res;
     }
 
-    public Table conductRound(ArrayList<Integer> rounds, ArrayList<String> q1, ArrayList<String> q2,
-            ArrayList<String> q3) {
-        ArrayList<String> newColTitle = new ArrayList<String>();
-        for (int i = 0, index = 0; i < _column_titles.length; ++i) {
-            if (rounds.get(i) == 1) {
-                String temp = q2.get(index);
-                switch(temp) {
-                    case "plus": temp = "+"; break;
-                    case "minus": temp = "-"; break;
-                    case "times": temp = "*"; break;
-                    case "divided_by": temp = "/"; break;
-                    default:
-                        throw error("invalid operator \'%s\'.", q2.get(index));
-                }
-                newColTitle.add("ROUND(" + _column_titles[i] + temp + q1.get(index) + ")");
-                index++;
-            }
-            else
-                newColTitle.add(_column_titles[i]);
-        }
-
-        Table res = new Table(newColTitle.toArray(new String[newColTitle.size()]), _column_types);
-
+    public Table conductRound(ArrayList<Integer> rounds, ArrayList<String> operand, ArrayList<String> operator,
+            ArrayList<String> reserve) {
+        Table res = new Table(_column_titles, _column_types);
         // insert result rows into the table "res" one by one.
         for (Row row : _rows) {            
             ArrayList<String> newRow = new ArrayList<String>();
@@ -196,10 +176,10 @@ class Table implements Iterable<Row> {
                     if (_column_types[i].equals("string")) {
                         throw error("cannot apply ROUND to column \'%s\' with type string.", getTitle(i));
                     }
-                    int limit = Integer.parseInt(q3.get(index));
-                    double num = Double.parseDouble(q1.get(index));
+                    int limit = Integer.parseInt(reserve.get(index));
+                    double num = Double.parseDouble(operand.get(index));
                     double calc = 0.0d;
-                    String op = q2.get(index);
+                    String op = operator.get(index);
                     switch (op) {
                         case "plus":
                             try {

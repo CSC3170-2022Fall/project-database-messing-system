@@ -61,7 +61,7 @@ class Tokenizer {
                 token = "*EOF*";
             } else if (token.startsWith("'")) {
                 if (token.length() == 1 || !token.endsWith("'")) {
-                    throw error("unterminated literal constant.");
+                    throw error("unterminated literal constant or column name with comma.");
                 }
             } else if (token.startsWith("/*")) {
                 if (token.length() < 4 || !token.endsWith("*/")) {
