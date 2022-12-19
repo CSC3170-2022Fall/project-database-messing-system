@@ -210,13 +210,12 @@ class Tokenizer {
         newCommand();
     }
 
-    /*setPos(), returnPos(): methods that support to read sentences previously */
+    /** setPos(), returnPos(): methods that support to read sentences previously */
     void setPos(){
         _pos=_k;
     }
 
     void returnPos(){
-        _buffer.subList(_pos+1, _k).clear();
         _k=_pos;
     }
     /** Matcher used for pattern matching. */
