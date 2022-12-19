@@ -13,12 +13,10 @@ import java.io.FileReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.text.NumberFormat;
-import java.lang.NumberFormatException;
 
 import static db61b.Utils.*;
 
@@ -264,7 +262,7 @@ class Table implements Iterable<Row> {
 
     /** Return the number of Rows in this table. */
     public int size() {
-        return _rows.size(); // REPLACE WITH SOLUTION
+        return _rows.size(); 
     }
 
     /** Returns an iterator that returns my rows in an unspecfied order. */
@@ -330,9 +328,7 @@ class Table implements Iterable<Row> {
                 header = input.readLine();
             }
             input.close();
-            // FILL IN
         } catch (FileNotFoundException e) {
-            // System.out.println("???");
             throw error("could not find %s.db", name);
         } catch (IOException e) {
             throw error("problem reading from %s.db", name);
@@ -424,7 +420,6 @@ class Table implements Iterable<Row> {
                 }
                 output.println("");
             }
-            // FILL THIS IN
         } catch (IOException e) {
             throw error("trouble writing to %s.db", name);
         } finally {
@@ -685,7 +680,6 @@ class Table implements Iterable<Row> {
                 result.add(new Row(data));
             }
         }
-        // FILL IN
         return result;
     }
 
@@ -757,6 +751,38 @@ class Table implements Iterable<Row> {
                 }
             }
         }
+        if(_is_complement == true){
+            Table result_c = new Table(columnNames, columnTypes);
+            for (Row row1 : _rows) {
+                for (Row row2 : table2._rows) {
+                    int flag = 1;
+                    if (conditions != null) {
+                        if (!Condition.test(conditions, row1, row2)) {
+                            flag = 0;
+                        }
+                    }
+                    if (flag == 1) {
+                        String[] data = new String[columnNames.size()];
+                        for (int i = 0; i < columnNames.size(); i++) {
+                            int id = findColumn(columnNames.get(i));
+                            if (id != -1) {
+                                data[i] = row1.get(id);
+                            } else {
+                                id = table2.findColumn(columnNames.get(i));
+                                if (id == -1) {
+                                    throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                                }
+                                data[i] = row2.get(id);
+                            }
+                        }
+                        Row tmp = new Row(data);
+                        if(!result._rows.contains(tmp))
+                            result_c.add(tmp);
+                    }
+                }
+            }            
+            return result_c;
+        }
         return result;
     }
 
@@ -785,9 +811,17 @@ class Table implements Iterable<Row> {
 
         int ind = 0;
         for (Row row : _rows) {
-            map.put(ind++, row.get(columnIndex));
+            if (Objects.equals(_column_types[columnIndex], "int")) {
+                map.put(ind++, row.get(columnIndex).length() + row.get(columnIndex));
+            } else if (Objects.equals(_column_types[columnIndex], "double")){
+                String pt = Integer.toString(row.get(columnIndex).indexOf('.'));
+                map.put(ind++, pt + row.get(columnIndex));
+            } else {
+                map.put(ind++, row.get(columnIndex));
+            }
             records.add(row);
         }
+
         if (Objects.equals(columnOrder, "asc")) {
             map = map.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
                     Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
@@ -833,12 +867,26 @@ class Table implements Iterable<Row> {
                     int localInd = 0;
                     String[] v = stringSet.get(ind);
                     sameValue.add(currentRow);
-                    m.put(localInd++, currentRow.get(columnIndex));
+                    if (Objects.equals(_column_types[columnIndex], "int")) {
+                        m.put(localInd++, currentRow.get(columnIndex).length() + currentRow.get(columnIndex));
+                    } else if (Objects.equals(_column_types[columnIndex], "double")){
+                        String pt = Integer.toString(currentRow.get(columnIndex).indexOf('.'));
+                        m.put(localInd++, pt + currentRow.get(columnIndex));
+                    } else {
+                        m.put(localInd++, currentRow.get(columnIndex));
+                    }
                     ind++;
                     while ((ind != stringSet.size()) && (!result.isEmpty()) && (Arrays.equals(v, stringSet.get(ind)))) {
                         currentRow = result.remove(0);
                         sameValue.add(currentRow);
-                        m.put(localInd++, currentRow.get(columnIndex));
+                        if (Objects.equals(_column_types[columnIndex], "int")) {
+                            m.put(localInd++, currentRow.get(columnIndex).length() + currentRow.get(columnIndex));
+                        } else if (Objects.equals(_column_types[columnIndex], "double")){
+                            String pt = Integer.toString(currentRow.get(columnIndex).indexOf('.'));
+                            m.put(localInd++, pt + currentRow.get(columnIndex));
+                        } else {
+                            m.put(localInd++, currentRow.get(columnIndex));
+                        }
                         ind++;
                     }
                     if (Objects.equals(columnOrder, "asc")) {
@@ -883,7 +931,11 @@ class Table implements Iterable<Row> {
                 return false;
         }
 
-        return true; // REPLACE WITH SOLUTION
+        return true; 
+    }
+
+    public void change_to_complement(){
+        _is_complement = true;
     }
 
     /** My rows. */
@@ -893,6 +945,7 @@ class Table implements Iterable<Row> {
     // int
     // double
     // string
+    private boolean _is_complement = false;
     private int _primary_key = -1;
     private HashSet<String> _primary_key_set = new HashSet<>();
 }

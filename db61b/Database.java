@@ -8,8 +8,6 @@
 package db61b;
 
 import java.util.HashMap;
-import static db61b.Utils.*;
-// FILL IN (WITH IMPORTS)?
 
 /** A collection of Tables, indexed by name.
  *  @author */
@@ -42,5 +40,4 @@ class Database {
     }
     public Trie version_tree = new Trie();
     private HashMap<String,Table> _database = null;
-    // FILL IN?
 }

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import static db61b.Utils.*;
-import static db61b.Tokenizer.*;
 
 /** An object that reads and interprets a sequence of commands from an
  *  input source.
@@ -359,7 +358,6 @@ class CommandInterpreter {
             System.out.println("Search results:");
             selectTable.print();
         }
-        // FILL THIS IN
     }
 
     /** Parse and execute a table definition, returning the specified
@@ -405,7 +403,7 @@ class CommandInterpreter {
     
     Table selectClause() {
         /* for the aggregated functions (except ROUND), we do not allow nonaggregated columns
-         * selected togerher. e.g. SELECT avg score, name from students; is
+         * selected together. e.g. SELECT avg score, name from students; is
          * not allowed.
          * 
          * for the ROUND function, we treat it as a normal column, so it is not allowed
@@ -437,7 +435,7 @@ class CommandInterpreter {
         ArrayList<String> funcToColName = new ArrayList<String>();
         // flag is used for SELECT *, 
         // and countStar is used to get the columnId to which the COUNT * corresponds.
-        int flag=0, countStar = -1, haveRound = 0;
+        int flag=0, countStar = -1;
         while(!_input.nextIf("from")){
             if(_input.nextIf("*")){
                 flag=1;
@@ -521,10 +519,26 @@ class CommandInterpreter {
             Table2 = tableName();
         }
         ArrayList<Condition> conditions;
+        ArrayList<String> swap = new ArrayList<String>();
+        _swap = null;
         if (null != Table2) {
             conditions = conditionClause(Table1, Table2);
         } else {
             conditions = conditionClause(Table1);
+        }
+        // In statement
+        if(conditions == null  &&  _swap != null){
+            if (_input.nextIf("not")) {
+                Table1.change_to_complement();
+            }
+            _input.next("in");
+            for(String s: _swap){
+                swap.add(s);
+            }
+            _swap = null;
+            if(!_input.nextIf("select")) throw error("Syntax Error. Need a \"select\" after \"in\"");
+            Table2 = selectClause();
+            Table2 = Table2.select(Table2,swap,conditions);
         }
         if (null != Table2) {
             ArrayList<String> tempTitle = new ArrayList<String>();
@@ -605,12 +619,15 @@ class CommandInterpreter {
     }
 
 
-    /** Parse and execute an order by clause from the token stream, returning the
-     *  resulting list containing the order information. */
+    /* Parse and execute an order by clause from the token stream, returning the
+     * resulting list containing the order information. 
+     * 
+     * grammar: select <column names> from <tables> where <conditions> order by '<column name>';
+     */
     ArrayList<String> orderByClause(Table table) {
         ArrayList<String> Order = new ArrayList<String>();
         if (_input.nextIf("order") && _input.nextIf("by")) {
-            String columnName = name();
+            String columnName = literal();
             int id = table.findColumn(columnName);
             if (id == -1) {
                 throw error("unknown column: %s", columnName);
@@ -679,7 +696,7 @@ class CommandInterpreter {
         ArrayList<Condition> alfa=new ArrayList<Condition>();
         if(_input.nextIf("where")){
             String col1,relation,col2,val;
-            while(!(_input.nextIs(";")) && !_input.nextIs("order")){
+            while((!(_input.peek().equals(";"))) && (!(_input.peek().equals("order")))){
                 try{
                     col1 = columnName();
 
@@ -736,6 +753,19 @@ class CommandInterpreter {
 
                     }
 
+                    // IN cause
+                    if (_input.peek().equals(",") || _input.peek().equals("in") || _input.peek().equals("not")){
+                        ArrayList<String> swap = new ArrayList<String>();
+                        swap.add(col1);
+                        while(_input.nextIf(",")){
+                            String col = _input.next();
+                            swap.add(col);
+                        }
+                        _swap = swap;
+                        //if(!tmp.next("in")) throw error("too few argument to satisfy the statement WHERE: please include \"in\" or other relation symbols.");
+                        return null;
+                    }
+
                     // single RELATION cause
                     relation = _input.next();
                     if(_input.nextIs(Tokenizer.NUMBER)){
@@ -774,14 +804,13 @@ class CommandInterpreter {
         }
         else{
             return null;
-        }       // REPLACE WITH SOLUTION
+        }
     }
 
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
-
-        return null;        // REPLACE WITH SOLUTION
+        return null;
     }
 
     /** Advance the input past the next semicolon. */
@@ -802,4 +831,6 @@ class CommandInterpreter {
     private Tokenizer _input;
     /** Database containing all tables. */
     private Database _database;
+    /** _swap is used to temporarily store the "select where in" keywords */
+    private ArrayList<String> _swap;
 }

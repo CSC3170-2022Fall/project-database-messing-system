@@ -105,9 +105,21 @@ class Condition {
     }
     boolean testint(Row... rows){
         if(_col2==null){
-            int val2=Integer.parseInt(_val2);
-            int val1=Integer.parseInt(_col1.getFrom(rows));
+            int val1,val2;
+            try{
+                val2=Integer.parseInt(_val2);
+                val1=Integer.parseInt(_col1.getFrom(rows));
+            }
+            catch(DBException e){
+                throw error("%s", e.getMessage());
+            }
+            catch (java.lang.NumberFormatException e) {
+                throw error("Data type error.");
+            }
             switch(_relation){
+                case "like":
+                throw error("Data type error.");
+
                 case "=":
                 if(val1!=val2){return false;}
                 break;
@@ -135,8 +147,18 @@ class Condition {
         }
 
         else{
-            int val2=Integer.parseInt(_col2.getFrom(rows));
-            int val1=Integer.parseInt(_col1.getFrom(rows));
+            int val2;
+            int val1;
+            try{
+                val2=Integer.parseInt(_col2.getFrom(rows));
+                val1=Integer.parseInt(_col1.getFrom(rows));
+            }
+            catch(DBException e){
+                throw error("%s", e.getMessage());
+            }
+            catch (java.lang.NumberFormatException e) {
+                throw error("Data type error.");
+            }
             switch(_relation){
                 case "=":
                 if(val1!=val2){return false;}
@@ -167,9 +189,21 @@ class Condition {
     }
     boolean testdouble(Row... rows){
        if(_col2==null){
-            double val2=Double.parseDouble(_val2);
-            double val1=Double.parseDouble(_col1.getFrom(rows));
+            double val1,val2;
+            try{
+                val2=Double.parseDouble(_val2);
+                val1=Double.parseDouble(_col1.getFrom(rows));
+            }
+            catch(DBException e){
+                throw error("%s", e.getMessage());
+            }
+            catch (java.lang.NumberFormatException e) {
+                throw error("Data type error.");
+            }
             switch(_relation){
+                case "like":
+                throw error("Data type error.");
+                
                 case "=":
                 if(val1!=val2){return false;}
                 break;
@@ -197,8 +231,17 @@ class Condition {
         }
 
         else{
-            double val2=Double.parseDouble(_col2.getFrom(rows));
-            double val1=Double.parseDouble(_col1.getFrom(rows));
+            double val1,val2;
+            try{
+                val2=Double.parseDouble(_col2.getFrom(rows));
+                val1=Double.parseDouble(_col1.getFrom(rows));
+            }
+            catch(DBException e){
+                throw error("%s", e.getMessage());
+            }
+            catch (java.lang.NumberFormatException e) {
+                throw error("Data type error.");
+            }
             switch(_relation){
                 case "=":
                 if(val1!=val2){return false;}
@@ -229,20 +272,24 @@ class Condition {
     }
     boolean test(int type,Row... rows) {
        // System.out.println(type);
-        if(type==0){
-            return teststr(rows);
+       try{
+            if(type==0){
+                return teststr(rows);
+            }
+            else if(type==1){
+                return testint(rows);
+            }
+            else if(type==2){
+                return testdouble(rows);
+            }
+            else{
+                System.out.printf("unknown type %d%n", type);
+                return false;
+            }
         }
-        else if(type==1){
-            return testint(rows);
+        catch(DBException e){
+            throw error("%s", e.getMessage());
         }
-        else if(type==2){
-            return testdouble(rows);
-        }
-        else{
-            System.out.printf("unknown type %d%n", type);
-            return false;
-        }
-        // REPLACE WITH SOLUTION
     }
 
     /** Return true iff ROWS satisfies all CONDITIONS. */
