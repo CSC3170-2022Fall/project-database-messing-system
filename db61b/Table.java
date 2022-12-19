@@ -169,7 +169,7 @@ class Table implements Iterable<Row> {
                     default:
                         throw error("invalid operator \'%s\'.", q2.get(index));
                 }
-                newColTitle.add("ROUND(" + table._column_titles[i] + temp + q1.get(index) + ")");
+                newColTitle.add("ROUND(" + table._column_titles[i] + temp + q1.get(index) +", "+ q3.get(index)+ ")");
                 index++;
             }
             else
