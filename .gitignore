@@ -3,3 +3,5 @@ sentinel
 .vscode/*
 snapshots/*
 !snapshots/.gitkeep
+as2/out.db
+as2/msg.log
