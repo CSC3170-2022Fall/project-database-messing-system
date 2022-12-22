@@ -1,9 +1,10 @@
 #!/bin/bash
-path=$(cd $(dirname $0) && pwd )
+path="$(cd $(dirname $0) && pwd )"
 echo "================================="
 echo "==    Compile main program     =="
 echo "================================="
 cd $path/../
+echo $path
 make default
 export CLASSPATH=$CLASSPATH:$path/../
 cd $path

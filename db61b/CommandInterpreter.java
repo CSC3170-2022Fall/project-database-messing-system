@@ -513,9 +513,10 @@ class CommandInterpreter {
                             break;
                     }
                 }
-                if (!_input.nextIs("from") && _input.nextIs(Tokenizer.IDENTIFIER)) {
+                if (_input.nextIs(Tokenizer.LITERAL)) {
                     colName = _input.peek();
                     _input.next();
+                    colName = colName.substring(1, colName.length() - 1).trim();
                     if (special_round) {
                         changedTitle.remove(changedTitle.size()-1);
                         changedTitle.add(colName);
@@ -778,7 +779,7 @@ class CommandInterpreter {
     ArrayList<String> orderByClause(Table table) {
         ArrayList<String> Order = new ArrayList<String>();
         if (_input.nextIf("order") && _input.nextIf("by")) {
-            String columnName = name();
+            String columnName = literal();
             int id = table.findColumn(columnName);
             if (id == -1) {
                 throw error("unknown column: %s", columnName);
