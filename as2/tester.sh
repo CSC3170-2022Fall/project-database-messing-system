@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 path=$(cd $(dirname $0) && pwd )
 echo "================================="
 echo "==    Compile main program     =="
@@ -10,6 +10,7 @@ cd $path
 echo "================================="
 echo "==   Start assignment2 test    =="
 echo "================================="
+fail=0
 for i in {2..16}
 do
 	echo "Question $i: "
@@ -24,9 +25,11 @@ do
 			echo "  Passed."
 		else
 			echo "  Failed."
+			fail=1
 		fi
 	else
 		echo "  Skipped."
 	fi
 	echo "============================"
 done
+exit $fail
