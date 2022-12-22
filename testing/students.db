@@ -1,7 +1,8 @@
-SID,Lastname,Firstname,SemEnter,YearEnter,Major
-101,Knowles,Jason,F,2003,EECS
-102,Chan,Valerie,S,2003,Math
-103,Xavier,Jonathan,S,2004,LSUnd
-104,Armstrong,Thomas,F,2003,EECS
-105,Brown,Shana,S,2004,EECS
-106,Chan,Yangfan,F,2003,LSUnd
+stu_id,gender,rank,score
+string,string,string,double
+TYZZZZZZZ,F,A,60.5
+1145141919,M,A,85.5
+XYYTXDY,M,A,78.5
+Aurora233,F,A,88.5
+121090001,M,A,5.5
+19260817,F,A,58.5
