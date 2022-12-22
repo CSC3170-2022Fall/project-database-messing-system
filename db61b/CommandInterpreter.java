@@ -498,7 +498,7 @@ class CommandInterpreter {
                         default:
                             throw error("invalid operator \'%s\'.", temp1);
                     }
-                    changedTitle.add("ROUND(" + colName + temp1 + temp2 + ", " + temp3 + ")");
+                    changedTitle.add("ROUND(" + colName + temp1 + temp2 + "~" + temp3 + ")");
                 }
                 if (haveFunc) {
                     funcToColName.add(colName);
@@ -513,8 +513,8 @@ class CommandInterpreter {
                             break;
                     }
                 }
-                if (_input.nextIs(Tokenizer.LITERAL)) {
-                    colName = _input.peek().substring(1, _input.peek().length() - 1).trim();
+                if (!_input.nextIs("from") && _input.nextIs(Tokenizer.IDENTIFIER)) {
+                    colName = _input.peek();
                     _input.next();
                     if (special_round) {
                         changedTitle.remove(changedTitle.size()-1);
@@ -776,7 +776,7 @@ class CommandInterpreter {
     ArrayList<String> orderByClause(Table table) {
         ArrayList<String> Order = new ArrayList<String>();
         if (_input.nextIf("order") && _input.nextIf("by")) {
-            String columnName = literal();
+            String columnName = name();
             int id = table.findColumn(columnName);
             if (id == -1) {
                 throw error("unknown column: %s", columnName);
