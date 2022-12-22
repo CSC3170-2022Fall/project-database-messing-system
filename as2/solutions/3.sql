@@ -1,4 +1,2 @@
--- -----------------------------------------------------
--- ---------------- Solution for Q3 --------------------
--- -----------------------------------------------------
-SELECT EMPLOYEE_ID, SALARY FROM employees ORDER BY SALARY
+load employees;
+select EMPLOYEE _ID, SALARY from employees order by SALARY;
