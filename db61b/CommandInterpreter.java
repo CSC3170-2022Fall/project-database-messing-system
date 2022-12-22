@@ -921,8 +921,9 @@ class CommandInterpreter {
 
                     // single RELATION cause
                     relation = _input.next();
-                    if(_input.nextIs(Tokenizer.NUMBER)){
+                    if(_input.nextIs(Tokenizer.LITERAL)){
                         val = _input.next();
+                        val = val.substring(1, val.length() - 1).trim();
                         try{
                             alfa.add(new Condition(new Column(col1,0,tables[0]),relation,val));
                         }
