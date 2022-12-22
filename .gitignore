@@ -7,3 +7,5 @@ as2/out.db
 as2/msg.log
 as2/out_sorted.db
 .idea
+students.db
+testing/students.db
