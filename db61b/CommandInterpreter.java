@@ -660,7 +660,7 @@ class CommandInterpreter {
         ArrayList<String> Order = new ArrayList<>();
         ArrayList<String> columnNames = new ArrayList<>();
         Order.add(_input.peek());
-        columnNames.add(literal());
+        columnNames.add(_input.next());
         Order.add("asc");
         while (_input.nextIf(",")) {
             if (!_input.nextIs("count") &&
@@ -684,14 +684,14 @@ class CommandInterpreter {
             _input.next();
         }
 
-        String columnName = columnName();
+        String columnName = literal();
         int id = table.findColumn(columnName);
         if (id == -1) {
             throw error("unknown column: %s", columnName);
         } else groupByColumns.add(columnName);
 
         while (_input.nextIf(",")) {
-            columnName = columnName();
+            columnName = literal();
             id = table.findColumn(columnName);
             if (id == -1) {
                 throw error("unknown column: %s", columnName);
