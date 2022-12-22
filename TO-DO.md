@@ -70,6 +70,8 @@
 
 ## Additional Test
 
+- [x] Automatically build and test project with GitHub Actions -**HTC**
+
 ### Duplicate
 
 - [x] table name-**HTC**
