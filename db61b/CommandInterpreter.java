@@ -343,7 +343,6 @@ class CommandInterpreter {
 
     void selectStatement() {
         _input.next("select");
-        _input.setPos();
         Table selectTable = selectClause();
         if(_input.nextIs("order")) {
             ArrayList<String> Order;
@@ -387,7 +386,7 @@ class CommandInterpreter {
             if (_input.nextIf("as")) {
                 _input.next("select");
                 //System.out.println("?????");
-                _input.setPos();
+                
                 table = selectClause();
                 //System.out.println("???");
                 //while(true);
@@ -415,6 +414,7 @@ class CommandInterpreter {
         */
 
         // 3 lists used for ROUND columnName operator operand reservedDigit
+        _input.setPos();
         ArrayList<String> operator = new ArrayList<String>();
         ArrayList<String> operand = new ArrayList<String>();
         ArrayList<String> reservedDigit = new ArrayList<String>();
