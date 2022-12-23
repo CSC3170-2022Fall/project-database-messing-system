@@ -1,0 +1,3 @@
+EMPLOYEE_ID,SALARY
+int,double
+100,24000.00
