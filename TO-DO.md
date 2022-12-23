@@ -128,9 +128,7 @@
 
 - [x] order by -**SCH**
 
-- [ ] group by -**SCH**
-
-- [ ] having -**ZYQ**
+- [x] group by -**SCH**
 
 - [x] (not) in -**HTC**
 
@@ -142,7 +140,7 @@
 
 ### Application
 
-- [ ] re-implement in Assignment 2-**ZYQ**
+- [x] re-implement in Assignment 2-**ZYQ**
 
 - [x] version control-**TYZ**
 	- [x] statement
