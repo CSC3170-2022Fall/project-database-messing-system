@@ -121,7 +121,7 @@ class CommandInterpreter {
     /** A new CommandInterpreter executing commands read from INP, writing
      *  prompts on PROMPTER, if it is non-null. */
 
-    // The commandinterpreter receives input and System.out from Main.
+    // The commandInterpreter receives input and System.out from Main.
     CommandInterpreter(Scanner inp, PrintStream prompter) {
         _input = new Tokenizer(inp, prompter);
         _database = new Database();
@@ -194,14 +194,6 @@ class CommandInterpreter {
         _input.next("into");
         Table table = tableName();
         _input.next("values");
-
-        // ArrayList<String> values = new ArrayList<>();
-        // values.add(literal());
-        // while (_input.nextIf(",")) {
-        //     values.add(literal());
-        // }
-
-        // table.add(new Row(values.toArray(new String[values.size()])));
         do{
             if (_input.nextIf("(")) {
                 ArrayList<String> values = new ArrayList<>();
@@ -255,8 +247,6 @@ class CommandInterpreter {
             throw error("%s", e.getMessage());
         }
         _input.nextIf(";");
-        //System.out.println("???");
-        //System.out.println(_input.peek());
     }
 
     /** Parse and execute a commit statement from the token stream. */
@@ -267,10 +257,10 @@ class CommandInterpreter {
         if (!_input.peek().equals(";"))
             throw error("Too many arguments");
         try{
-            //update snapshots
+            // update snapshots
             String version_name = table.updateSnapshots(name);
 
-            //update logs
+            // update logs
             table.updateLogs(name, version_name);
 
             // update versions
@@ -340,7 +330,6 @@ class CommandInterpreter {
     }
 
     /** Parse and execute a select statement from the token stream. */
-
     void selectStatement() {
         _input.next("select");
         Table selectTable = selectClause();
@@ -378,18 +367,14 @@ class CommandInterpreter {
                 if (type == -1) throw error("Syntax error, every column needs a data type(int,double or string)");
                 columnTypes.add(type_string);
             } while (_input.nextIf(","));
-            if(_input.nextIf(")")==false) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
+            if(!_input.nextIf(")")) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
             else table = new Table(columnTitles,columnTypes);
             if(primary_key!=null) table.primary_key(primary_key);
         } else {
             table = null;
             if (_input.nextIf("as")) {
                 _input.next("select");
-                //System.out.println("?????");
-                
                 table = selectClause();
-                //System.out.println("???");
-                //while(true);
             }
             else {
                 throw error("Error: A table must have at least one visible column.");
@@ -400,8 +385,8 @@ class CommandInterpreter {
 
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
-    /*select SID, Firstname from students */
-    /*Grammar for integrate function: select avg columnName from table */
+    /* select SID, Firstname from students */
+    /* Grammar for integrate function: select avg columnName from table */
     
     Table selectClause() {
         /* for the aggregated functions (except ROUND), we do not allow nonaggregated columns
@@ -411,7 +396,7 @@ class CommandInterpreter {
          * for the ROUND function, we treat it as a normal column, so it is not allowed
          * to do SELECT round score plus 100 3, avg age from students;
          * But it is allowed to do SELECT round score plus 100 3, age from students;
-        */
+         */
 
         // 3 lists used for ROUND columnName operator operand reservedDigit
         _input.setPos();
@@ -427,14 +412,14 @@ class CommandInterpreter {
          * e.g. select avg score, max age from students;
          * the computed list contains a row with data[avg(score), max(age)].
          * Then it is inserted into a new table called res.
-        */
+         */
         ArrayList<String> computed = new ArrayList<String>();
         // used to contain the functions used. Functions are stored as integers.
         // Note: the ROUND function is not stored in this list.
         ArrayList<Integer> functions = new ArrayList<Integer>();
         // used to contain whether a column needs to be rounded. 0 as not, 1 as yes.
         ArrayList<Integer> rounds = new ArrayList<Integer>();
-        //for each function stored in the "functions" list, associate it with the columnName.
+        // for each function stored in the "functions" list, associate it with the columnName.
         ArrayList<String> funcToColName = new ArrayList<String>();
         // flag is used for SELECT *, 
         // and countStar is used to get the columnId to which the COUNT * corresponds.
@@ -562,8 +547,6 @@ class CommandInterpreter {
             if(!_input.nextIf("select")) throw error("Syntax Error. Need a \"select\" after \"in\"");
             Table2 = selectClause();
             Table2 = Table2.select(Table2,swap,null);
-            //Table1.print();
-            //Table2.print();
         }
         if (null != Table2) {
             ArrayList<String> tempTitle = new ArrayList<String>();
@@ -589,17 +572,16 @@ class CommandInterpreter {
             // contain the result of select.
             Table selectRes = Table1.select(Table2, columnTitle, conditions);
 
-            /* group by clause */
+            // group by clause
             if (_input.nextIf("group") && _input.nextIf("by")) {
-                //System.out.println("!!!");
                 selectRes = groupByClause(selectRes, haveFunc);
                 return selectRes.changeTitle(changedTitle);
             }
 
             /* the non-repetitive feature of select statement can influence
-             * the result of aggregated functinos.
+             * the result of aggregated functions.
              * To avoid this, we need an "original big table" named joinRes.
-            */
+             */
             Table joinRes = Table1.select(Table2, tempTitle, conditions);
             if (functions.size() > 0) {
                 computed = joinRes.conductFunctions(functions, funcToColName);
@@ -622,7 +604,6 @@ class CommandInterpreter {
                     changedTitle.add(Table1.getTitle(i));
                 }
             }
-            //System.out.println("???");
             
             if (columnTitle.size() == 0) {
                 // for COUNT *, we do not store "*" as columnTitle,
@@ -638,7 +619,7 @@ class CommandInterpreter {
             }
             Table selectRes = Table1.select(columnTitle, conditions);
             
-            /* group by clause */
+            // group by clause
             if (_input.nextIf("group") && _input.nextIf("by")) {
                 selectRes = groupByClause(selectRes, haveFunc);
 
@@ -930,7 +911,6 @@ class CommandInterpreter {
                             swap.add(col);
                         }
                         _swap = swap;
-                        //if(!tmp.next("in")) throw error("too few argument to satisfy the statement WHERE: please include \"in\" or other relation symbols.");
                         return alfa;
                     }
 
@@ -943,7 +923,6 @@ class CommandInterpreter {
                             alfa.add(new Condition(new Column(col1,0,tables[0]),relation,val));
                         }
                         catch(DBException e){
-                            //System.out.println(tables[1].size());
                             if (tables.length != 1)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
                             else
@@ -967,7 +946,6 @@ class CommandInterpreter {
                     throw error("%s", e.getMessage());
                 }
                 _input.nextIf("and");
-                //System.out.println(_input.peek());
             }
             return alfa;
         }

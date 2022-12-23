@@ -36,7 +36,7 @@ class Condition {
     /** Assuming that ROWS are rows from the respective tables from which
      *  my columns are selected, returns the result of performing the test I
      *  denote. */
-    boolean teststr(Row... rows){
+    boolean testStr(Row... rows){
             if(_col2==null){
                 //System.out.println(_val2);
                 if(_val2.equals("NULL")) {
@@ -67,7 +67,7 @@ class Condition {
                     if(_col1.getFrom(rows).equals(_val2)){return false;}
                     break;
 
-                    case ">=":// try to transfer to integer
+                    case ">=":
                     if(_col1.getFrom(rows).compareTo(_val2)<0)return false;
                     break;
 
@@ -100,7 +100,7 @@ class Condition {
                     if(_col1.getFrom(rows).equals(val2)){return false;}
                     break;
 
-                    case ">=":// try to transfer to integer
+                    case ">=":
                     if(_col1.getFrom(rows).compareTo(val2)<0)return false;
                     break;
 
@@ -119,7 +119,7 @@ class Condition {
             }
         return true;
     }
-    boolean testint(Row... rows){
+    boolean testInt(Row... rows){
         if(_col2==null){
             int val1,val2;
             try{
@@ -167,7 +167,7 @@ class Condition {
                 if(val1==val2){return false;}
                 break;
 
-                case ">=":// try to transfer to integer
+                case ">=":
                 if(val1<val2)return false;
                 break;
 
@@ -215,7 +215,7 @@ class Condition {
                 if(val1==val2){return false;}
                 break;
 
-                case ">=":// try to transfer to integer
+                case ">=":
                 if(val1<val2)return false;
                 break;
 
@@ -234,7 +234,7 @@ class Condition {
         }
         return true;
     }
-    boolean testdouble(Row... rows){
+    boolean testDouble(Row... rows){
        if(_col2==null){
             double val1,val2;
             try{
@@ -281,7 +281,7 @@ class Condition {
                 if(val1==val2){return false;}
                 break;
 
-                case ">=":// try to transfer to integer
+                case ">=":
                 if(val1<val2)return false;
                 break;
 
@@ -328,7 +328,7 @@ class Condition {
                 if(val1==val2){return false;}
                 break;
 
-                case ">=":// try to transfer to integer
+                case ">=":
                 if(val1<val2)return false;
                 break;
 
@@ -348,16 +348,15 @@ class Condition {
         return true;
     }
     boolean test(int type,Row... rows) {
-       // System.out.println(type);
        try{
             if(type==0){
-                return teststr(rows);
+                return testStr(rows);
             }
             else if(type==1){
-                return testint(rows);
+                return testInt(rows);
             }
             else if(type==2){
-                return testdouble(rows);
+                return testDouble(rows);
             }
             else{
                 System.out.printf("unknown type %d%n", type);
@@ -372,7 +371,6 @@ class Condition {
     /** Return true iff ROWS satisfies all CONDITIONS. */
     static boolean test(List<Condition> conditions, Row... rows) {
         for (Condition cond : conditions) {
-            //System.out.println(cond._relation);
             try{
                 switch(cond._col1.get_type()){
                     case "int":
@@ -406,5 +404,4 @@ class Condition {
     private Column _col1, _col2;
     /** Second operand, if literal (otherwise null). */
     private String _val2, _relation;
-    // ADD ADDITIONAL FIELDS HERE
 }

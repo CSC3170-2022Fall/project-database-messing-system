@@ -65,7 +65,7 @@ class Table implements Iterable<Row> {
 
     public Double maxColumn( int colId) {
         if (_column_types[colId].equals("string")) {
-            throw error("cannot apply MAX to column \'%s\' with type string.", getTitle(colId));
+            throw error("cannot apply MAX to column '%s' with type string.", getTitle(colId));
         }
         int flag = 0;
         Double max = 0.0d;
@@ -86,7 +86,7 @@ class Table implements Iterable<Row> {
 
     public Double minColumn(int colId) {
         if (_column_types[colId].equals("string")) {
-            throw error("cannot apply MIN to column \'%s\' with type string.", getTitle(colId));
+            throw error("cannot apply MIN to column '%s' with type string.", getTitle(colId));
         }
         int flag = 0;
         Double min = 0.0d;
@@ -107,7 +107,7 @@ class Table implements Iterable<Row> {
 
     public Double avgColumn(int colId) {
         if (_column_types[colId].equals("string")) {
-            throw error("cannot apply AVG to column \'%s\' with type string.", getTitle(colId));
+            throw error("cannot apply AVG to column '%s' with type string.", getTitle(colId));
         }
         double avg = 0;
         for (Row row : _rows) {
@@ -123,7 +123,7 @@ class Table implements Iterable<Row> {
 
     public Double sumColumn(int colId) {
         if (_column_types[colId].equals("string")) {
-            throw error("cannot apply AVG to column \'%s\' with type string.", getTitle(colId));
+            throw error("cannot apply AVG to column '%s' with type string.", getTitle(colId));
         }
         double sum = 0;
         for (Row row : _rows) {
@@ -174,7 +174,7 @@ class Table implements Iterable<Row> {
                 }
                 else{
                     if (_column_types[i].equals("string")) {
-                        throw error("cannot apply ROUND to column \'%s\' with type string.", getTitle(i));
+                        throw error("cannot apply ROUND to column '%s' with type string.", getTitle(i));
                     }
                     int limit = Integer.parseInt(reserve.get(index));
                     double num = Double.parseDouble(operand.get(index));
@@ -210,7 +210,7 @@ class Table implements Iterable<Row> {
                                 throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
                             }
                         default:
-                            throw error("invalid operator \'%s\'.", op);
+                            throw error("invalid operator '%s'.", op);
                     }
                     NumberFormat nf = NumberFormat.getNumberInstance();
                     nf.setMaximumFractionDigits(limit);
@@ -306,7 +306,6 @@ class Table implements Iterable<Row> {
                     input.close();
                     throw error("wrong data in DB file");
                 }
-                // System.out.println(header+"?????");
                 table._rows.add(new Row(value));
                 if (input == null)
                     break;
@@ -441,7 +440,6 @@ class Table implements Iterable<Row> {
         // If NAME already has a version list, delete the last line.
         try {
             RandomAccessFile f = new RandomAccessFile("versions/" + name + ".db", "rw");
-            // System.out.println(f.length());
             long length = f.length() - 1;
             byte b = 0;
             do {
@@ -471,20 +469,6 @@ class Table implements Iterable<Row> {
     }
 
     void updateLogs(String name, String version_name) {
-        // PrintStream output;
-        // output = null;
-        // try {
-        // output = new PrintStream("logs/" + name + ".db");
-        // Date date = new Date();
-        // output.println(date.toString() + "," + version_name);
-
-        // } catch (IOException e) {
-        // throw error("trouble updating %s.db", name);
-        // } finally {
-        // if (output != null) {
-        // output.close();
-        // }
-        // }
         // If NAME doesn't have a log, create one.
         File file = new File("logs/" + name + ".log");
         if (!file.exists()) {
@@ -530,7 +514,7 @@ class Table implements Iterable<Row> {
     }
 
     /** Print my contents on the standard output. */
-    final int MAX_ROW = 100; // The maxinum of output rows
+    final int MAX_ROW = 100;  // The maximum of output rows
 
     int[] find_max_length() {
         int[] max_length = new int[_column_titles.length];
@@ -679,7 +663,6 @@ class Table implements Iterable<Row> {
      */
     Table select(Table table2, List<String> columnNames,
             List<Condition> conditions) {
-        // System.out.println("????");
         List<String> columnTypes = new ArrayList<String>();
         for (int i = 0; i < columnNames.size(); i++) {
             int id = findColumn(columnNames.get(i));
@@ -719,7 +702,6 @@ class Table implements Iterable<Row> {
                 if (flag == 1) {
 
                     if (!equijoin(column1, column2, row1, row2)) {
-                        // System.out.println("????");
                         continue;
                     }
                     String[] data = new String[columnNames.size()];

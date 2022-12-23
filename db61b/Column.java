@@ -10,6 +10,7 @@ import static db61b.Utils.*;
  *  @author P. N. Hilfinger
 */
 class Column {
+
     /** Selects column named NAME from a row of one of the given TABLES. */
     Column(String name, Table... tables) {
         _name = name;
@@ -17,45 +18,34 @@ class Column {
             _column = tables[_table].findColumn(name);
             if (_column != -1) {
                 _type = tables[_table].get_type(_column);
-                //System.out.print(name);
-                //System.out.print(_column);
                 return;
             }
         }
-        //System.out.print(name);
-        //System.out.print(_column);
         throw error("unknown column: %s", name);
     }
 
 
     Column(String name,int id, Table... tables) {
         _name = name;
-        //for (_table = 0; _table < tables.length; _table += 1) {
             _table=id;
             _column = tables[_table].findColumn(name);
             if (_column != -1) {
                 _type = tables[_table].get_type(_column);
-                //System.out.print(name);
-                //System.out.print(_column);
                 return;
             }
-        //}
-        //System.out.print(name);
-        //System.out.print(tables[_table].columns());
         throw error("unknown column: %s", name);
     }
+
     /** Return my name. */
     String getName() {
         return _name;
     }
 
-    int gettableid() {
-        return _table;
-    }
-
+    /** Return the type */
     String get_type(){
         return _type;
     }
+
     /** Returns the value of this Column from ROWS[_table]. Assumes that
      *  ROWS[_table] is from the same table that was provided to the
      *  constructor of this Column. More generally, this method is intended

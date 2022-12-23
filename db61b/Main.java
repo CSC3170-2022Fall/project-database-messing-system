@@ -27,15 +27,9 @@ public class Main {
 
         File versions = new File("./versions");
         judge_dir_exists(versions);
-        // String s="****";
-        // String version_name = Trie.encrypt_sha_1(s);
-        // File version = new File("./snapshots/"+version_name);
-        // judge_file_exists(version);
-        // Trie version_tree = new Trie();
-        // version_tree.Insert(version_name);
-        // System.out.println(version_tree.Find("f442327a"));
 
         Scanner input = new Scanner(System.in);
+
         // Pass input into "CommandInterpreter"
         CommandInterpreter interpreter =
             new CommandInterpreter(input, System.out);
@@ -46,10 +40,9 @@ public class Main {
                 if (!interpreter.statement()) {
                     break;
                 }
-            } catch (DBException e) {// When the dbms throws an error, use e.getMessage() to get error message
+            } catch (DBException e) {  // When the dbms throws an error, use e.getMessage() to get error message
                 System.out.printf("Error: %s%n", e.getMessage());
-            //    System.out.println("Please enter a ';' to continue correctly");
-                interpreter.skipCommand();// Skip the command rather than shutting down the whole program
+                interpreter.skipCommand();  // Skip the command rather than shutting down the whole program
             }
         }
     }

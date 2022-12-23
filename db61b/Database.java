@@ -30,7 +30,6 @@ class Database {
             throw new IllegalArgumentException("null argument");
         }
         if(_database.containsKey(name)){
-            //throw error("Table '%s' already exits",name);
             _database.remove(name);
             _database.put(name,table);
         }
