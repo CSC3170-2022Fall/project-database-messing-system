@@ -39,6 +39,18 @@ class Condition {
     boolean teststr(Row... rows){
             if(_col2==null){
                 //System.out.println(_val2);
+                if(_val2.equals("NULL")) {
+                    if(_relation.equals("=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return true;
+                        return false;
+                    }
+                    else if(_relation.equals("!=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return false;
+                        return true;
+                    }
+                    else return false;
+                }
+                if(_col1.getFrom(rows).equals("NULL"))return false;
                 switch(_relation){
                     case "like":
                     try{
@@ -75,6 +87,10 @@ class Condition {
 
             else{
                 String val2=_col2.getFrom(rows);
+                if(_val2.equals("NULL")) {
+                   return false;
+                }
+                if(_col1.getFrom(rows).equals("NULL"))return false;
                 switch(_relation){
                     case "=":
                     if(!(_col1.getFrom(rows).equals(val2))){return false;}
@@ -111,19 +127,32 @@ class Condition {
                 val1=Integer.parseInt(_col1.getFrom(rows));
             }
             catch(DBException e){
-                if(_col1.getFrom(rows).equals("NULL")) {
-                    if(_val2.equals("NULL"))return true;
-                    return false;
+                
+                if(_val2.equals("NULL")) {
+                    if(_relation.equals("=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return true;
+                        return false;
+                    }
+                    else if(_relation.equals("!=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return false;
+                        return true;
+                    }
                 }
-                if(_val2.equals("NULL")) return false;
+                if(_col1.getFrom(rows).equals("NULL"))return false;
                 throw error("%s", e.getMessage());
             }
             catch (java.lang.NumberFormatException e) {
-                if(_col1.getFrom(rows).equals("NULL")) {
-                    if(_val2.equals("NULL"))return true;
-                    return false;
+                if(_val2.equals("NULL")) {
+                    if(_relation.equals("=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return true;
+                        return false;
+                    }
+                    else if(_relation.equals("!=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return false;
+                        return true;
+                    }
                 }
-                if(_val2.equals("NULL")) return false;
+                if(_col1.getFrom(rows).equals("NULL"))return false;
                 throw error("Data type error.");
             }
             switch(_relation){
@@ -164,16 +193,14 @@ class Condition {
                 val1=Integer.parseInt(_col1.getFrom(rows));
             }
             catch(DBException e){
-                if(_col1.getFrom(rows).equals("NULL")){ 
-                    if(_col2.getFrom(rows).equals("NULL")) return true;
-                    return false;
+                if(_col1.getFrom(rows).equals("NULL")){
+                   return false;
                 }
                 if(_col2.getFrom(rows).equals("NULL")) return false;
                 throw error("%s", e.getMessage());
             }
             catch (java.lang.NumberFormatException e) {
                 if(_col1.getFrom(rows).equals("NULL")){ 
-                    if(_col2.getFrom(rows).equals("NULL")) return true;
                     return false;
                 }
                 if(_col2.getFrom(rows).equals("NULL")) return false;
@@ -215,19 +242,31 @@ class Condition {
                 val1=Double.parseDouble(_col1.getFrom(rows));
             }
             catch(DBException e){
-                if(_col1.getFrom(rows).equals("NULL")) {
-                    if(_val2.equals("NULL"))return true;
-                    return false;
+                if(_val2.equals("NULL")) {
+                    if(_relation.equals("=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return true;
+                        return false;
+                    }
+                    else if(_relation.equals("!=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return false;
+                        return true;
+                    }
                 }
-                if(_val2.equals("NULL")) return false;
+                if(_col1.getFrom(rows).equals("NULL"))return false;
                 throw error("%s", e.getMessage());
             }
             catch (java.lang.NumberFormatException e) {
-                if(_col1.getFrom(rows).equals("NULL")){
-                    if(_val2.equals("NULL"))return true;
-                    return false;
-                } 
-                if(_val2.equals("NULL")) return false;
+                if(_val2.equals("NULL")) {
+                    if(_relation.equals("=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return true;
+                        return false;
+                    }
+                    else if(_relation.equals("!=")){
+                        if(_col1.getFrom(rows).equals("NULL"))return false;
+                        return true;
+                    }
+                }
+                if(_col1.getFrom(rows).equals("NULL"))return false;
                 throw error("Data type error.");
             }
             switch(_relation){
@@ -268,7 +307,6 @@ class Condition {
             }
             catch(DBException e){
                 if(_col1.getFrom(rows).equals("NULL")){ 
-                    if(_col2.getFrom(rows).equals("NULL")) return true;
                     return false;
                 }
                 if(_col2.getFrom(rows).equals("NULL")) return false;
@@ -276,7 +314,6 @@ class Condition {
             }
             catch (java.lang.NumberFormatException e) {
                 if(_col1.getFrom(rows).equals("NULL")){ 
-                    if(_col2.getFrom(rows).equals("NULL")) return true;
                     return false;
                 }
                 if(_col2.getFrom(rows).equals("NULL")) return false;
