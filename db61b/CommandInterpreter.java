@@ -688,6 +688,9 @@ class CommandInterpreter {
         
         String agg = _input.next();
         String col = columnName();
+        if (Objects.equals(col, "*")) {
+            throw error("group by does not support '*', please use column name instead");
+        }
         _input.nextIf(Tokenizer.LITERAL);
         ArrayList<String> colNames = new ArrayList<>();
         colNames.add(col);
