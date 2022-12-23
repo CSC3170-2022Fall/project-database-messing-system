@@ -80,8 +80,6 @@
 
 - [x] insert values-**HTC**
 
-- [x] join -**AZH**
-
 ### Syntax Error
 
 - [x] Parenthesis (create table)-**HTC**
@@ -90,7 +88,7 @@
 
 - [x] Column not found -**XXY**
 
-- [ ] Standard Error Messages
+- [ ] Standard Error Messages -**AZH**
 
 ## Advance
 
