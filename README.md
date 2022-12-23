@@ -46,12 +46,12 @@ Advance coding:
 
 - Take **data type (int/double/string)** into consideration while creating the table and doing other operations;
 
-- Implement the operations including **join, commit, rollback**;
+- Implement the operations including **commit, rollback**;
 
-- Implement aggregate functions including **max(), min(), avg(), round(), count()**;
+- Implement aggregate functions including **max(), min(), avg(), sum(), round(), count()**;
 
 - Implement additional keyword including **as, like, between, where (not) in, order by, group by, primary key**;
 
 - Version Control: Use **snapshot** strategy with **SHA-1** as version name and **trie** as version tree;
 	
-- Application: **re-implement Assignmnet 2**.
+- Application: **re-implement Assignment 2**.
