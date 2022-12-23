@@ -1,5 +1,8 @@
-name,stu_id,score
-string,int,int
-HTC,345678,92
-AZH,234567,91
-TYZ,123456,90
+stu_id,gender,rank,score
+string,string,string,double
+TYZZZZZZZ,F,A,60.5
+1145141919,M,A,85.5
+XYYTXDY,M,A,78.5
+Aurora233,F,A,88.5
+121090001,M,A,5.5
+19260817,F,A,58.5

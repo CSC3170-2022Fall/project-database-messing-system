@@ -545,7 +545,7 @@ class CommandInterpreter {
             conditions = conditionClause(Table1);
         }
         // In statement
-        if(conditions == null  &&  _swap != null){
+        if(_swap != null){
             if (_input.nextIf("not")) {
                 Table1.change_to_complement();
             }
@@ -556,7 +556,9 @@ class CommandInterpreter {
             _swap = null;
             if(!_input.nextIf("select")) throw error("Syntax Error. Need a \"select\" after \"in\"");
             Table2 = selectClause();
-            Table2 = Table2.select(Table2,swap,conditions);
+            Table2 = Table2.select(Table2,swap,null);
+            //Table1.print();
+            //Table2.print();
         }
         if (null != Table2) {
             ArrayList<String> tempTitle = new ArrayList<String>();
@@ -916,7 +918,7 @@ class CommandInterpreter {
                         }
                         _swap = swap;
                         //if(!tmp.next("in")) throw error("too few argument to satisfy the statement WHERE: please include \"in\" or other relation symbols.");
-                        return null;
+                        return alfa;
                     }
 
                     // single RELATION cause
