@@ -111,9 +111,19 @@ class Condition {
                 val1=Integer.parseInt(_col1.getFrom(rows));
             }
             catch(DBException e){
+                if(_col1.getFrom(rows).equals("NULL")) {
+                    if(_val2.equals("NULL"))return true;
+                    return false;
+                }
+                if(_val2.equals("NULL")) return false;
                 throw error("%s", e.getMessage());
             }
             catch (java.lang.NumberFormatException e) {
+                if(_col1.getFrom(rows).equals("NULL")) {
+                    if(_val2.equals("NULL"))return true;
+                    return false;
+                }
+                if(_val2.equals("NULL")) return false;
                 throw error("Data type error.");
             }
             switch(_relation){
@@ -154,9 +164,19 @@ class Condition {
                 val1=Integer.parseInt(_col1.getFrom(rows));
             }
             catch(DBException e){
+                if(_col1.getFrom(rows).equals("NULL")){ 
+                    if(_col2.getFrom(rows).equals("NULL")) return true;
+                    return false;
+                }
+                if(_col2.getFrom(rows).equals("NULL")) return false;
                 throw error("%s", e.getMessage());
             }
             catch (java.lang.NumberFormatException e) {
+                if(_col1.getFrom(rows).equals("NULL")){ 
+                    if(_col2.getFrom(rows).equals("NULL")) return true;
+                    return false;
+                }
+                if(_col2.getFrom(rows).equals("NULL")) return false;
                 throw error("Data type error.");
             }
             switch(_relation){
@@ -195,9 +215,19 @@ class Condition {
                 val1=Double.parseDouble(_col1.getFrom(rows));
             }
             catch(DBException e){
+                if(_col1.getFrom(rows).equals("NULL")) {
+                    if(_val2.equals("NULL"))return true;
+                    return false;
+                }
+                if(_val2.equals("NULL")) return false;
                 throw error("%s", e.getMessage());
             }
             catch (java.lang.NumberFormatException e) {
+                if(_col1.getFrom(rows).equals("NULL")){
+                    if(_val2.equals("NULL"))return true;
+                    return false;
+                } 
+                if(_val2.equals("NULL")) return false;
                 throw error("Data type error.");
             }
             switch(_relation){
@@ -237,9 +267,19 @@ class Condition {
                 val1=Double.parseDouble(_col1.getFrom(rows));
             }
             catch(DBException e){
+                if(_col1.getFrom(rows).equals("NULL")){ 
+                    if(_col2.getFrom(rows).equals("NULL")) return true;
+                    return false;
+                }
+                if(_col2.getFrom(rows).equals("NULL")) return false;
                 throw error("%s", e.getMessage());
             }
             catch (java.lang.NumberFormatException e) {
+                if(_col1.getFrom(rows).equals("NULL")){ 
+                    if(_col2.getFrom(rows).equals("NULL")) return true;
+                    return false;
+                }
+                if(_col2.getFrom(rows).equals("NULL")) return false;
                 throw error("Data type error.");
             }
             switch(_relation){
