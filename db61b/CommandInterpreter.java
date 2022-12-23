@@ -386,7 +386,11 @@ class CommandInterpreter {
             table = null;
             if (_input.nextIf("as")) {
                 _input.next("select");
+                //System.out.println("?????");
+                _input.setPos();
                 table = selectClause();
+                //System.out.println("???");
+                //while(true);
             }
             else {
                 throw error("Error: A table must have at least one visible column.");
@@ -587,6 +591,7 @@ class CommandInterpreter {
 
             /* group by clause */
             if (_input.nextIf("group") && _input.nextIf("by")) {
+                //System.out.println("!!!");
                 selectRes = groupByClause(selectRes, haveFunc);
                 return selectRes.changeTitle(changedTitle);
             }
@@ -636,6 +641,7 @@ class CommandInterpreter {
             /* group by clause */
             if (_input.nextIf("group") && _input.nextIf("by")) {
                 selectRes = groupByClause(selectRes, haveFunc);
+
                 return selectRes.changeTitle(changedTitle);
             }
 
