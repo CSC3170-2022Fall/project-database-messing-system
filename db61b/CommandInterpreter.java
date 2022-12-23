@@ -528,6 +528,7 @@ class CommandInterpreter {
             }
             _input.nextIf(",");
         }
+
         if (columnTitle.size() == 0 && flag==0 && countStar == -1){
             throw error("missing argument(s) for statement SELECT: select at least one column.");
         }
@@ -587,7 +588,7 @@ class CommandInterpreter {
             /* group by clause */
             if (_input.nextIf("group") && _input.nextIf("by")) {
                 selectRes = groupByClause(selectRes, haveFunc);
-                return selectRes;
+                return selectRes.changeTitle(changedTitle);
             }
 
             /* the non-repetitive feature of select statement can influence
@@ -631,11 +632,11 @@ class CommandInterpreter {
                 funcToColName.set(countStar, columnTitle.get(0));
             }
             Table selectRes = Table1.select(columnTitle, conditions);
-
+            
             /* group by clause */
             if (_input.nextIf("group") && _input.nextIf("by")) {
                 selectRes = groupByClause(selectRes, haveFunc);
-                return selectRes;
+                return selectRes.changeTitle(changedTitle);
             }
 
             if (functions.size() > 0) {
@@ -663,37 +664,40 @@ class CommandInterpreter {
         ArrayList<String> columnNames = new ArrayList<>();
         Order.add(_input.peek());
         columnNames.add(_input.next());
+        _input.nextIf(Tokenizer.LITERAL);
         Order.add("asc");
         while (_input.nextIf(",")) {
             if (!_input.nextIs("count") &&
-                    !_input.nextIs("avg") &&
-                    !_input.nextIs("max") &&
-                    !_input.nextIs("min") &&
-                    !_input.nextIs("sum") &&
-                    !_input.nextIs("round")) {
+            !_input.nextIs("avg") &&
+            !_input.nextIs("max") &&
+            !_input.nextIs("min") &&
+            !_input.nextIs("sum") &&
+            !_input.nextIs("round")) {
                 Order.add(_input.peek());
                 columnNames.add(_input.next());
+                _input.nextIf(Tokenizer.LITERAL);
                 Order.add("asc");
             } else break;
         }
-
+        
         String agg = _input.next();
         String col = columnName();
+        _input.nextIf(Tokenizer.LITERAL);
         ArrayList<String> colNames = new ArrayList<>();
         colNames.add(col);
-
+        
         while (!((_input.nextIf("group") && _input.nextIf("by")))) {
             _input.next();
         }
 
-        String columnName = literal();
+        String columnName = columnName();
         int id = table.findColumn(columnName);
         if (id == -1) {
             throw error("unknown column: %s", columnName);
         } else groupByColumns.add(columnName);
 
         while (_input.nextIf(",")) {
-            columnName = literal();
+            columnName = columnName();
             id = table.findColumn(columnName);
             if (id == -1) {
                 throw error("unknown column: %s", columnName);
