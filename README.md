@@ -61,16 +61,19 @@ Advance coding:
 All the data are stored in the rows of each table. Rows are stored based on hashsets in tables, and tables are stored based on hashmaps in databases. For each table, it contains information about the name and data type of each column, and the rows can be traversed using an iterator.
 
 ## Basic Syntax
-- <create statement> ::= create table <name > <table definition > ;
-- <table definition> ::= ( <column name>+, ) | as <select clause>
-- <print statement> ::= print <table name> ;
-- <insert statement> ::= insert into <table name> values <literal>+,; 
-- <load statement> ::= load <name> ;
-- <store statement> ::= store <file name (no suffix)> <table name> ;
-- <exit statement> ::= quit ; | exit ;
-- <select statement> ::= <select clause>;
-- <select clause> ::= select <column name>+, from <tables> <condition clause>;
-- Operator in select clause: =, <, <=, >, >=
+- **create statement** ::= create table **name** **table definition**  ;
+- **table definition** ::= ( **column name** +, ) | as **select clause**
+- **print statement** ::= print **table name** ;
+- **insert statement**::= insert into **table name** values **literal**+,; 
+- **load statement** ::= load **name** ;
+- **store statement** ::= **store file name (no suffix)** **table name** ;
+- **exit statement** ::= quit ; | exit ;
+- **select statement** ::= **select clause**;
+- **select clause** ::= select **column name**+, from **tables** **condition clause**;
+- **Operator in select clause**: =, <, <=, >, >=
 	
 ## Advanced Syntax
+- **Aggregated functions(avg, max, min, count, sum)** ::= select **function** **column name**+, from **table name**
+- **Round function **::= select round **column name**  **operator**  **operand** reserve **number of bits reserved** from **table name**;
+- **in conditions**::= select **column name**+, from **table name** where **column name** in **select clause**
 
