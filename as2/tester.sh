@@ -25,10 +25,11 @@ do
 		if [ $i == 3 ]; then
 			out="msg.log"
 		fi
-		if diff -cw $out ./answers/$i.db > /dev/null;then
+		if diff -qw $out ./answers/$i.db > /dev/null;then
 			echo "  Passed."
 		else
 			echo "  Failed."
+			diff -cw $out ./answers/$i.db
 			fail=1
 		fi
 	else
