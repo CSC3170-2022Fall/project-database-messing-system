@@ -87,3 +87,4 @@ All the data are stored in the rows of each table. Rows are stored based on hash
 - **rollback to statement** ::= rollback **table name** to **literal**;
 - **rollback at statement** ::= rollback **table name** at **literal**;
 
+## Standard Error Messages
