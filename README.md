@@ -74,6 +74,16 @@ All the data are stored in the rows of each table. Rows are stored based on hash
 	
 ## Advanced Syntax
 - **Aggregated functions(avg, max, min, count, sum)** ::= select **function** **column name**+, from **table name**
-- **Round function **::= select round **column name**  **operator**  **operand** reserve **number of bits reserved** from **table name**;
-- **in conditions**::= select **column name**+, from **table name** where **column name** in **select clause**
+- **Round function**::= select round **column name**  **operator**  **operand** reserve **number of bits reserved** from **table name**
+- **in condition**::= select **column name**+, from **table name** where **column name** in **select clause**
+- **order by condition**::= select **column name**+, from **table name** order by (asc/desc) **column name**+,
+- **group by condition**::= select **column name**+, **function**  **column name**  from **table name** group by **column name**+,
+- **between condition**::= select **column name**+, from  **table name**  where  **column name**  between  **operand A**  and **operand B**
+- **like condition**::= select **column name**+, from **table name** where **column name** like **sample value**;
+  (supported operator: ‘_’, ‘%’)
+
+## Version Control Syntax
+- **commit statement** ::= commit **table name**;
+- **rollback to statement** ::= rollback **table name** to **literal**;
+- **rollback at statement** ::= rollback **table name** at **literal**;
 
