@@ -197,10 +197,26 @@ class CommandInterpreter {
         do{
             if (_input.nextIf("(")) {
                 ArrayList<String> values = new ArrayList<>();
-                int times = 0;
+                String[] types = table.get_types();
+                int times = 0, cnt = 0;
                 do {
-                    values.add(literal());
-                    times++;
+                    String temp = literal();
+                    if (types[cnt].equals("double")) {
+                        try {
+                            Double.parseDouble(temp);
+                        }catch(NumberFormatException e) {
+                            throw error("invalid type of insert value "+temp+": expected Double.");
+                        }
+                    }
+                    if (types[cnt].equals("int")) {
+                        try {
+                            Integer.parseInt(temp);
+                        }catch(NumberFormatException e) {
+                            throw error("invalid type of insert value "+temp+": expected Integer.");
+                        }
+                    }
+                    values.add(temp);
+                    times++; cnt++;
                 } while (_input.nextIf(","));
                 if (times > table.columns())
                     throw error("Too many arguments.");
