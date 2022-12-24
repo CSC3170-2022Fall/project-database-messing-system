@@ -22,6 +22,9 @@ do
 		if [ $i == 7 ]; then
 			out="out.db"
 		fi
+		if [ $i == 3 ]; then
+			out="msg.log"
+		fi
 		if diff -qw $out ./answers/$i.db > /dev/null;then
 			echo "  Passed."
 		else
