@@ -1,13 +1,13 @@
-DEPARTMENT_ID,DEPARTMENT_NAME,MANAGER_ID,EMPLOYEE_ID,FIRST_NAME
-int,string,int,int,string
-10,Administration,200,200,Jennifer
-100,Finance,108,108,Nancy
-110,Accounting,205,205,Shelley
-20,Marketing,201,201,Michael
-30,Purchasing,114,114,Den
-40,Human Resources,203,203,Susan
-50,Shipping,121,121,Adam
-60,IT,103,103,Alexander
-70,Public Relations,204,204,Hermann
-80,Sales,145,145,John
-90,Executive,100,100,Steven
+DEPARTMENT_ID,DEPARTMENT_NAME,FIRST_NAME
+int,string,string
+10,Administration,Jennifer
+100,Finance,Nancy
+110,Accounting,Shelley
+20,Marketing,Michael
+30,Purchasing,Den
+40,Human Resources,Susan
+50,Shipping,Adam
+60,IT,Alexander
+70,Public Relations,Hermann
+80,Sales,John
+90,Executive,Steven
