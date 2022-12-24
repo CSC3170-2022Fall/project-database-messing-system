@@ -134,16 +134,28 @@
 
 - [x] print (MySQL style)-**HTC**
 
-- [ ] WebSSH-**HTC**
-
 ### Application
 
 - [x] re-implement in Assignment 2-**ZYQ**
+
+- [x] testing -**HTC**
 
 - [x] version control-**TYZ**
 	- [x] statement
 	- [x] snapshot
 	- [x] log
 
-
-
+## Presensation and Report
+### Presentation
+- [x] PPT-**ZYQ**
+- [x] Present
+	- [x] Introduction-**AZH**
+	- [x] Database structure-**AZH**
+	- [x] Basic SQL Syntax -**SCH**
+	- [x] Advanced SQL Syntax-**SCH**
+	- [x] Version Control-**TYZ**
+	- [x] Real-implement-**AZH**
+- [x] editor-**TYZ**
+### Report
+- [x] Readme and TO-DO List-**ZYQ**
+- [ ] Error message format and comment edit-**AZH**
