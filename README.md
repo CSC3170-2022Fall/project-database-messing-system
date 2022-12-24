@@ -88,3 +88,6 @@ All the data are stored in the rows of each table. Rows are stored based on hash
 - **rollback at statement** ::= rollback **table name** at **literal**;
 
 ## Standard Error Messages
+
+## Re-implement Assignment2
+For the specific results, please refer to the pdf file “Presentation PPT.pdf" transformed by our presentation PPT.
