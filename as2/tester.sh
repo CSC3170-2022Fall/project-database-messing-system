@@ -18,6 +18,7 @@ do
 	if [ -a ./solutions/$i.sql ];then
 		java -ea db61b.Main < ./solutions/$i.sql > msg.log
 		python sort.py
+		python remove_prompt.py
 		out="out_sorted.db"
 		if [ $i == 7 ]; then
 			out="out.db"
@@ -30,6 +31,8 @@ do
 		else
 			echo "  Failed."
 			diff -cw $out ./answers/$i.db
+			echo "======== msg.log ========="
+			cat msg.log
 			fail=1
 		fi
 	else
