@@ -786,7 +786,11 @@ class Table implements Iterable<Row> {
                 map.put(ind++, row.get(columnIndex).length() + row.get(columnIndex));
             } else if (Objects.equals(_column_types[columnIndex], "double")){
                 String pt = Integer.toString(row.get(columnIndex).indexOf('.'));
-                map.put(ind++, pt + row.get(columnIndex));
+                if (pt.equals("-1")) {
+                    map.put(ind++, row.get(columnIndex).length() + row.get(columnIndex));
+                } else {
+                    map.put(ind++, pt + row.get(columnIndex));
+                }
             } else {
                 map.put(ind++, row.get(columnIndex));
             }
