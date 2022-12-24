@@ -36,7 +36,7 @@ After thorough discussion, our team made the choice and the specification inform
 ## Project Abstract
 
 <!-- TODO -->
-This project involves writing a miniature relational database management system (DBMS) that stores tables of data, where a table consists of some number of labeled columns of information. Our system will include a very simple query language for extracting information from these tables. For the purposes of this project, we will deal only with very small databases, and therefore will not consider too much about speed and efficiency. But we will still consider part of the efficiency improvement when designing the DBMS. Here's what we implemented in this system:
+This project writes a miniature relational database management system (DBMS) that stores data tables containing labeled information columns. The project consists of the language system and the version control system. In language system, we defined the data definition language (DDL) and data manipulation language (DML) and wrote the DDL interpreter and DML in the java language compiler to interpreting users' input and dealing with data in tables. The version control system is standard practice for maintaining a project and tracking it from inception to finalization. In addition, version control is a software engineering technique to ensure that the same program files edited by different people are synchronized during the software development process, which play an essential role in a such multi-person cooperative project. We will only deal with tiny databases for this project, so we will not  consider too much about speed and efficiency. But we will still consider part of the efficiency improvement when designing the DBMS. Here's what we implemented in this system:
 
 Basic coding:
 
@@ -55,3 +55,22 @@ Advance coding:
 - Version Control: Use **snapshot** strategy with **SHA-1** as version name and **trie** as version tree;
 	
 - Application: **re-implement Assignment 2**.
+
+## Database Structure
+
+All the data are stored in the rows of each table. Rows are stored based on hashsets in tables, and tables are stored based on hashmaps in databases. For each table, it contains information about the name and data type of each column, and the rows can be traversed using an iterator.
+
+## Basic Syntax
+- <create statement> ::= create table <name > <table definition > ;
+- <table definition> ::= ( <column name>+, ) | as <select clause>
+- <print statement> ::= print <table name> ;
+- <insert statement> ::= insert into <table name> values <literal>+,; 
+- <load statement> ::= load <name> ;
+- <store statement> ::= store <file name (no suffix)> <table name> ;
+- <exit statement> ::= quit ; | exit ;
+- <select statement> ::= <select clause>;
+- <select clause> ::= select <column name>+, from <tables> <condition clause>;
+- Operator in select clause: =, <, <=, >, >=
+	
+## Advanced Syntax
+
