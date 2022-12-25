@@ -88,7 +88,7 @@
 
 - [x] Column not found -**XXY**
 
-- [ ] Standard Error Messages -**AZH**
+- [x] Standard Error Messages -**AZH**
 
 ## Advance
 
@@ -158,4 +158,4 @@
 - [x] editor-**TYZ**
 ### Report
 - [x] Readme and TO-DO List-**ZYQ**
-- [ ] Error message format and comment edit-**AZH**
+- [x] Error message format and comment edit-**AZH**
