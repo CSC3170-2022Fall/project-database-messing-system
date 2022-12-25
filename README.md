@@ -1,4 +1,5 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=9422691&assignment_repo_type=AssignmentRepo)
+
 # CSC3170 Course Project
 
 ## Project Overall Description
@@ -57,31 +58,31 @@ All the data are stored in the rows of each table. Rows are stored based on **ha
 Since the hashsets are unordered, the clause **order by 'xxx'** has no effect when the column **'xxx'** is not in the result table.
 
 ## Basic Syntax
-- **create statement** ::= $create table name table definition$ 
-- **table definition** ::= $(<column\ name><column\ data\ type>^+_,); | as\ <select\ clause>;$
-- **print statement** ::= $print\ <table\ name>;$
-- **insert statement**::= $insert\ into\ <table\ name>\ values\ (<literal>^+_,)^+_,;$,
-- **load statement** ::= $load\ <.db\ file\ name>;$
-- **store statement** ::= $store\ <file\ name\ without\ extension>\ <table\ name> ;$
-- **exit statement** ::= $quit; | exit ;$
-- **select statement** ::= $<select\ clause>;$
-- **select clause** ::= $select\ <column\ name>^+_,\ from\ <tables>\ <condition\ clause>;$
-- **Operator in select clause**: =, <, <=, >, >=
+- **create statement** ::= create table \<name> \<table definition>
+- **table definition** ::= (\<column name>\<column data type>+,); | as\<select clause>;
+- **print statement** ::= print \<table name>;
+- **insert statement**::= insert into \<table name> values (\<literal>+,)+,;
+- **load statement** ::= load \<name>;
+- **store statement** ::= store \<file name without extension> \<table name> ;
+- **exit statement** ::= quit; | exit ;
+- **select statement** ::= \<select clause>;
+- **select clause** ::= select \<column name>+, from \<tables> \<condition clause>;
+- **Operator in select clause**: =, \<, \<=, >, >=
 ## Advanced Syntax
-- **Aggregated functions(avg, max, min, count, sum)** ::= $select\ <function>\ <column name>^+_,\\ from\ <tables>;$
+- **Aggregated functions(avg, max, min, count, sum)** ::= select \<function> \<column name>+, from \<tables>;
 
-- **select with round function**::= $select\ round <column name>\ <operator>\ <operand>\ reserve\\ <number\ of\ reserved\ bits>\ from\ <tables>;$
+- **select with round function**::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<tables>;
 
-- **select with in condition**::= $select\ <column\ name>^+_,\ from\ <table\ name>\\ where\ <column\ name>\ in\ <select\ clause>;$
+- **select with in condition**::= select \<column name>+, from \<table name> where \<column name> in \<select clause>;
 
-- **select with order by**::= $select\ <column\ name>^+_,\ from\ <tables>\\ order\ by\ '<column\ name>'^+_,<order>;$
+- **select with order by**::= select \<column name>+, from \<tables> order by '\<column name>'+,\<order>;
 
-- **select with group by**::= $select\ <column\ name>^+_,\ function\ <column\ name>\\ from\ <tables>\ group\ by\ <column\ name>^+_,;$
+- **select with group by**::= select \<column name>+, function \<column name> from \<tables> group by \<column name>+,;
 
-- **select with between condition**::= $select\ <column\ name>^+_,\ from\ <tables>\ where\\ <column\ name>\ between\ <lower\ bound>\ and\ <upper\ bound>;$
+- **select with between condition**::= select \<column name>+, from \<tables> where \<column name> between \<lower bound> and \<upper bound>;
 
-- **select with like condition**::= $select\ <column name>^+_,\ from\ <tables>\\ where\ <column\ name>\ like\ <pattern>;$
-  (supported operator: ‘_’ and ‘%’)
+- **select with like condition**::= select \<column name>+, from \<tables> where \<column name> like \<pattern>;
+  (supported operator: ‘’ and ‘%’)
   
   
   
@@ -90,9 +91,9 @@ Since the hashsets are unordered, the clause **order by 'xxx'** has no effect wh
   "**in**" and "**not in**" can only be applied to the select clause with **one** table.
 
 ## Version Control Syntax
-- **commit statement** ::= $commit\ <table\ name>$;
-- **rollback to statement** ::= $rollback\ <table\ name>\ to\ <version\ code>$;
-- **rollback at statement** ::= $rollback\ <table\ name>\ at\ <version\ code>$;
+- **commit statement** ::= commit \<table name>;
+- **rollback to statement** ::= rollback \<table name> to \<version code>;
+- **rollback at statement** ::= rollback \<table name> at \<version code>;
 
 ## Standard Error Messages
 
@@ -106,4 +107,4 @@ Since the hashsets are unordered, the clause **order by 'xxx'** has no effect wh
 | VersionNotFound | <li>Cannot find specified version <li>More than one table share the same name |
 
 ## Re-implement Assignment2
-For the specific results, please refer to the pdf file “Presentation PPT.pdf" transformed by our presentation PPT.
+For the specific results, please refer to the pdf file “**Presentation slides.pdf**" in the "**presentation-related files**" directory.
