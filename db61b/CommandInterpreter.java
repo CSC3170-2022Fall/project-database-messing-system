@@ -273,13 +273,13 @@ class CommandInterpreter {
 
             /* update versions */
             table.removeCurrentVersion(name, version_name);
-            if (_database.version_tree.Find(version_name).equals("Value Missmatch: no such version in the history.")) {
+            if (_database.version_tree.Find(version_name).equals("Value Mismatch: no such version in the history.")) {
                 table.addVersion(name, version_name);
             }
             table.addVersion(name, version_name);
 
             /* update version_tree */
-            if (_database.version_tree.Find(version_name).equals("Value Missmatch: no such version in the history.")) {
+            if (_database.version_tree.Find(version_name).equals("Value Mismatch: no such version in the history.")) {
                 _database.version_tree.Insert(version_name);
             }
 
@@ -309,7 +309,7 @@ class CommandInterpreter {
             version_name = Table.findVersionAt(time, table_name);
         }
         if (version_name.equals("VersionNotFound: invalid time.")
-             || version_name.equals("Value Missmatch: no such version in the history.")
+             || version_name.equals("Value Mismatch: no such version in the history.")
              || version_name.equals("VersionNotFound: duplicate version name in the history.")) {
             throw error(version_name);
         } else {
@@ -704,26 +704,26 @@ class CommandInterpreter {
         String columnName = columnName();
         int id = table.findColumn(columnName);
         if (id == -1) {
-            throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
+            throw error("Value Mismatch: column \"%s\" does not exist.", columnName);
         } else groupByColumns.add(columnName);
 
         while (_input.nextIf(",")) {
             columnName = columnName();
             id = table.findColumn(columnName);
             if (id == -1) {
-                throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
+                throw error("Value Mismatch: column \"%s\" does not exist.", columnName);
             } else groupByColumns.add(columnName);
         }
 
         id = table.findColumn(columnName);
         if (id == -1) {
-            throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
+            throw error("Value Mismatch: column \"%s\" does not exist.", columnName);
         }
 
-        if (groupByColumns.size() != columnNames.size()) throw error("Value Missmatch: columns mismatch in GROUP BY statement");
+        if (groupByColumns.size() != columnNames.size()) throw error("Value Mismatch: columns mismatch in GROUP BY statement");
         else {
             for (String s : groupByColumns) {
-                if (!columnNames.contains(s)) throw error("Value Missmatch: columns mismatch in GROUP BY statement");
+                if (!columnNames.contains(s)) throw error("Value Mismatch: columns mismatch in GROUP BY statement");
             }
         }
         List<Integer> index = new ArrayList<>();
@@ -799,7 +799,7 @@ class CommandInterpreter {
             String columnName = literal();
             int id = table.findColumn(columnName);
             if (id == -1) {
-                throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
+                throw error("Value Mismatch: column \"%s\" does not exist.", columnName);
             } else {
                 Order.add(columnName);
                 if (_input.nextIs("desc") || _input.nextIs("asc")) {
@@ -812,7 +812,7 @@ class CommandInterpreter {
                 columnName = literal();
                 id = table.findColumn(columnName);
                 if (id == -1) {
-                    throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
+                    throw error("Value Mismatch: column \"%s\" does not exist.", columnName);
                 } else {
                     Order.add(columnName);
                     if (_input.nextIs("desc") || _input.nextIs("asc")) {
@@ -846,7 +846,7 @@ class CommandInterpreter {
         String name = name();
         Table table = _database.get(name);
         if (table == null) {
-            throw error("Value Missmatch: table \"%s\" does not exist.", name);
+            throw error("Value Mismatch: table \"%s\" does not exist.", name);
         }
         return table;
     }
@@ -885,7 +885,7 @@ class CommandInterpreter {
                             if (tables.length != 1)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
                             else
-                                throw error("Value Missmatch: column \"%s\" does not exist.", col1);
+                                throw error("Value Mismatch: column \"%s\" does not exist.", col1);
                         }
 
                         /* add Condition(col1, '<=', 'right_bound') */
@@ -903,7 +903,7 @@ class CommandInterpreter {
                             if (tables.length != 1)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
                             else
-                                throw error("Value Missmatch: column \"%s\" does not exist.", col1);
+                                throw error("Value Mismatch: column \"%s\" does not exist.", col1);
                         }
 
                         continue;
@@ -917,7 +917,7 @@ class CommandInterpreter {
                         try{
                             alfa.add(new Condition(new Column(col1, 0, tables[0]), relation, val));
                         } catch(DBException e){
-                            throw error("Value Missmatch: column \"%s\" does not exist.", col1);
+                            throw error("Value Mismatch: column \"%s\" does not exist.", col1);
                         }
                         continue;
 
@@ -947,7 +947,7 @@ class CommandInterpreter {
                             if (tables.length != 1)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
                             else
-                                throw error("Value Missmatch: column \"%s\" does not exist.", col1);
+                                throw error("Value Mismatch: column \"%s\" does not exist.", col1);
                         }
                     }
                     else{

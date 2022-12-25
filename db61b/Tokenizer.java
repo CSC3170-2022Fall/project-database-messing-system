@@ -109,7 +109,7 @@ class Tokenizer {
     String next(Pattern p) {
         if (!nextIs(p)) {
             if (nextIs("*EOF*")) {
-                throw error("Value Missmatch: unexpected end of input.");
+                throw error("FileFormatError: unexpected end of input.");
             } else {
                 throw error("Syntax Error: unexpected token: '%s'", peek());
             }
@@ -122,7 +122,7 @@ class Tokenizer {
     String next(String p) {
         if (!nextIs(p)) {
             if (nextIs("*EOF*")) {
-                throw error("Value Missmatch: unexpected end of input.");
+                throw error("FileFormatError: unexpected end of input.");
             } else {
                 throw error("Syntax Error: unexpected token: '%s'", peek());
             }

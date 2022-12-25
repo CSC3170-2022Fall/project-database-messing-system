@@ -21,7 +21,7 @@ class Column {
                 return;
             }
         }
-        throw error("Value Missmatch: column \"%s\" does not exist.", name);
+        throw error("Value Mismatch: column \"%s\" does not exist.", name);
     }
 
 
@@ -33,7 +33,7 @@ class Column {
                 _type = tables[_table].get_type(_column);
                 return;
             }
-        throw error("Value Missmatch: column \"%s\" does not exist.", name);
+        throw error("Value Mismatch: column \"%s\" does not exist.", name);
     }
 
     /** Return my name. */

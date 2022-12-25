@@ -5,16 +5,12 @@
 
 This is our implementation for the course project of CSC3170, 2022 Fall, CUHK(SZ). For details of the project, you can refer to [project-description.md](project-description.md). In this project, we will utilize what we learned in the lectures and tutorials in the course, and implement either one of the following major job:
 
-<!-- Please fill in "x" to replace the blank space between "[]" to tick the todo item; it's ticked on the first one by default. -->
-
 - [ ] **Application with Database System(s)**
 - [x] **Implementation of a Database System**
 
 ## Team Members
 
 Our team consists of the following members, listed in the table below (the team leader is shown in the first row, and is marked with 🚩 behind his/her name):
-
-<!-- change the info below to be the real case -->
 
 | Student ID | Student Name | GitHub Account (in Email) | GitHub Username   |
 | ---------- | ------------ | ------------------------- | ---------------- |
@@ -27,15 +23,13 @@ Our team consists of the following members, listed in the table below (the team 
 
 ## Project Specification
 
-<!-- You should remove the terms/sentence that is not necessary considering your option/branch/difficulty choice -->
-
 After thorough discussion, our team made the choice and the specification information is listed below:
 
 - Our option choice is: **Option 3**
 
 ## Project Abstract
 
-<!-- TODO -->
+
 This project writes a miniature relational database management system (DBMS) that stores data tables containing labeled information columns. The project consists of the language system and the version control system. In language system, we defined the data definition language (DDL) and data manipulation language (DML) and wrote the DDL interpreter and DML in the java language compiler to interpreting users' input and dealing with data in tables. The version control system is standard practice for maintaining a project and tracking it from inception to finalization. In addition, version control is a software engineering technique to ensure that the same program files edited by different people are synchronized during the software development process, which play an essential role in a such multi-person cooperative project. We will only deal with tiny databases for this project, so we will not  consider too much about speed and efficiency. But we will still consider part of the efficiency improvement when designing the DBMS. Here's what we implemented in this system:
 
 Basic coding:
@@ -58,36 +52,58 @@ Advance coding:
 
 ## Database Structure
 
-All the data are stored in the rows of each table. Rows are stored based on hashsets in tables, and tables are stored based on hashmaps in databases. For each table, it contains information about the name and data type of each column, and the rows can be traversed using an iterator.
+All the data are stored in the rows of each table. Rows are stored based on **hashsets** in tables, and tables are stored based on **hashmaps** in databases. For each table, it contains information about the name and **data type** of each column, and the rows can be traversed using an iterator.
+
+Since the hashsets are unordered, the clause **order by 'xxx'** has no effect when the column **'xxx'** is not in the result table.
 
 ## Basic Syntax
-- **create statement** ::= create table **name** **table definition**  ;
-- **table definition** ::= ( **column name** +, ) | as **select clause**
-- **print statement** ::= print **table name** ;
-- **insert statement**::= insert into **table name** values **literal**+,; 
-- **load statement** ::= load **name** ;
-- **store statement** ::= **store file name (no suffix)** **table name** ;
-- **exit statement** ::= quit ; | exit ;
-- **select statement** ::= **select clause**;
-- **select clause** ::= select **column name**+, from **tables** **condition clause**;
+- **create statement** ::= $create table name table definition$ 
+- **table definition** ::= $(<column\ name><column\ data\ type>^+_,); | as\ <select\ clause>;$
+- **print statement** ::= $print\ <table\ name>;$
+- **insert statement**::= $insert\ into\ <table\ name>\ values\ (<literal>^+_,)^+_,;$,
+- **load statement** ::= $load\ <.db\ file\ name>;$
+- **store statement** ::= $store\ <file\ name\ without\ extension>\ <table\ name> ;$
+- **exit statement** ::= $quit; | exit ;$
+- **select statement** ::= $<select\ clause>;$
+- **select clause** ::= $select\ <column\ name>^+_,\ from\ <tables>\ <condition\ clause>;$
 - **Operator in select clause**: =, <, <=, >, >=
-	
 ## Advanced Syntax
-- **Aggregated functions(avg, max, min, count, sum)** ::= select **function** **column name**+, from **table name**
-- **Round function**::= select round **column name**  **operator**  **operand** reserve **number of bits reserved** from **table name**
-- **in condition**::= select **column name**+, from **table name** where **column name** in **select clause**
-- **order by condition**::= select **column name**+, from **table name** order by (asc/desc) **column name**+,
-- **group by condition**::= select **column name**+, **function**  **column name**  from **table name** group by **column name**+,
-- **between condition**::= select **column name**+, from  **table name**  where  **column name**  between  **operand A**  and **operand B**
-- **like condition**::= select **column name**+, from **table name** where **column name** like **sample value**;
-  (supported operator: ‘_’, ‘%’)
+- **Aggregated functions(avg, max, min, count, sum)** ::= $select\ <function>\ <column name>^+_,\\ from\ <tables>;$
+
+- **select with round function**::= $select\ round <column name>\ <operator>\ <operand>\ reserve\\ <number\ of\ reserved\ bits>\ from\ <tables>;$
+
+- **select with in condition**::= $select\ <column\ name>^+_,\ from\ <table\ name>\\ where\ <column\ name>\ in\ <select\ clause>;$
+
+- **select with order by**::= $select\ <column\ name>^+_,\ from\ <tables>\\ order\ by\ '<column\ name>'^+_,<order>;$
+
+- **select with group by**::= $select\ <column\ name>^+_,\ function\ <column\ name>\\ from\ <tables>\ group\ by\ <column\ name>^+_,;$
+
+- **select with between condition**::= $select\ <column\ name>^+_,\ from\ <tables>\ where\\ <column\ name>\ between\ <lower\ bound>\ and\ <upper\ bound>;$
+
+- **select with like condition**::= $select\ <column name>^+_,\ from\ <tables>\\ where\ <column\ name>\ like\ <pattern>;$
+  (supported operator: ‘_’ and ‘%’)
+  
+  
+  
+  **Notes**: aggregate functions can be used with "**where**" conditions **only if** there is "**group by**" clause, in that case, only the last argument can be an aggregate function.
+  
+  "**in**" and "**not in**" can only be applied to the select clause with **one** table.
 
 ## Version Control Syntax
-- **commit statement** ::= commit **table name**;
-- **rollback to statement** ::= rollback **table name** to **literal**;
-- **rollback at statement** ::= rollback **table name** at **literal**;
+- **commit statement** ::= $commit\ <table\ name>$;
+- **rollback to statement** ::= $rollback\ <table\ name>\ to\ <version\ code>$;
+- **rollback at statement** ::= $rollback\ <table\ name>\ at\ <version\ code>$;
 
 ## Standard Error Messages
+
+| Error Message   | Explanation                                                  |
+| :-------------: | :----------------------------------------------------------- |
+| Syntax Error    | <li>Unrecognizable command keywords <li>Too many or too few arguments <li>Divide something by 0 <li>Unterminated literal or comment <li>Wrong usage of commands |
+| Format Error    | <li>Wrong data type when inserting or comparing <li>Apply functions to unsupported type of data <li>Wrong data type of arguments for some commands <li>Not using correct utf-8 encoding <li>Invalid SHA-1 code |
+| Value Mismatch | <li>Cannot find specified column or table or version or type <li>Index out of range of a container <li>Some lists should have identical length but actually don't. <li>Duplicate names |
+| FileFormatError | <li>Unexpected end of input <li>No header or datatype in the .db file <li>Number of columns in a row does not equal that of the table. |
+| FileNotFound | <li>Cannot find specified file |
+| VersionNotFound | <li>Cannot find specified version <li>More than one table share the same name |
 
 ## Re-implement Assignment2
 For the specific results, please refer to the pdf file “Presentation PPT.pdf" transformed by our presentation PPT.

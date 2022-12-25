@@ -13,7 +13,7 @@ public class FileOperation {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				throw error("OS Error: creating file failed.");
+				throw error("IOException: creating file failed.");
 			}
 		}
 	}

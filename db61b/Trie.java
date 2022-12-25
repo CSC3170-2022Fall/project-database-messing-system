@@ -77,7 +77,7 @@ class Trie {
 				throw error("Format Error: invalid SHA-1 code.");
 			}
 			if (now.next[next_number] == null) {
-				return "Value Missmatch: no such version in the history."; // no such prefix
+				return "Value Mismatch: no such version in the history."; // no such prefix
 			}
 			now = now.next[next_number];
 		}

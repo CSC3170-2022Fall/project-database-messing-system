@@ -27,7 +27,7 @@ class Table implements Iterable<Row> {
         for (int i = columnTitles.length - 1; i >= 1; i -= 1) {
             for (int j = i - 1; j >= 0; j -= 1) {
                 if (columnTitles[i].equals(columnTitles[j])) {
-                    throw error("Value Missmatch: duplicate column name: %s.",
+                    throw error("Value Mismatch: duplicate column name: %s.",
                             columnTitles[i]);
                 }
             }
@@ -608,7 +608,7 @@ class Table implements Iterable<Row> {
         for (int i = 0; i < columnNames.size(); i++) {
             int id = findColumn(columnNames.get(i));
             if (id == -1) {
-                throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
+                throw error("Value Mismatch: column \"%s\" does not exist.", columnNames.get(i));
             }
             String type = this.get_type(id);
             columnTypes.add(type);
@@ -626,7 +626,7 @@ class Table implements Iterable<Row> {
                 for (int i = 0; i < columnNames.size(); i++) {
                     int id = findColumn(columnNames.get(i));
                     if (id == -1) {
-                        throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
+                        throw error("Value Mismatch: column \"%s\" does not exist.", columnNames.get(i));
                     }
                     data[i] = row.get(id);
                 }
@@ -651,7 +651,7 @@ class Table implements Iterable<Row> {
             } else {
                 id = table2.findColumn(columnNames.get(i));
                 if (id == -1) {
-                    throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
+                    throw error("Value Mismatch: column \"%s\" does not exist.", columnNames.get(i));
                 } else {
                     String type = table2.get_type(id);
                     columnTypes.add(type);
@@ -691,7 +691,7 @@ class Table implements Iterable<Row> {
                         } else {
                             id = table2.findColumn(columnNames.get(i));
                             if (id == -1) {
-                                throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
+                                throw error("Value Mismatch: column \"%s\" does not exist.", columnNames.get(i));
                             }
                             data[i] = row2.get(id);
                         }
@@ -720,7 +720,7 @@ class Table implements Iterable<Row> {
                             } else {
                                 id = table2.findColumn(columnNames.get(i));
                                 if (id == -1) {
-                                    throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
+                                    throw error("Value Mismatch: column \"%s\" does not exist.", columnNames.get(i));
                                 }
                                 data[i] = row2.get(id);
                             }

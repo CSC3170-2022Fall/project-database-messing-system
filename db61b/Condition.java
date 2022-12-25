@@ -350,7 +350,7 @@ class Condition {
                 return testDouble(rows);
             }
             else{
-                System.out.printf("Value Missmatch: type %d not found.%n", type);
+                System.out.printf("Value Mismatch: type %d not found.%n", type);
                 return false;
             }
         }
@@ -380,7 +380,7 @@ class Condition {
                     }
                     break;
                     default:
-                    throw error("Value Missmatch: type %s not found.%n", cond._col1.get_type());
+                    throw error("Value Mismatch: type %s not found.%n", cond._col1.get_type());
                 }
             }
             catch(DBException e){
