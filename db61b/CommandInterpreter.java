@@ -670,7 +670,11 @@ class CommandInterpreter {
         _input.returnPos();
         ArrayList<String> Order = new ArrayList<>();
         ArrayList<String> columnNames = new ArrayList<>();
-        do {
+        Order.add(_input.peek());
+        columnNames.add(_input.next());
+        _input.nextIf(Tokenizer.LITERAL);
+        Order.add("asc");
+        while (_input.nextIf(",")) {
             if (!_input.nextIs("count") &&
             !_input.nextIs("avg") &&
             !_input.nextIs("max") &&
@@ -682,7 +686,7 @@ class CommandInterpreter {
                 _input.nextIf(Tokenizer.LITERAL);
                 Order.add("asc");
             } else break;
-        } while (_input.nextIf(","));
+        }
 
         String agg = _input.next();
         String col = columnName();
@@ -694,8 +698,6 @@ class CommandInterpreter {
         colNames.add(col);
         
         while (!((_input.nextIf("group") && _input.nextIf("by")))) {
-            if (_input.nextIs(","))
-                throw error("Syntax Error: only the last argument can be aggregate function in GROUP BY.");
             _input.next();
         }
 
