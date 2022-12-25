@@ -59,29 +59,29 @@ Since the hashsets are unordered, the clause **order by 'xxx'** has no effect wh
 
 ## Basic Syntax
 - **create statement** ::= create table \<name> \<table definition>
-- **table definition** ::= (\<column name>\<column data type>^+^,); | as\<select clause>;
+- **table definition** ::= (\<column name>\<column data type><sup>+</sup>,); | as\<select clause>;
 - **print statement** ::= print \<table name>;
-- **insert statement**::= insert into \<table name> values (\<literal>^+^,)^+^,;
+- **insert statement**::= insert into \<table name> values (\<literal><sup>+</sup>,)<sup>+</sup>,;
 - **load statement** ::= load \<name>;
 - **store statement** ::= store \<file name without extension> \<table name> ;
 - **exit statement** ::= quit; | exit ;
 - **select statement** ::= \<select clause>;
-- **select clause** ::= select \<column name>^+^, from \<tables> \<condition clause>;
+- **select clause** ::= select \<column name><sup>+</sup>, from \<tables> \<condition clause>;
 - **Operator in select clause**: =, \<, \<=, >, >=
 ## Advanced Syntax
-- **Aggregated functions(avg, max, min, count, sum)** ::= select \<function> \<column name>^+^, from \<tables>;
+- **Aggregated functions(avg, max, min, count, sum)** ::= select \<function> \<column name><sup>+</sup>, from \<tables>;
 
 - **select with round function**::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<tables>;
 
-- **select with in condition**::= select \<column name>^+^, from \<table name> where \<column name> in \<select clause>;
+- **select with in condition**::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
 
-- **select with order by**::= select \<column name>^+^, from \<tables> order by '\<column name>'^+^,\<order>;
+- **select with order by**::= select \<column name><sup>+</sup>, from \<tables> order by '\<column name>'<sup>+</sup>,\<order>;
 
-- **select with group by**::= select \<column name>^+^, function \<column name> from \<tables> group by \<column name>^+^,;
+- **select with group by**::= select \<column name><sup>+</sup>, function \<column name> from \<tables> group by \<column name><sup>+</sup>,;
 
-- **select with between condition**::= select \<column name>^+^, from \<tables> where \<column name> between \<lower bound> and \<upper bound>;
+- **select with between condition**::= select \<column name><sup>+</sup>, from \<tables> where \<column name> between \<lower bound> and \<upper bound>;
 
-- **select with like condition**::= select \<column name>^+^, from \<tables> where \<column name> like \<pattern>;
+- **select with like condition**::= select \<column name><sup>+</sup>, from \<tables> where \<column name> like \<pattern>;
   (supported operator: ‘’ and ‘%’)
   
   
