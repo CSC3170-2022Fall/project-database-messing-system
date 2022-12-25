@@ -1,10 +1,3 @@
-// This is a SUGGESTED skeleton for a class that describes a single
-// Condition (such as CCN = '99776').  You can throw this away if you
-// want,  but it is a good idea to try to understand it first.
-// Our solution changes or adds about 30 lines in this skeleton.
-
-// Comments that start with "//" are intended to be removed from your
-// solutions.
 package db61b;
 
 import java.util.List;
@@ -20,7 +13,6 @@ class Condition {
         _col1=col1;
         _relation=relation;
         _col2=col2;
-        // YOUR CODE HERE
     }
 
     /** A Condition representing COL1 RELATION 'VAL2', where COL1 is
@@ -38,7 +30,6 @@ class Condition {
      *  denote. */
     boolean testStr(Row... rows){
             if(_col2==null){
-                //System.out.println(_val2);
                 if(_val2.equals("NULL")) {
                     if(_relation.equals("=")){
                         if(_col1.getFrom(rows).equals("NULL"))return true;
@@ -56,7 +47,7 @@ class Condition {
                     try{
                         if(!(_col1.getFrom(rows).matches(_val2))){return false;}
                     }catch(java.util.regex.PatternSyntaxException e){
-                        throw error("Syntax error in LikeStatement");
+                        throw error("Syntax Error: invalid expression in LIKE clause.");
                     }
                     break;
                     case "=":
@@ -153,11 +144,11 @@ class Condition {
                     }
                 }
                 if(_col1.getFrom(rows).equals("NULL"))return false;
-                throw error("Data type error.");
+                throw error("Format Error: cannot convert non-Integer argument(s) into Integer in the contidion.");
             }
             switch(_relation){
                 case "like":
-                throw error("Data type error.");
+                throw error("Syntax Error: cannot apply LIKE to Integer.");
 
                 case "=":
                 if(val1!=val2){return false;}
@@ -204,7 +195,7 @@ class Condition {
                     return false;
                 }
                 if(_col2.getFrom(rows).equals("NULL")) return false;
-                throw error("Data type error.");
+                throw error("Format Error: cannot convert non-Integer argument(s) into Integer in the contidion.");
             }
             switch(_relation){
                 case "=":
@@ -267,11 +258,11 @@ class Condition {
                     }
                 }
                 if(_col1.getFrom(rows).equals("NULL"))return false;
-                throw error("Data type error.");
+                throw error("Format Error: cannot convert non-Double argument(s) into Double in the contidion.");
             }
             switch(_relation){
                 case "like":
-                throw error("Data type error.");
+                throw error("Syntax Error: cannot apply LIKE to Double.");
                 
                 case "=":
                 if(val1!=val2){return false;}
@@ -317,7 +308,7 @@ class Condition {
                     return false;
                 }
                 if(_col2.getFrom(rows).equals("NULL")) return false;
-                throw error("Data type error.");
+                throw error("Format Error: cannot convert non-Double argument(s) into Double in the contidion.");
             }
             switch(_relation){
                 case "=":
@@ -359,7 +350,7 @@ class Condition {
                 return testDouble(rows);
             }
             else{
-                System.out.printf("unknown type %d%n", type);
+                System.out.printf("Value Missmatch: type %d not found.%n", type);
                 return false;
             }
         }
@@ -389,7 +380,7 @@ class Condition {
                     }
                     break;
                     default:
-                    throw error("unknown type %d%n", cond._col1.get_type());
+                    throw error("Value Missmatch: type %s not found.%n", cond._col1.get_type());
                 }
             }
             catch(DBException e){

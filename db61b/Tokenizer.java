@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static db61b.Utils.*;// Some useful tools from other sources
+import static db61b.Utils.*;
 
 /** Represents a stream of db61b tokens read from a given Scanner.
  *  @author P. N. Hilfinger. */
@@ -41,9 +41,9 @@ class Tokenizer {
      *  if it is non-null. */
     Tokenizer(Scanner s, PrintStream prompter) {
         _input = s;
-        _buffer = new ArrayList<>();  // Temporarily store the tokens
-        _prompter = prompter;  // System.out
-        _continued = false;  // The command is not ended yet.
+        _buffer = new ArrayList<>();  /* Temporarily store the tokens */
+        _prompter = prompter;  /* System.out */
+        _continued = false;  /* The command is not ended yet. */
         _shouldPrompt = true;
         _k = 0;
         _mat = Pattern.compile(".").matcher("");
@@ -61,11 +61,11 @@ class Tokenizer {
                 token = "*EOF*";
             } else if (token.startsWith("'")) {
                 if (token.length() == 1 || !token.endsWith("'")) {
-                    throw error("unterminated literal constant or column name with comma.");
+                    throw error("Syntax Error: unterminated literal constant or column name with comma.");
                 }
             } else if (token.startsWith("/*")) {
                 if (token.length() < 4 || !token.endsWith("*/")) {
-                    throw error("unterminated comment.");
+                    throw error("Syntax Error: unterminated comment.");
                 }
                 continue;
             } else if (token.endsWith("\n")) {
@@ -77,8 +77,8 @@ class Tokenizer {
                 _shouldPrompt = true;
                 continue;
             }
-            _buffer.add(token);  // Store the token into the buffer
-            _continued = !token.equals(";");  // If the sentence ends with ";", we needn't continue.
+            _buffer.add(token);  /* Store the token into the buffer */
+            _continued = !token.equals(";");  /* If the sentence ends with ";", we needn't continue. */
             return;
         }
     }
@@ -89,11 +89,11 @@ class Tokenizer {
     private void prompt() {
         if (_shouldPrompt && _prompter != null) {
             if (_continued) {
-                _prompter.print("...");  // when the sentence is not ended by ";", print "..." to remind the user.
+                _prompter.print("...");  /* when the sentence is not ended by ";", print "..." to remind the user. */
             } else {
                 _prompter.print("> ");
             }
-            _prompter.flush();  // flush() is used to let the system print immediately before the program goes to the next step.
+            _prompter.flush();  /* flush() is used to let the system print immediately before the program goes to the next step. */
             _shouldPrompt = false;
         }
     }
@@ -109,9 +109,9 @@ class Tokenizer {
     String next(Pattern p) {
         if (!nextIs(p)) {
             if (nextIs("*EOF*")) {
-                throw error("unexpected end of input.");
+                throw error("Value Missmatch: unexpected end of input.");
             } else {
-                throw error("unexpected token: '%s'", peek());
+                throw error("Syntax Error: unexpected token: '%s'", peek());
             }
         }
         return next();
@@ -122,9 +122,9 @@ class Tokenizer {
     String next(String p) {
         if (!nextIs(p)) {
             if (nextIs("*EOF*")) {
-                throw error("unexpected end of input");
+                throw error("Value Missmatch: unexpected end of input.");
             } else {
-                throw error("unexpected token: '%s'", peek());
+                throw error("Syntax Error: unexpected token: '%s'", peek());
             }
         }
         return next();

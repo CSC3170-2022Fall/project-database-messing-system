@@ -1,11 +1,3 @@
-// This is a SUGGESTED skeleton for a class that parses and executes database
-// statements.  Be sure to read the STRATEGY section, and ask us if you have any
-// questions about it.  You can throw this away if you want, but it is a good
-// idea to try to understand it first.  Our solution adds or changes about 50
-// lines in this skeleton.
-
-// Comments that start with "//" are intended to be removed from your
-// solutions.
 package db61b;
 
 import java.io.PrintStream;
@@ -121,14 +113,14 @@ class CommandInterpreter {
     /** A new CommandInterpreter executing commands read from INP, writing
      *  prompts on PROMPTER, if it is non-null. */
 
-    // The commandInterpreter receives input and System.out from Main.
+    /* The commandInterpreter receives input and System.out from Main.*/ 
     CommandInterpreter(Scanner inp, PrintStream prompter) {
         _input = new Tokenizer(inp, prompter);
         _database = new Database();
     }
 
-    /** Parse and execute one statement from the token stream.  Return true
-     *  iff the command is something other than quit or exit. */
+    /* Parse and execute one statement from the token stream.  Return true
+     * iff the command is something other than quit or exit. */
     boolean statement() {
         switch (_input.peek()) {
         case "create":
@@ -164,7 +156,7 @@ class CommandInterpreter {
             _input.next();
             break;
         default:
-            throw error("unrecognizable command");
+            throw error("Syntax Error: unrecognizable command \"%s\"", _input.peek());
         }
         return true;
     }
@@ -205,25 +197,25 @@ class CommandInterpreter {
                         try {
                             Double.parseDouble(temp);
                         }catch(NumberFormatException e) {
-                            throw error("invalid type of insert value "+temp+": expected Double.");
+                            throw error("Format Error: invalid type of insert value \""+temp+"\": expected Double.");
                         }
                     }
                     if (types[cnt].equals("int")) {
                         try {
                             Integer.parseInt(temp);
                         }catch(NumberFormatException e) {
-                            throw error("invalid type of insert value "+temp+": expected Integer.");
+                            throw error("Format Error: invalid type of insert value \""+temp+"\": expected Integer.");
                         }
                     }
                     values.add(temp);
                     times++; cnt++;
                 } while (_input.nextIf(","));
                 if (times > table.columns())
-                    throw error("Too many arguments.");
+                    throw error("Syntax Error: too many arguments for INSERT statement.");
                 else if (times < table.columns())
-                    throw error("Too few arguments.");
+                    throw error("Syntax Error: missing arguments for INSERT statement.");
                 else if (_input.nextIf(")") == false)
-                    throw error("Syntax error, insert \") Statement\" to complete InsertionStatement.");
+                    throw error("Syntax error: unterminated INSERT statement: expected \")\".");
                 else
                     table.add(new Row(values.toArray(new String[values.size()])));
             }
@@ -236,7 +228,7 @@ class CommandInterpreter {
         _input.next("load");
         String name=name();
         if(!_input.peek().equals(";"))
-            throw error("Too many arguments");
+            throw error("Syntax Error: too many arguments for LOAD statement.");
         try{
             Table table=Table.readTable(name);
             _database.put(name,table);
@@ -254,7 +246,7 @@ class CommandInterpreter {
         String name = _input.next();
         Table table = tableName();
         if (!_input.peek().equals(";"))
-            throw error("Too many arguments");
+            throw error("Syntax Error: too many arguments for STORE statement.");
         try{
             table.writeTable(name);
             System.out.printf("Stored %s.db%n", name);
@@ -271,30 +263,28 @@ class CommandInterpreter {
         String name = _input.peek();
         Table table = tableName();
         if (!_input.peek().equals(";"))
-            throw error("Too many arguments");
+            throw error("Syntax Error: too many arguments for COMMIT statement");
         try{
-            // update snapshots
+            /* update snapshots */
             String version_name = table.updateSnapshots(name);
 
-            // update logs
+            /* update logs */
             table.updateLogs(name, version_name);
 
-            // update versions
+            /* update versions */
             table.removeCurrentVersion(name, version_name);
-            if (_database.version_tree.Find(version_name).equals("Version Not Found")) {
+            if (_database.version_tree.Find(version_name).equals("Value Missmatch: no such version in the history.")) {
                 table.addVersion(name, version_name);
-                // System.out.println("new version");
             }
             table.addVersion(name, version_name);
-            // System.out.println("current version");
 
-            // update version_tree
-            if (_database.version_tree.Find(version_name).equals("Version Not Found")) {
+            /* update version_tree */
+            if (_database.version_tree.Find(version_name).equals("Value Missmatch: no such version in the history.")) {
                 _database.version_tree.Insert(version_name);
             }
 
-            System.out.printf("Committed %s.db%n", name);
-            System.out.println("Snapshot version name:" + version_name);
+            System.out.printf("Note: committed %s.db%n", name);
+            System.out.println("Note: snapshot version name:" + version_name);
         }
         catch(DBException e){
             throw error("%s", e.getMessage());
@@ -318,14 +308,16 @@ class CommandInterpreter {
             String time = literal();
             version_name = Table.findVersionAt(time, table_name);
         }
-        if (version_name.equals("Invalid time") || version_name.equals("Version Not Found") || version_name.equals("More than one version shares the same name")) {
+        if (version_name.equals("VersionNotFound: invalid time.")
+             || version_name.equals("Value Missmatch: no such version in the history.")
+             || version_name.equals("VersionNotFound: duplicate version name in the history.")) {
             throw error(version_name);
         } else {
             try {
                 version_name = "snapshots/" + version_name;
                 Table table=Table.readTable(version_name);
                 _database.put(table_name,table);
-                System.out.println("Rollbacked "+table_name+".db");
+                System.out.println("Note: rollbacked "+table_name+".db");
             }
             catch(DBException e){
                 throw error("%s", e.getMessage());
@@ -380,10 +372,10 @@ class CommandInterpreter {
                 columnTitles.add(columnName());
                 String type_string = columnName();
                 int type = gettype(type_string);
-                if (type == -1) throw error("Syntax error, every column needs a data type(int,double or string)");
+                if (type == -1) throw error("Syntax Error: a column must have its type of int, double or string.");
                 columnTypes.add(type_string);
             } while (_input.nextIf(","));
-            if(!_input.nextIf(")")) throw error("Syntax error, insert \") Statement\" to complete CreateStatement.");
+            if(!_input.nextIf(")")) throw error("Syntax Error: unterminated CREATE statement: expected \")\".");
             else table = new Table(columnTitles,columnTypes);
             if(primary_key!=null) table.primary_key(primary_key);
         } else {
@@ -393,7 +385,7 @@ class CommandInterpreter {
                 table = selectClause();
             }
             else {
-                throw error("Error: A table must have at least one visible column.");
+                throw error("Syntax Error: A table must have at least one column.");
             }
         }
         return table;
@@ -413,32 +405,40 @@ class CommandInterpreter {
          * to do SELECT round score plus 100 3, avg age from students;
          * But it is allowed to do SELECT round score plus 100 3, age from students;
          */
-
-        // 3 lists used for ROUND columnName operator operand reservedDigit
+        /*
+         * operator / operand / reservedDigit: 3 lists used for "ROUND columnName operator operand reservedDigit" 
+         * 
+         * columnTitle: used to direct the select function
+         * 
+         * changedTitle / changedType: for columns with aggregated functions, we have
+         *   to change the columnTitles and types. 
+         * 
+         * computed: for one-row aggregated functions, return a row with all functions results
+         * e.g. select avg score, max age from students;
+         * the computed list contains a row with data[avg(score), max(age)].
+         * Then it is inserted into a new table called res.
+         * 
+         * functions: used to contain the functions used. Functions are stored as integers.
+         * Note: the ROUND function is not stored in this list. 
+         * 
+         * rounds: used to contain whether a column needs to be rounded. 0 as not, 1 as yes. 
+         * 
+         * funcToColName: for each function stored in the "functions" list, associate it with the columnName. 
+         * 
+         * flag is used for SELECT *, 
+         *   and countStar is used to get the columnId to which the COUNT * corresponds.
+         */
         _input.setPos();
         ArrayList<String> operator = new ArrayList<String>();
         ArrayList<String> operand = new ArrayList<String>();
         ArrayList<String> reservedDigit = new ArrayList<String>();
-        // columnTitles used to direct the select function
         ArrayList<String> columnTitle = new ArrayList<String>();
-        // for columns with aggregated functions, we have to change the columnTitles and types.
         ArrayList<String> changedTitle = new ArrayList<String>();
         ArrayList<String> changedType = new ArrayList<String>();
-        /* for one-row aggregated functions, return a row with all functions results
-         * e.g. select avg score, max age from students;
-         * the computed list contains a row with data[avg(score), max(age)].
-         * Then it is inserted into a new table called res.
-         */
         ArrayList<String> computed = new ArrayList<String>();
-        // used to contain the functions used. Functions are stored as integers.
-        // Note: the ROUND function is not stored in this list.
         ArrayList<Integer> functions = new ArrayList<Integer>();
-        // used to contain whether a column needs to be rounded. 0 as not, 1 as yes.
         ArrayList<Integer> rounds = new ArrayList<Integer>();
-        // for each function stored in the "functions" list, associate it with the columnName.
         ArrayList<String> funcToColName = new ArrayList<String>();
-        // flag is used for SELECT *, 
-        // and countStar is used to get the columnId to which the COUNT * corresponds.
         int flag=0, countStar = -1;
         boolean haveFunc = true, special_round;
         while(!_input.nextIf("from")){
@@ -472,17 +472,20 @@ class CommandInterpreter {
                         _input.next();
                         break;
                     case "round":
-                        rounds.add(1); // this column needs ROUND
-                        special_round = true; // for this column, the user uses ROUND function.
+                        /* this column needs ROUND */
+                        rounds.add(1); 
+                        /* for this column, the user uses ROUND function. */
+                        special_round = true;
                         haveFunc = false;
                         _input.next();
                         break;
                     default:
-                        rounds.add(0); // this column does not need ROUND
+                        /* this column does not need ROUND */
+                        rounds.add(0); 
                         haveFunc = false;
                 }
                 if (!haveFunc && functions.size() > 0) {
-                    throw error("aggregated SELECT list contains nonaggregated column, which is incompatible.");
+                    throw error("Syntax Error: aggregate SELECT statement without GROUP BY contains nonaggregate argument(s), which is incompatible.");
                 }
                 String colName = columnName();
                 if ((!haveFunc || !columnTitle.contains(colName)) && !colName.equals("*"))
@@ -501,7 +504,7 @@ class CommandInterpreter {
                         case "times": temp1 = "*"; break;
                         case "divided_by": temp1 = "/"; break;
                         default:
-                            throw error("invalid operator \'%s\'.", temp1);
+                            throw error("Syntax Error: invalid operator \'%s\'.", temp1);
                     }
                     changedTitle.add("ROUND(" + colName + temp1 + temp2 + "~" + temp3 + ")");
                 }
@@ -535,7 +538,7 @@ class CommandInterpreter {
         }
 
         if (columnTitle.size() == 0 && flag==0 && countStar == -1){
-            throw error("missing argument(s) for statement SELECT: select at least one column.");
+            throw error("Syntax Error: missing argument(s) for SELECT statement: select at least one column.");
         }
         Table Table1 = tableName();
         Table Table2 = null;
@@ -550,7 +553,7 @@ class CommandInterpreter {
         } else {
             conditions = conditionClause(Table1);
         }
-        // In statement
+        /* In statement */
         if(_swap != null){
             if (_input.nextIf("not")) {
                 Table1.change_to_complement();
@@ -560,7 +563,7 @@ class CommandInterpreter {
                 swap.add(s);
             }
             _swap = null;
-            if(!_input.nextIf("select")) throw error("Syntax Error. Need a \"select\" after \"in\"");
+            if(!_input.nextIf("select")) throw error("Syntax Error: expected \"select\" after \"in\"");
             Table2 = selectClause();
             Table2 = Table2.select(Table2,swap,null);
         }
@@ -585,10 +588,10 @@ class CommandInterpreter {
                 if(tempTitle.contains(Table2.getTitle(i)))continue;
                 tempTitle.add(Table2.getTitle(i));
             }
-            // contain the result of select.
+            /* contain the result of select. */
             Table selectRes = Table1.select(Table2, columnTitle, conditions);
 
-            // group by clause
+            /* group by clause */
             if (_input.nextIf("group") && _input.nextIf("by")) {
                 selectRes = groupByClause(selectRes, haveFunc);
                 return selectRes.changeTitle(changedTitle);
@@ -607,7 +610,7 @@ class CommandInterpreter {
                 res.add(new Row(computed.toArray(new String[computed.size()])));
                 return res;
             }
-            // operator.size > 0 means the ROUND function exists.
+            /* operator.size > 0 means the ROUND function exists. */
             if (operator.size() > 0) {
                 Table res = selectRes.conductRound(rounds, operand, operator, reservedDigit);
                 return res.changeTitle(changedTitle);
@@ -622,20 +625,22 @@ class CommandInterpreter {
             }
             
             if (columnTitle.size() == 0) {
-                // for COUNT *, we do not store "*" as columnTitle,
-                // so we need to specify a column of the given table for COUNT
-                // if there is no other functions.
+                /* for COUNT *, we do not store "*" as columnTitle,
+                 * so we need to specify a column of the given table for COUNT
+                 * if there is no other functions. 
+                 */
                 funcToColName.set(countStar, Table1.getTitle(0));
                 columnTitle.add(Table1.getTitle(0));
             }
             else if (countStar != -1){
-                // if there are other functions, just let COUNT deal with
-                // the same column.
+                /*  if there are other functions, just let COUNT deal with
+                 * the same column.
+                 */
                 funcToColName.set(countStar, columnTitle.get(0));
             }
             Table selectRes = Table1.select(columnTitle, conditions);
             
-            // group by clause
+            /* group by clause */
             if (_input.nextIf("group") && _input.nextIf("by")) {
                 selectRes = groupByClause(selectRes, haveFunc);
 
@@ -656,20 +661,16 @@ class CommandInterpreter {
         }
     }
 
-    /** Parse and execute a group by clause from the token stream, returning the
-     *  resulting table containing grouped information. */
+    /* Parse and execute a group by clause from the token stream, returning the
+     * resulting table containing grouped information. */
     Table groupByClause(Table table, boolean haveFunc) {
-        if (!haveFunc) throw error("no aggregation functions for group by statement");
+        if (!haveFunc) throw error("Syntax Error: missing aggregate function for GROUP BY statement.");
         ArrayList<String> groupByColumns = new ArrayList<>();
 
         _input.returnPos();
         ArrayList<String> Order = new ArrayList<>();
         ArrayList<String> columnNames = new ArrayList<>();
-        Order.add(_input.peek());
-        columnNames.add(_input.next());
-        _input.nextIf(Tokenizer.LITERAL);
-        Order.add("asc");
-        while (_input.nextIf(",")) {
+        do {
             if (!_input.nextIs("count") &&
             !_input.nextIs("avg") &&
             !_input.nextIs("max") &&
@@ -681,44 +682,46 @@ class CommandInterpreter {
                 _input.nextIf(Tokenizer.LITERAL);
                 Order.add("asc");
             } else break;
-        }
-        
+        } while (_input.nextIf(","));
+
         String agg = _input.next();
         String col = columnName();
         if (Objects.equals(col, "*")) {
-            throw error("group by does not support '*', please use column name instead");
+            throw error("Syntax Error: symbol '*' is unsupported in GROUP BY, use column name instead.");
         }
         _input.nextIf(Tokenizer.LITERAL);
         ArrayList<String> colNames = new ArrayList<>();
         colNames.add(col);
         
         while (!((_input.nextIf("group") && _input.nextIf("by")))) {
+            if (_input.nextIs(","))
+                throw error("Syntax Error: only the last argument can be aggregate function in GROUP BY.");
             _input.next();
         }
 
         String columnName = columnName();
         int id = table.findColumn(columnName);
         if (id == -1) {
-            throw error("unknown column: %s", columnName);
+            throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
         } else groupByColumns.add(columnName);
 
         while (_input.nextIf(",")) {
             columnName = columnName();
             id = table.findColumn(columnName);
             if (id == -1) {
-                throw error("unknown column: %s", columnName);
+                throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
             } else groupByColumns.add(columnName);
         }
 
         id = table.findColumn(columnName);
         if (id == -1) {
-            throw error("unknown column: %s", columnName);
+            throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
         }
 
-        if (groupByColumns.size() != columnNames.size()) throw error("columns mismatch in group by statement");
+        if (groupByColumns.size() != columnNames.size()) throw error("Value Missmatch: columns mismatch in GROUP BY statement");
         else {
             for (String s : groupByColumns) {
-                if (!columnNames.contains(s)) throw error("columns mismatch in group by statement");
+                if (!columnNames.contains(s)) throw error("Value Missmatch: columns mismatch in GROUP BY statement");
             }
         }
         List<Integer> index = new ArrayList<>();
@@ -755,7 +758,7 @@ class CommandInterpreter {
                 titles[titles.length - 1] = "COUNT(" + col + ")";
                 aggFunc.add(3);
             }
-            case "round" -> throw error("round function does not support group by statement");
+            case "round" -> throw error("Syntax Error: ROUND function does not support GROUP BY statement.");
         }
 
         Table result = new Table(titles, table.get_types());
@@ -784,7 +787,7 @@ class CommandInterpreter {
     }
 
 
-    /** Parse and execute an order by clause from the token stream, returning the
+    /* Parse and execute an order by clause from the token stream, returning the
      * resulting list containing the order information.
      * grammar: select <column names> from <tables> where <conditions> order by '<column name>';
      */
@@ -794,7 +797,7 @@ class CommandInterpreter {
             String columnName = literal();
             int id = table.findColumn(columnName);
             if (id == -1) {
-                throw error("unknown column: %s", columnName);
+                throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
             } else {
                 Order.add(columnName);
                 if (_input.nextIs("desc") || _input.nextIs("asc")) {
@@ -807,7 +810,7 @@ class CommandInterpreter {
                 columnName = literal();
                 id = table.findColumn(columnName);
                 if (id == -1) {
-                    throw error("unknown column: %s", columnName);
+                    throw error("Value Missmatch: column \"%s\" does not exist.", columnName);
                 } else {
                     Order.add(columnName);
                     if (_input.nextIs("desc") || _input.nextIs("asc")) {
@@ -823,39 +826,39 @@ class CommandInterpreter {
         }
     }
 
-    /** Parse and return a valid name (identifier) from the token stream. */
+    /* Parse and return a valid name (identifier) from the token stream. */
     String name() {
         return _input.next(Tokenizer.IDENTIFIER);
     }
 
-    /** Parse and return a valid column name from the token stream. Column
-     *  names are simply names; we use a different method name to clarify
-     *  the intent of the code. */
+    /* Parse and return a valid column name from the token stream. Column
+     * names are simply names; we use a different method name to clarify
+     * the intent of the code. */
     String columnName() {
         return name();
     }
 
-    /** Parse a valid table name from the token stream, and return the Table
-     *  that it designates, which must be loaded. */
+    /* Parse a valid table name from the token stream, and return the Table
+     * that it designates, which must be loaded. */
     Table tableName() {
         String name = name();
         Table table = _database.get(name);
         if (table == null) {
-            throw error("unknown table: %s", name);
+            throw error("Value Missmatch: table \"%s\" does not exist.", name);
         }
         return table;
     }
 
-    /** Parse a literal and return the string it represents (i.e., without
-     *  single quotes). */
+    /* Parse a literal and return the string it represents (i.e., without
+     * single quotes). */
     String literal() {
         String lit = _input.next(Tokenizer.LITERAL);
         return lit.substring(1, lit.length() - 1).trim();
     }
 
-    /** Parse and return a list of Conditions that apply to TABLES from the
-     *  token stream.  This denotes the conjunction (`and') zero
-     *  or more Conditions. */
+    /* Parse and return a list of Conditions that apply to TABLES from the
+     * token stream.  This denotes the conjunction (`and') zero
+     * or more Conditions. */
     ArrayList<Condition> conditionClause(Table... tables) {
         ArrayList<Condition> alfa=new ArrayList<Condition>();
         if(_input.nextIf("where")){
@@ -869,7 +872,7 @@ class CommandInterpreter {
                      * between 'left_bound' and 'right_bound'*/
                     if (_input.nextIf("between")) {
 
-                        // add Condition(col1, '>=', 'left_bound')
+                        /* add Condition(col1, '>=', 'left_bound') */
                         relation = ">=";
                         String bound = _input.next();
                         val = bound.substring(1, bound.length() - 1);
@@ -880,12 +883,12 @@ class CommandInterpreter {
                             if (tables.length != 1)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
                             else
-                                throw error("column '%s' does not exist.", col1);
+                                throw error("Value Missmatch: column \"%s\" does not exist.", col1);
                         }
 
-                        // add Condition(col1, '<=', 'right_bound')
+                        /* add Condition(col1, '<=', 'right_bound') */
                         if(!_input.nextIf("and")){
-                            throw error("Incorrect 'between' clause");
+                            throw error("Syntax Error: expected \"and\" in BETWEEN clause.");
                         }
 
                         relation = "<=";
@@ -898,12 +901,12 @@ class CommandInterpreter {
                             if (tables.length != 1)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
                             else
-                                throw error("column '%s' does not exist.", col1);
+                                throw error("Value Missmatch: column \"%s\" does not exist.", col1);
                         }
 
                         continue;
                     }
-                    // Like RELATION cause
+                    /* Like RELATION clause */
                     if (_input.nextIf("like")) {
                         relation = "like";
                         String tmp_val = literal();
@@ -912,13 +915,13 @@ class CommandInterpreter {
                         try{
                             alfa.add(new Condition(new Column(col1, 0, tables[0]), relation, val));
                         } catch(DBException e){
-                            throw error("column '%s' does not exist.", col1);
+                            throw error("Value Missmatch: column \"%s\" does not exist.", col1);
                         }
                         continue;
 
                     }
 
-                    // IN cause
+                    /* IN clause */
                     if (_input.peek().equals(",") || _input.peek().equals("in") || _input.peek().equals("not")){
                         ArrayList<String> swap = new ArrayList<String>();
                         swap.add(col1);
@@ -930,7 +933,7 @@ class CommandInterpreter {
                         return alfa;
                     }
 
-                    // single RELATION cause
+                    /* single RELATION clause */
                     relation = _input.next();
                     if(_input.nextIs(Tokenizer.LITERAL)){
                         val = _input.next();
@@ -942,7 +945,7 @@ class CommandInterpreter {
                             if (tables.length != 1)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,val));
                             else
-                                throw error("column '%s' does not exist.", col1);
+                                throw error("Value Missmatch: column \"%s\" does not exist.", col1);
                         }
                     }
                     else{
@@ -954,7 +957,7 @@ class CommandInterpreter {
                             if (tables.length >= 2)
                                 alfa.add(new Condition(new Column(col1,1,tables[0],tables[1]),relation,new Column(col2,0,tables[0])));
                             else
-                                throw error("too few tables to satisfy the statement WHERE: please include two tables.");
+                                throw error("Syntax Error: missing argument for WHERE clause: expected two tables.");
                         }
                     }
                 }

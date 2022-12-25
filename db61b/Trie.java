@@ -16,7 +16,7 @@ class Trie {
 				hash_text = "0" + hash_text;
 			return hash_text;
 		} catch (NoSuchAlgorithmException e) {
-			throw error("Please ensure using the correct utf-8");
+			throw error("Format Error: please ensure using the correct utf-8.");
 		}
 	}
 
@@ -74,15 +74,15 @@ class Trie {
 			int next_number = character_to_number(c);
 			if (next_number == -1) {
 				System.out.println(s);
-				throw error("Invalid SHA-1 code.");
+				throw error("Format Error: invalid SHA-1 code.");
 			}
 			if (now.next[next_number] == null) {
-				return "Version Not Found"; // no such prefix
+				return "Value Missmatch: no such version in the history."; // no such prefix
 			}
 			now = now.next[next_number];
 		}
 		if (now.sum > 1) {
-			return "More than one version shares the same name"; //more than one string
+			return "VersionNotFound: duplicate version name in the history."; //more than one string
 		}
 		while (now.sum == 1) {
 			now = now.next[now.only];

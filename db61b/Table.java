@@ -1,10 +1,3 @@
-// This is a SUGGESTED skeleton for a class that represents a single
-// Table.  You can throw this away if you want, but it is a good
-// idea to try to understand it first.  Our solution changes or adds
-// about 100 lines in this skeleton.
-
-// Comments that start with "//" are intended to be removed from your
-// solutions.
 package db61b;
 
 import java.io.BufferedReader;
@@ -34,12 +27,12 @@ class Table implements Iterable<Row> {
         for (int i = columnTitles.length - 1; i >= 1; i -= 1) {
             for (int j = i - 1; j >= 0; j -= 1) {
                 if (columnTitles[i].equals(columnTitles[j])) {
-                    throw error("duplicate column name: %s",
+                    throw error("Value Missmatch: duplicate column name: %s.",
                             columnTitles[i]);
                 }
             }
             if (gettype(columnTypes[i]) == -1)
-                throw error("wrong data type");
+                throw error("Format Error: invalid data type \"%s\".", columnTitles[i]);
         }
         _column_types = columnTypes;
         _column_titles = columnTitles;
@@ -64,9 +57,6 @@ class Table implements Iterable<Row> {
     }
 
     public Double maxColumn( int colId) {
-        if (_column_types[colId].equals("string")) {
-            throw error("cannot apply MAX to column '%s' with type string.", getTitle(colId));
-        }
         int flag = 0;
         Double max = 0.0d;
         for (Row row : _rows) {
@@ -78,16 +68,13 @@ class Table implements Iterable<Row> {
                 } else if (temp > max)
                     max = temp;
             }catch (java.lang.NumberFormatException e) {
-                throw error("Data type error. Cannot do the operation \"max\" on it.");
+                throw error("Format Error: cannot apply MAX to value \"%s\".", row.get(colId));
             }
         }
         return max;
     }
 
     public Double minColumn(int colId) {
-        if (_column_types[colId].equals("string")) {
-            throw error("cannot apply MIN to column '%s' with type string.", getTitle(colId));
-        }
         int flag = 0;
         Double min = 0.0d;
         for (Row row : _rows) {
@@ -99,22 +86,19 @@ class Table implements Iterable<Row> {
                 } else if (temp < min)
                     min = temp;
             } catch (java.lang.NumberFormatException e) {
-                throw error("Data type error. Cannot do the operation \"min\" on it.");
+                throw error("Format Error: cannot apply MIN to value \"%s\".", row.get(colId));
             }
         }
         return min;
     }
 
     public Double avgColumn(int colId) {
-        if (_column_types[colId].equals("string")) {
-            throw error("cannot apply AVG to column '%s' with type string.", getTitle(colId));
-        }
         double avg = 0;
         for (Row row : _rows) {
             try{
                 avg += Double.parseDouble(row.get(colId));
             } catch (java.lang.NumberFormatException e) {
-                throw error("Data type error. Cannot do the operation \"average\" on it.");
+                throw error("Format Error: cannot apply AVG to value \"%s\".", row.get(colId));
             }
         }
         avg /= _rows.size();
@@ -122,23 +106,20 @@ class Table implements Iterable<Row> {
     }
 
     public Double sumColumn(int colId) {
-        if (_column_types[colId].equals("string")) {
-            throw error("cannot apply AVG to column '%s' with type string.", getTitle(colId));
-        }
         double sum = 0;
         for (Row row : _rows) {
             try{
                 sum += Double.parseDouble(row.get(colId));
             } catch (java.lang.NumberFormatException e) {
-                throw error("Data type error. Cannot do the operation \"average\" on it.");
+                throw error("Format Error: cannot apply SUM to value \"%s\".", row.get(colId));
             }
         }
         return sum;
     }
 
     public ArrayList<String> conductFunctions(ArrayList<Integer> functions, ArrayList<String> names) {
-        // since for SELECT with aggregated functions, the result can only be one row,
-        // we just need to store all the data in one list and return.
+        /* since for SELECT with aggregated functions, the result can only be one row,
+         * we just need to store all the data in one list and return. */
         ArrayList<String> res = new ArrayList<String>();
         for (int i = 0; i < functions.size(); ++i) {
             switch (functions.get(i)) {
@@ -165,7 +146,7 @@ class Table implements Iterable<Row> {
     public Table conductRound(ArrayList<Integer> rounds, ArrayList<String> operand, ArrayList<String> operator,
             ArrayList<String> reserve) {
         Table res = new Table(_column_titles, _column_types);
-        // insert result rows into the table "res" one by one.
+        /* insert result rows into the table "res" one by one. */
         for (Row row : _rows) {            
             ArrayList<String> newRow = new ArrayList<String>();
             for (int i = 0, index = 0; i < row.size(); i++) {
@@ -173,11 +154,14 @@ class Table implements Iterable<Row> {
                     newRow.add(row.get(i));
                 }
                 else{
-                    if (_column_types[i].equals("string")) {
-                        throw error("cannot apply ROUND to column '%s' with type string.", getTitle(i));
+                    int limit = 0;
+                    double num = 0.0d;
+                    try {
+                        limit = Integer.parseInt(reserve.get(index));
+                        num = Double.parseDouble(operand.get(index));
+                    } catch (java.lang.NumberFormatException e) {
+                        throw error("Format Error: invalid format for the operand or reservation.");
                     }
-                    int limit = Integer.parseInt(reserve.get(index));
-                    double num = Double.parseDouble(operand.get(index));
                     double calc = 0.0d;
                     String op = operator.get(index);
                     switch (op) {
@@ -186,31 +170,33 @@ class Table implements Iterable<Row> {
                                 calc = Double.parseDouble(row.get(i)) + num;
                                 break;
                             } catch (java.lang.NumberFormatException e) {
-                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                                throw error("Format Error: cannot apply the operation \"%s\" on the value \"%s\".", op, row.get(i));
                             }
                         case "minus":
                             try {
                                 calc = Double.parseDouble(row.get(i)) - num;
                                 break;
                             } catch (java.lang.NumberFormatException e) {
-                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                                throw error("Format Error: cannot apply the operation \"%s\" on the value \"%s\".", op, row.get(i));
                             }
                         case "times":
                             try {
                                 calc = Double.parseDouble(row.get(i)) * num;
                                 break;
                             } catch (java.lang.NumberFormatException e) {
-                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                                throw error("Format Error: cannot apply the operation \"%s\" on the value \"%s\".", op, row.get(i));
                             }
                         case "divided_by":
                             try {
+                                if (num == 0)
+                                    throw error("Syntax Error: divisor cannot be 0.");
                                 calc = Double.parseDouble(row.get(i)) / num;
                                 break;
                             } catch (java.lang.NumberFormatException e) {
-                                throw error("Data type error. Cannot do the operation \"%s\" on it.", op);
+                                throw error("Format Error: cannot apply the operation \"%s\" on the value \"%s\".", op, row.get(i));
                             }
                         default:
-                            throw error("invalid operator '%s'.", op);
+                            throw error("Syntax Error: invalid operator \"%s\".", op);
                     }
                     NumberFormat nf = NumberFormat.getNumberInstance();
                     nf.setMaximumFractionDigits(limit);
@@ -224,18 +210,17 @@ class Table implements Iterable<Row> {
         return res;
     }
 
-    /** Return the title of the Kth column. Requires 0 <= K < columns(). */
+    /* Return the title of the Kth column. Requires 0 <= K < columns(). */
     public String getTitle(int k) {
         return _column_titles[k];
     }
 
-    /** Return all titles of the table. */
+    /* Return all titles of the table. */
     public String[] getTitles() {
         return _column_titles;
     }
 
-    /**
-     * Return the number of the column whose title is TITLE, or -1 if
+    /* Return the number of the column whose title is TITLE, or -1 if
      * there isn't one.
      */
     public int findColumn(String title) {
@@ -245,37 +230,35 @@ class Table implements Iterable<Row> {
         return -1;
     }
 
-    /** Return the number of Rows in this table. */
+    /* Return the number of Rows in this table. */
     public int size() {
         return _rows.size(); 
     }
 
-    /** Returns an iterator that returns my rows in an unspecfied order. */
+    /* Returns an iterator that returns my rows in an unspecfied order. */
     @Override
     public Iterator<Row> iterator() {
         return _rows.iterator();
     }
 
-    /**
-     * Add ROW to THIS if no equal row already exists. Return true if anything
+    /* Add ROW to THIS if no equal row already exists. Return true if anything
      * was added, false otherwise.
      */
     public boolean add(Row row) {
         if (!(_rows.contains(row))) {
             if (_primary_key != -1) {
                 if (_primary_key_set.contains(row.get(_primary_key))) {
-                    return false; // duplicate primary key
+                    return false; /* duplicate primary key */
                 }
                 _primary_key_set.add(row.get(_primary_key));
             }
             _rows.add(row);
             return true;
         }
-        return false; // duplicate row
+        return false; /* duplicate row */
     }
 
-    /**
-     * Read the contents of the file NAME.db, and return as a Table.
+    /* Read the contents of the file NAME.db, and return as a Table.
      * Format errors in the .db file cause a DBException.
      */
     static Table readTable(String name) {
@@ -289,13 +272,13 @@ class Table implements Iterable<Row> {
             String header = input.readLine();
             if (header == null) {
                 input.close();
-                throw error("missing header in DB file");
+                throw error("FileFormatError: missing header in DB file.");
             }
             String[] columnNames = header.split(",");
             String types = input.readLine();
             if (types == null) {
                 input.close();
-                throw error("missing data types in DB file");
+                throw error("FileFormatError: missing data types in DB file.");
             }
             String[] columnTypes = types.split(",");
             table = new Table(columnNames, columnTypes);
@@ -304,7 +287,7 @@ class Table implements Iterable<Row> {
                 String[] value = header.split(",");
                 if (value.length != columnNames.length) {
                     input.close();
-                    throw error("wrong data in DB file");
+                    throw error("FileFormatError: missing data in rows in DB file.");
                 }
                 table._rows.add(new Row(value));
                 if (input == null)
@@ -313,9 +296,9 @@ class Table implements Iterable<Row> {
             }
             input.close();
         } catch (FileNotFoundException e) {
-            throw error("could not find %s.db", name);
+            throw error("FileNotFound: cannot find %s.db.", name);
         } catch (IOException e) {
-            throw error("problem reading from %s.db", name);
+            throw error("IOException: cannot read from %s.db.", name);
         } finally {
             if (input != null) {
                 try {
@@ -358,7 +341,7 @@ class Table implements Iterable<Row> {
                 output.println("");
             }
         } catch (IOException e) {
-            throw error("trouble writing to %s.db", name);
+            throw error("IOException: cannot write to %s.db.", name);
         } finally {
             if (output != null) {
                 output.close();
@@ -367,7 +350,7 @@ class Table implements Iterable<Row> {
     }
 
     String updateSnapshots(String name) {
-        // get version name
+        /* get version name */
         String str = "";
         for (int i = 0; i < _column_titles.length; i++) {
             str += _column_titles[i];
@@ -379,7 +362,7 @@ class Table implements Iterable<Row> {
         }
         str = Trie.encrypt_sha_1(str);
 
-        // update Snapshots folder
+        /* update Snapshots folder */
         PrintStream output;
         output = null;
         try {
@@ -405,7 +388,7 @@ class Table implements Iterable<Row> {
                 output.println("");
             }
         } catch (IOException e) {
-            throw error("trouble writing to %s.db", name);
+            throw error("IOException: cannot write to %s.db.", name);
         } finally {
             if (output != null) {
                 output.close();
@@ -417,13 +400,13 @@ class Table implements Iterable<Row> {
     /** Removes the last line of the version file. */
     void removeCurrentVersion(String name, String version_name) {
 
-        // If NAME doesn't have a version list, create one.
+        /* If NAME doesn't have a version list, create one. */
         File file = new File("versions/" + name + ".db");
         if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                throw error("Cannot initialize a version file for %s", name);
+                throw error("IOException: cannot initialize a version file named \"%s\"", name);
             }
             return;
         }
@@ -434,10 +417,10 @@ class Table implements Iterable<Row> {
             f.writeBytes(version_name);
             f.close();
         } catch (IOException e) {
-            throw error("trouble adding version to %s", name);
+            throw error("IOException: cannot add version to \"%s\"", name);
         }
 
-        // If NAME already has a version list, delete the last line.
+        /* If NAME already has a version list, delete the last line. */
         try {
             RandomAccessFile f = new RandomAccessFile("versions/" + name + ".db", "rw");
             long length = f.length() - 1;
@@ -450,7 +433,7 @@ class Table implements Iterable<Row> {
             f.setLength(length);
             f.close();
         } catch (IOException e) {
-            throw error("trouble removing version from %s", name);
+            throw error("IOException: cannot remove version from \"%s\"", name);
         }
     }
 
@@ -464,18 +447,18 @@ class Table implements Iterable<Row> {
 
             f.close();
         } catch (IOException e) {
-            throw error("trouble adding version to %s", name);
+            throw error("IOException: cannot add version to \"%s\"", name);
         }
     }
 
     void updateLogs(String name, String version_name) {
-        // If NAME doesn't have a log, create one.
+        /* If NAME doesn't have a log, create one. */
         File file = new File("logs/" + name + ".log");
         if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                throw error("Cannot initialize a log for %s", name);
+                throw error("IOException: cannot initialize log for \"%s\"", name);
             }
         }
         try {
@@ -487,13 +470,13 @@ class Table implements Iterable<Row> {
             f.writeBytes("\n");
             f.close();
         } catch (IOException e) {
-            throw error("trouble updating %s.log", name);
+            throw error("IOException: cannot update %s.log", name);
         }
     }
 
-    /** Return the version_name of table NAME at TIME */
+    /* Return the version_name of table NAME at TIME */
     static String findVersionAt(String time, String name) {
-        String version_name = "Invalid time";
+        String version_name = "VersionNotFound: invalid time.";
         File file = new File("logs/" + name + ".log");
         BufferedReader reader = null;
         try {
@@ -513,8 +496,8 @@ class Table implements Iterable<Row> {
         return version_name;
     }
 
-    /** Print my contents on the standard output. */
-    final int MAX_ROW = 100;  // The maximum of output rows
+    /* Print my contents on the standard output. */
+    final int MAX_ROW = 100;  /* The maximum of output rows */
 
     int[] find_max_length() {
         int[] max_length = new int[_column_titles.length];
@@ -617,8 +600,7 @@ class Table implements Iterable<Row> {
         }
     }
 
-    /**
-     * Return a new Table whose columns are COLUMNNAMES, selected from
+    /* Return a new Table whose columns are COLUMNNAMES, selected from
      * rows of this table that satisfy CONDITIONS.
      */
     Table select(List<String> columnNames, List<Condition> conditions) {
@@ -626,14 +608,12 @@ class Table implements Iterable<Row> {
         for (int i = 0; i < columnNames.size(); i++) {
             int id = findColumn(columnNames.get(i));
             if (id == -1) {
-                throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
             }
             String type = this.get_type(id);
             columnTypes.add(type);
         }
-        // System.out.println(columnTypes);
         Table result = new Table(columnNames, columnTypes);
-        // System.out.println("????");
         for (Row row : _rows) {
             int flag = 1;
             if (conditions != null) {
@@ -646,7 +626,7 @@ class Table implements Iterable<Row> {
                 for (int i = 0; i < columnNames.size(); i++) {
                     int id = findColumn(columnNames.get(i));
                     if (id == -1) {
-                        throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                        throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
                     }
                     data[i] = row.get(id);
                 }
@@ -656,8 +636,7 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-    /**
-     * Return a new Table whose columns are COLUMNNAMES, selected
+    /* Return a new Table whose columns are COLUMNNAMES, selected
      * from pairs of rows from this table and from TABLE2 that match
      * on all columns with identical names and satisfy CONDITIONS.
      */
@@ -672,7 +651,7 @@ class Table implements Iterable<Row> {
             } else {
                 id = table2.findColumn(columnNames.get(i));
                 if (id == -1) {
-                    throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                    throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
                 } else {
                     String type = table2.get_type(id);
                     columnTypes.add(type);
@@ -712,7 +691,7 @@ class Table implements Iterable<Row> {
                         } else {
                             id = table2.findColumn(columnNames.get(i));
                             if (id == -1) {
-                                throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                                throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
                             }
                             data[i] = row2.get(id);
                         }
@@ -741,7 +720,7 @@ class Table implements Iterable<Row> {
                             } else {
                                 id = table2.findColumn(columnNames.get(i));
                                 if (id == -1) {
-                                    throw error("column \"" + columnNames.get(i) + "\" does not exist.");
+                                    throw error("Value Missmatch: column \"%s\" does not exist.", columnNames.get(i));
                                 }
                                 data[i] = row2.get(id);
                             }
@@ -757,8 +736,7 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-    /**
-     * Return a list from the original table, whose order is changed
+    /* Return a list from the original table, whose order is changed
      * by ORDER. Because _row uses hashset to store data, thus we cannot
      * directly change the order of a table.
      */
@@ -880,8 +858,7 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-    /**
-     * Return true if the columns COMMON1 from ROW1 and COMMON2 from
+    /* Return true if the columns COMMON1 from ROW1 and COMMON2 from
      * ROW2 all have identical values. Assumes that COMMON1 and
      * COMMON2 have the same number of elements and the same names,
      * that the columns in COMMON1 apply to this table, those in
@@ -917,9 +894,6 @@ class Table implements Iterable<Row> {
     private HashSet<Row> _rows = new HashSet<>();
     private String[] _column_titles;
     private String[] _column_types;
-    // int
-    // double
-    // string
     private boolean _is_complement = false;
     private int _primary_key = -1;
     private HashSet<String> _primary_key_set = new HashSet<>();

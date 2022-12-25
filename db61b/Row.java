@@ -1,10 +1,3 @@
-// This is a SUGGESTED skeleton for a class that describes a single Row of a
-// Table. You can throw this away if you want, but it is a good idea to try to
-// understand it first.  Our solution changes or adds about 10 lines in this
-// skeleton.
-
-// Comments that start with "//" are intended to be removed from your
-// solutions.
 package db61b;
 
 import java.util.Arrays;
@@ -54,7 +47,7 @@ class Row {
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
     String get(int k) {
         if (k < 0 || k >= _data.length)
-            throw error("Error: column index out of range.");
+            throw error("Value Missmatch: column index out of range.");
         return _data[k];
     }
 
