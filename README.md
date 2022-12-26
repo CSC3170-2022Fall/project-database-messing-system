@@ -160,7 +160,7 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
 - **select clause** ::= select \<column name><sup>+</sup>, from \<table name> \<condition clause>;
 
-- **Operator in select clause**: =, \<, \<=, >, >=
+- **Operator in select clause**: =, \<, \<=, >, >=, !=
 ## Advanced Syntax
 
 - **Asterisk symbol** ::= select * from \<table name>;
