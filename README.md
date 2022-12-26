@@ -52,11 +52,80 @@ Advance coding:
 	
 - Application: **re-implement Assignment 2**.
 
+## Getting Started
+
+### Prerequisites
+
+- jdk >= 17
+
+- Make >= 4.2.1
+
+### Compile the Project
+
+```bash
+$ git clone https://github.com/CSC3170-2022Fall/project-database-messing-system.git
+$ cd project-database-messing-system
+$ make default
+```
+
+### Run the Project
+
+```bash
+$ java db61b.Main
+```
+
+### Custom Tests
+
+This project is configured with test cases from CSC3170-2022Fall Assignment2.
+
+Solutions are under `as2/solutions/` and test answers are under `as2/answers/`.
+
+A shell script `tester.sh` is used to judge the output of the project with standard answers.
+
+In total, `tester.sh` returns three states **Passed**, **Failed** and **Skipped**.
+
+- **Passed**: Your output, after sorting, agrees with the answer. 
+*(Note that for test case 3, no sorting will be done)*
+
+- **Failed**: Your output is not consistent with answers after sorting.
+
+- **Skipped**: Cannot find the solution file of this test case.
+
+For **Failed** test points, tester.sh will provide output comparison reports and run logs.
+
+If you need to configure more test cases, just change the loop termination condition in `tester.sh`.
+
+#### Run Custom Tests
+
+```bash
+$ bash as2/tester.sh
+```
+
+#### GitHub Action Configuration
+
+```yml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Compile the project
+      run: make default
+    - name: Run the assignment 2 test cases
+      run: bash as2/tester.sh
+```
+
+
 ## Database Structure
 
-All the data are stored in the rows of each table. Rows are stored based on **hashsets** in tables, and tables are stored based on **hashmaps** in databases. For each table, it contains information about the name and **data type** of each column, and the rows can be traversed using an iterator.
+All the data are stored in the rows of each table. Rows are stored based on **HashSets** in tables, and tables are stored based on **HashMaps** in databases. For each table, it contains information about the name and **data type** of each column, and the rows can be traversed using an iterator.
 
-Since the hashsets are unordered, the clause **order by 'xxx'** has no effect when the column **'xxx'** is not in the result table.
+Since the HashSets are unordered, the clause **order by 'xxx'** has no effect when the column **'xxx'** is not in the result table.
 
 ## Basic Syntax
 - **create statement** ::= create table \<name> \<table definition>

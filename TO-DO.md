@@ -157,5 +157,6 @@
 	- [x] Real-implement-**AZH**
 - [x] editor-**TYZ**
 ### Report
+- [x] Getting Started-**HTC**
 - [x] Readme and TO-DO List-**ZYQ**
 - [x] Error message format and comment edit-**AZH**
