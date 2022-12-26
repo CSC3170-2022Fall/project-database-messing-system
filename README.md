@@ -41,49 +41,158 @@ Basic coding:
 Advance coding:
 
 - Take **data type (int/double/string)** into consideration while creating the table and doing other operations;
-
+- Asterisk symbol '*';
+- Rename the columns;
 - Implement the operations including **commit, rollback**;
-
 - Implement aggregate functions including **max(), min(), avg(), sum(), round(), count()**;
-
 - Implement additional keyword including **as, like, between, where (not) in, order by, group by, primary key**;
-
 - Version Control: Use **snapshot** strategy with **SHA-1** as version name and **trie** as version tree;
-	
 - Application: **re-implement Assignment 2**.
+
+## Set Up Instruction
+
+### Prerequisites
+
+- jdk >= 17
+
+- Make >= 4.2.1
+
+### Compile the Project
+
+```bash
+$ git clone https://github.com/CSC3170-2022Fall/project-database-messing-system.git
+$ cd project-database-messing-system
+$ make default
+```
+
+### Run the Project
+
+```bash
+$ java db61b.Main
+```
+
+### Custom Tests
+
+This project is configured with test cases from CSC3170-2022Fall Assignment2.
+
+The solution should be stored as `as2/solutions/x.sql` and the answer should be stored as `as2/answers/x.db`, where `x` is the number of the test cases.
+
+A shell script `tester.sh` is used to judge the `out.db` (except for the test case 3 which needs **order by**) with standard answers. In other word, a sentence like `store <table> out` is always required in your solution file.
+
+`tester.sh` will sort `out.db` and turn it into `out_sorted.db` first, and compare `out_sorted.db` with the standard answer. 
+
+In total, `tester.sh` returns three states **Passed**, **Failed** and **Skipped**.
+
+- **Passed**: Your output, after sorting, agrees with the answer. 
+*(Note that for test case 3, no sorting will be done)*
+
+- **Failed**: Your output is not consistent with answers after sorting.
+
+- **Skipped**: Cannot find the solution file of this test case.
+
+For **Failed** test points, `tester.sh` will provide output comparison reports and run logs.
+
+If you need to configure more test cases, just change the loop termination condition in `tester.sh`.
+
+#### Run Custom Tests
+
+```bash
+$ bash as2/tester.sh
+```
+
+#### GitHub Action Configuration
+
+CI configuration starts with the basic environment (ubuntu or other OS with bash, Make, JDK 17), then run the command `bash as2/tester.sh`. 
+
+The following is the CI configuration of this repository.
+
+```yml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Compile the project
+      run: make default
+    - name: Run the assignment 2 test cases
+      run: bash as2/tester.sh
+```
+
 
 ## Database Structure
 
-All the data are stored in the rows of each table. Rows are stored based on **hashsets** in tables, and tables are stored based on **hashmaps** in databases. For each table, it contains information about the name and **data type** of each column, and the rows can be traversed using an iterator.
+All the data are stored in the rows of each table. Rows are stored based on **HashSets** in tables, and tables are stored based on **HashMaps** in databases. For each table, it contains information about the name and **data type** of each column, and the rows can be traversed using an iterator.
 
-Since the hashsets are unordered, the clause **order by 'xxx'** has no effect when the column **'xxx'** is not in the result table.
+Since the HashSets are unordered, the clause **order by 'xxx'** has no effect when the column **'xxx'** is not in the result table.
 
 ## Basic Syntax
 - **create statement** ::= create table \<name> \<table definition>
+
 - **table definition** ::= (\<column name>\<column data type><sup>+</sup>,); | as\<select clause>;
-- **print statement** ::= print \<table name>;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/create.gif)
+
 - **insert statement**::= insert into \<table name> values (\<literal><sup>+</sup>,)<sup>+</sup>,;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/insert.gif)
+- **print statement** ::= print \<table name>;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/print.gif)
+
 - **load statement** ::= load \<name>;
+
 - **store statement** ::= store \<file name without extension> \<table name> ;
+
 - **exit statement** ::= quit; | exit ;
+
 - **select statement** ::= \<select clause>;
-- **select clause** ::= select \<column name><sup>+</sup>, from \<tables> \<condition clause>;
-- **Operator in select clause**: =, \<, \<=, >, >=
+
+- **select clause** ::= select \<column name><sup>+</sup>, from \<table name> \<condition clause>;
+
+- **Operator in select clause**: =, \<, \<=, >, >=, !=
 ## Advanced Syntax
-- **Aggregated functions(avg, max, min, count, sum)** ::= select \<function> \<column name><sup>+</sup>, from \<tables>;
 
-- **select with round function**::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<tables>;
+- **Asterisk symbol** ::= select * from \<table name>;
 
-- **select with in condition**::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
+- **Rename columns** ::= select \<column name><sup>+</sup>, '\<another name>'<sup>+</sup>, from \<table name>;
 
-- **select with order by**::= select \<column name><sup>+</sup>, from \<tables> order by '\<column name>'<sup>+</sup>,\<order>;
+  Example: 
 
-- **select with group by**::= select \<column name><sup>+</sup>, function \<column name> from \<tables> group by \<column name><sup>+</sup>,;
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/rename.gif)
 
-- **select with between condition**::= select \<column name><sup>+</sup>, from \<tables> where \<column name> between \<lower bound> and \<upper bound>;
+- **Aggregated functions (avg, max, min, count, sum) **::= select \<function> \<column name><sup>+</sup>, from \<table name>;
 
-- **select with like condition**::= select \<column name><sup>+</sup>, from \<tables> where \<column name> like \<pattern>;
-  (supported operator: ‘’ and ‘%’)
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/aggregate.gif)
+
+- **select with round function **::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<table name>;
+
+  Example:
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/round.gif)
+
+- **select with in condition **::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
+
+- **select with order by** ::= select \<column name><sup>+</sup>, from \<table name> order by '\<column name>'<sup>+</sup>,\<order>;
+
+- **select with group by** ::= select \<column name><sup>+</sup>, function \<column name> from \<table name> group by \<column name><sup>+</sup>,;
+
+- **select with between condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> between \<lower bound> and \<upper bound>;
+
+- **select with like condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> like \<pattern>;
+  (supported operator: '_' and  '%')
   
   
   
