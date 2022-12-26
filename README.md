@@ -52,7 +52,7 @@ Advance coding:
 	
 - Application: **re-implement Assignment 2**.
 
-## Getting Started
+## Set Up Instruction
 
 ### Prerequisites
 
@@ -78,9 +78,11 @@ $ java db61b.Main
 
 This project is configured with test cases from CSC3170-2022Fall Assignment2.
 
-Solutions are under `as2/solutions/` and test answers are under `as2/answers/`.
+The solution should be stored as `as2/solutions/x.sql` and the answer should be stored as `as2/answers/x.db`, where `x` is the number of the test cases.
 
-A shell script `tester.sh` is used to judge the output of the project with standard answers.
+A shell script `tester.sh` is used to judge the `out.db` (except for the test case 3 which needs **order by**) with standard answers. In other word, a sentence like `store <table> out` is always required in your solution file.
+
+`tester.sh` will sort `out.db` and turn it into `out_sorted.db` first, and compare `out_sorted.db` with the standard answer. 
 
 In total, `tester.sh` returns three states **Passed**, **Failed** and **Skipped**.
 
@@ -91,7 +93,7 @@ In total, `tester.sh` returns three states **Passed**, **Failed** and **Skipped*
 
 - **Skipped**: Cannot find the solution file of this test case.
 
-For **Failed** test points, tester.sh will provide output comparison reports and run logs.
+For **Failed** test points, `tester.sh` will provide output comparison reports and run logs.
 
 If you need to configure more test cases, just change the loop termination condition in `tester.sh`.
 
@@ -102,6 +104,10 @@ $ bash as2/tester.sh
 ```
 
 #### GitHub Action Configuration
+
+CI configuration starts with the basic environment (ubuntu or other OS with bash, Make, JDK 17), then run the command `bash as2/tester.sh`. 
+
+The following is the CI configuration of this repository.
 
 ```yml
 jobs:
