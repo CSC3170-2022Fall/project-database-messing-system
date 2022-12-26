@@ -22,6 +22,14 @@ Our team consists of the following members, listed in the table below (the team 
 | 121090628  | 夏禹扬       | 2467925095@qq.com          | [@xqbf](https://github.com/xqbf)             |
 | 121090841  | 郑莹琪       | 121090841@link.cuhk.edu.cn | [@Aurora121090841](https://github.com/Aurora121090841)  |
 
+## Hyperlinks
+We have posted the presentation video on bilibili: [2022FALL CSC3170 Group2 Database-Messing-System Final Presentation](https://www.bilibili.com/video/BV1dG4y1J7ys).
+
+Presentation slides: [Presentation slides.pdf](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/presentation-related%20files/Presentation%20slides.pdf).
+
+Besides this README.md, we have also set [TODO.md](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/TO-DO.md)
+to roughly show the things we have done. 
+
 ## Project Specification
 
 After thorough discussion, our team made the choice and the specification information is listed below:
@@ -107,4 +115,4 @@ Since the hashsets are unordered, the clause **order by 'xxx'** has no effect wh
 | VersionNotFound | <li>Cannot find specified version <li>More than one table share the same name |
 
 ## Re-implement Assignment2
-For the specific results, please refer to the pdf file “**Presentation slides.pdf**" in the "**presentation-related files**" directory.
+For the specific results, please refer to the pdf file “[**Presentation slides.pdf**](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/presentation-related%20files/Presentation%20slides.pdf)". For code and .db file used in presentation, you can check the "[presentation-related files](https://github.com/CSC3170-2022Fall/project-database-messing-system/tree/main/presentation-related%20files)" directory.
