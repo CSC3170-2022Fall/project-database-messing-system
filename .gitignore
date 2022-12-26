@@ -3,9 +3,9 @@ sentinel
 .vscode/*
 snapshots/*
 !snapshots/.gitkeep
-as2/out.db
-as2/msg.log
-as2/out_sorted.db
+Assignment2/out.db
+Assignment2/msg.log
+Assignment2/out_sorted.db
 .idea
 students.db
 testing/students.db

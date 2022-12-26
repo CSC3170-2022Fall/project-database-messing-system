@@ -18,4 +18,4 @@ jobs:
     - name: Compile the project
       run: make default
     - name: Run the assignment 2 test cases
-      run: bash as2/tester.sh
+      run: bash Assignment2/tester.sh
