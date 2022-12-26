@@ -1,3 +1,0 @@
-# Project Specification
-
-<!-- TODO -->
