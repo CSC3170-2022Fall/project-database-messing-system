@@ -41,15 +41,12 @@ Basic coding:
 Advance coding:
 
 - Take **data type (int/double/string)** into consideration while creating the table and doing other operations;
-
+- Asterisk symbol '*';
+- Rename the columns;
 - Implement the operations including **commit, rollback**;
-
 - Implement aggregate functions including **max(), min(), avg(), sum(), round(), count()**;
-
 - Implement additional keyword including **as, like, between, where (not) in, order by, group by, primary key**;
-
 - Version Control: Use **snapshot** strategy with **SHA-1** as version name and **trie** as version tree;
-	
 - Application: **re-implement Assignment 2**.
 
 ## Set Up Instruction
@@ -135,30 +132,67 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
 ## Basic Syntax
 - **create statement** ::= create table \<name> \<table definition>
+
 - **table definition** ::= (\<column name>\<column data type><sup>+</sup>,); | as\<select clause>;
-- **print statement** ::= print \<table name>;
+
+  Example: 
+
+  ![](readme-related files\create.gif)
+
 - **insert statement**::= insert into \<table name> values (\<literal><sup>+</sup>,)<sup>+</sup>,;
+
+  Example: 
+
+  ![](readme-related files\insert.gif)
+- **print statement** ::= print \<table name>;
+
+  Example: 
+
+  ![](readme-related files\print.gif)
+
 - **load statement** ::= load \<name>;
+
 - **store statement** ::= store \<file name without extension> \<table name> ;
+
 - **exit statement** ::= quit; | exit ;
+
 - **select statement** ::= \<select clause>;
-- **select clause** ::= select \<column name><sup>+</sup>, from \<tables> \<condition clause>;
+
+- **select clause** ::= select \<column name><sup>+</sup>, from \<table name> \<condition clause>;
+
 - **Operator in select clause**: =, \<, \<=, >, >=
 ## Advanced Syntax
-- **Aggregated functions(avg, max, min, count, sum)** ::= select \<function> \<column name><sup>+</sup>, from \<tables>;
 
-- **select with round function**::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<tables>;
+- **Asterisk symbol** ::= select * from \<table name>;
 
-- **select with in condition**::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
+- **Rename columns** ::= select \<column name><sup>+</sup>, '\<another name>'<sup>+</sup>, from \<table name>;
 
-- **select with order by**::= select \<column name><sup>+</sup>, from \<tables> order by '\<column name>'<sup>+</sup>,\<order>;
+  Example: 
 
-- **select with group by**::= select \<column name><sup>+</sup>, function \<column name> from \<tables> group by \<column name><sup>+</sup>,;
+  ![](readme-related files\rename.gif)
 
-- **select with between condition**::= select \<column name><sup>+</sup>, from \<tables> where \<column name> between \<lower bound> and \<upper bound>;
+- **Aggregated functions (avg, max, min, count, sum) **::= select \<function> \<column name><sup>+</sup>, from \<table name>;
 
-- **select with like condition**::= select \<column name><sup>+</sup>, from \<tables> where \<column name> like \<pattern>;
-  (supported operator: ‘’ and ‘%’)
+  Example: 
+
+  ![](readme-related files\aggregate.gif)
+
+- **select with round function **::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<table name>;
+
+  Example:
+
+  ![](readme-related files\round.gif)
+
+- **select with in condition **::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
+
+- **select with order by** ::= select \<column name><sup>+</sup>, from \<table name> order by '\<column name>'<sup>+</sup>,\<order>;
+
+- **select with group by** ::= select \<column name><sup>+</sup>, function \<column name> from \<table name> group by \<column name><sup>+</sup>,;
+
+- **select with between condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> between \<lower bound> and \<upper bound>;
+
+- **select with like condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> like \<pattern>;
+  (supported operator: '_' and  '%')
   
   
   
