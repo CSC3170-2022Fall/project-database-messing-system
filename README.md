@@ -185,14 +185,30 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
 - **select with in condition **::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
 
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/in.gif)
+
 - **select with order by** ::= select \<column name><sup>+</sup>, from \<table name> order by '\<column name>'<sup>+</sup>,\<order>;
 
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/order_by.gif)
+
 - **select with group by** ::= select \<column name><sup>+</sup>, function \<column name> from \<table name> group by \<column name><sup>+</sup>,;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/group_by.gif)
 
 - **select with between condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> between \<lower bound> and \<upper bound>;
 
 - **select with like condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> like \<pattern>;
   (supported operator: '_' and  '%')
+  
+  Example: 
+  
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/like.gif)
   
   
   
@@ -202,8 +218,22 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
 ## Version Control Syntax
 - **commit statement** ::= commit \<table name>;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/commit.gif)
+
 - **rollback to statement** ::= rollback \<table name> to \<version code>;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/rollback_to.gif)
+
 - **rollback at statement** ::= rollback \<table name> at \<version code>;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/rollback_at.gif)
 
 ## Standard Error Messages
 
