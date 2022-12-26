@@ -12,7 +12,7 @@ def create_gif(image_list, gif_name, duration=1.0):
 
 def main():
     image_list = []
-    for i in range(1, 19):
+    for i in range(1, 18):
         image_list.append("{}.jpg".format(i))
     gif_name = 'new.gif'
     duration = 0.5
