@@ -132,11 +132,11 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
 ## Basic Syntax
 
-​	*<sup>\*</sup>Noted that the students.db file used in examples is stored under the "readme-related files" folder.*
+​	*<sup>\*</sup>Note that the students.db file used in examples is stored under the "readme-related files" folder.*
 
 - **create statement** ::= create table \<name> \<table definition>
 
-- **table definition** ::= (\<column name>\<column data type><sup>+</sup>,); | as\<select clause>;
+- **table definition** ::= (\<column name> \<column data type><sup>+</sup>,); | as \<select clause>;
 
   Example: 
 
@@ -170,6 +170,12 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/where.gif)
 ## Advanced Syntax
+
+- **Primary key** ::= primary key \<column name>; (It is used together with the table definition.)
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/primary_key.gif)
 
 - **Asterisk symbol** ::= select * from \<table name>;
 
