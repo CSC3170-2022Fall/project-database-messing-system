@@ -137,18 +137,18 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
   Example: 
 
-  ![](readme-related files\create.gif)
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/create.gif)
 
 - **insert statement**::= insert into \<table name> values (\<literal><sup>+</sup>,)<sup>+</sup>,;
 
   Example: 
 
-  ![](readme-related files\insert.gif)
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/insert.gif)
 - **print statement** ::= print \<table name>;
 
   Example: 
 
-  ![](readme-related files\print.gif)
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/print.gif)
 
 - **load statement** ::= load \<name>;
 
@@ -169,19 +169,19 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
   Example: 
 
-  ![](readme-related files\rename.gif)
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/rename.gif)
 
 - **Aggregated functions (avg, max, min, count, sum) **::= select \<function> \<column name><sup>+</sup>, from \<table name>;
 
   Example: 
 
-  ![](readme-related files\aggregate.gif)
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/aggregate.gif)
 
 - **select with round function **::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<table name>;
 
   Example:
 
-  ![](readme-related files\round.gif)
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/round.gif)
 
 - **select with in condition **::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
 
