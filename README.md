@@ -185,19 +185,19 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/rename.gif)
 
-- **Aggregated functions (avg, max, min, count, sum) **::= select \<function> \<column name><sup>+</sup>, from \<table name>;
+- **Aggregated functions (avg, max, min, count, sum)** ::= select \<function> \<column name><sup>+</sup>, from \<table name>;
 
   Example: 
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/aggregate.gif)
 
-- **select with round function **::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<table name>;
+- **select with round function** ::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<table name>;
 
   Example:
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/round.gif)
 
-- **select with in condition **::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
+- **select with in condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
 
   Example: 
 
