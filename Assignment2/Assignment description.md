@@ -1,13 +1,6 @@
-# CSC3170 Assignment 2
+# CSC3170 Assignment 2 (Modified for Better Understanding)
 
-> * This is an individual assignment and should be submitted by $5 p.m.$, 16 November 2022 via Blackboard.
-> * You should submit a `solutions.zip` file to the Blackboard (BB) containing only the MySQL script files for the corresponding questions, namely `1.sql`, `2.sql`, ..., `16.sql`, which are already contained in the [solutions](solutions) directory. Note that your `solutions.zip` file should directly contains the files, not a directory with files inside, and that it's "solutions" (plural form), not "solution". Don't change the comments provided in the files as they serve as hints for your implementation.
-> * You should also $\underline{\text{submit a screenshot of the GitHub webpage locating at this assignment, with the points}} \\ \underline{\text{you get and your username suffix in the URL bar of the browser}}$ (You may zoom out the browser to capture the info you need. Although we can see your scores on GitHub Classroom, this would serves as a voucher on BB). A full grade on GitHub Classroom will waive the further check of your codes (although this is only the necessary condition for that your codes are correct). Please check [README.md](README.md) for GitHub Classroom relevant issue and local test techniques.
-> * We have limit in GitHub Action time, which means that you may fail to start the autograding procedure, and that you will loose the chance for waiving further checking. Hence, it's a First-Come-First-Served (FCFS) procedure and please utilize the GitHub Classroom resource as soon as possible.
-> * Any submission with an incorrect format might lead to 0 points as our additional grading script relies strictly on the correct format.
-> * We set 25 points for Question 1, and 5 points each for questions from Question 2 to Question 16.
-
-1. Consider a database schema that stores the following information:
+1. Consider a database schema that stores the following information and create relevant tables:
 
    * `employees`: This is a table that contains the basic information of any employee:
      * `EMPLOYEE_ID`: The employee's identifier that determines other attributes. $\text{A 6-digit integer}$.
@@ -51,12 +44,6 @@
      * `END_DATE`: The end date of a job history record. Should not be empty.
      * `JOB_ID`: Describe the job type of a job history record. Have the same format as `jobs.JOB_ID`.
      * `DEPARTMENT_ID`: Help to describe the department information of a job history record. Have the same format as `departments.DEPARTMENT_ID`.
-
-   Please carefully check the information above, and write the MySQL scripts inside [1.sql](solutions/1.sql) (stored in the [solutions](solutions) directory) following the instruction in the comments. Note that this is one of the files you need to pack inside the `solution.zip`.
-
-   For the numerical data type like integer and float, you might just use `DECIMAL(M,D)` and adjust `M` and `D`, where `M` is the maximum number of digits (the precision) and `D` is the number of digits to the right of the decimal point. For the string, you might use `VARCHAR(N)`, where `N` is the maximum length. For the engine of the tables, you can use any suitable one provided by MySQL. Note that the `MyISAM` engine doesn't support foreign key, although it' not required in this question (we have cancelled the foreign key checking, as it could be relevant to many issues like execution order).
-
-   After finishing [Q1](solutions/1.sql), you may execute it to see whether there is any error. When everything is okay, you can execute [db_insert.sql](data/db_insert.sql) (stored in the [data](data) directory) to check whether you can insert the test data. It consists of a feasible instance and you can use it to check whether your implementation from question 2 to 16 is correct with the test cases in the [test_cases](test_cases) directory. If you can't execute [db_insert.sql](data/db_insert.sql) without errors, you might receive 0 points.  For keeping consistent with the test cases, in case that any alias name is required (e.g. "First Name"), the attributes in question 1 should be uppercase, while for question 2 to 16, you should also use uppercase (including the aggregation function names like `MAX`, `AVG`, etc.) though the words appeared in the questions are lowercase. For the following questions, please finish them in the files from [2.sql](solutions/2.sql) to [16.sql](solutions/16.sql) (also stored in the [solutions](solutions) directory).
 
 2. Show the first_name and last_name of all employees using alias name "First Name", "Last Name".
 
