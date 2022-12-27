@@ -75,7 +75,7 @@ $ java db61b.Main
 
 This project is configured with test cases from CSC3170-2022Fall Assignment2.
 
-The solution should be stored as `as2/solutions/x.sql` and the answer should be stored as `as2/answers/x.db`, where `x` is the number of the test cases.
+The solution should be stored as `Assignment2/solutions/x.sql` and the answer should be stored as `Assignment2/answers/x.db`, where `x` is the number of the test cases.
 
 A shell script `tester.sh` is used to judge the `out.db` (except for the test case 3 which needs **order by**) with standard answers. In other word, a sentence like `store <table> out` is always required in your solution file.
 
@@ -97,12 +97,12 @@ If you need to configure more test cases, just change the loop termination condi
 #### Run Custom Tests
 
 ```bash
-$ bash as2/tester.sh
+$ bash Assignment2/tester.sh
 ```
 
 #### GitHub Action Configuration
 
-CI configuration starts with the basic environment (ubuntu or other OS with bash, Make, JDK 17), then run the command `bash as2/tester.sh`. 
+CI configuration starts with the basic environment (ubuntu or other OS with bash, Make, JDK 17), then run the command `bash Assignment2/tester.sh`. 
 
 The following is the CI configuration of this repository.
 
@@ -120,7 +120,7 @@ jobs:
     - name: Compile the project
       run: make default
     - name: Run the assignment 2 test cases
-      run: bash as2/tester.sh
+      run: bash Assignment2/tester.sh
 ```
 
 
