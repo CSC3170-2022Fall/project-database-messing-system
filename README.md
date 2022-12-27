@@ -268,7 +268,9 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 For the specific results, please refer to the pdf file “[**Presentation slides.pdf**](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/presentation-related%20files/Presentation%20slides.pdf)". For code and .db file used in presentation, you can check the "[presentation-related files](https://github.com/CSC3170-2022Fall/project-database-messing-system/tree/main/presentation-related%20files)" directory.
 
 ## Hyperlinks
-We have posted the presentation video on bilibili: [2022FALL CSC3170 Group2 Database-Messing-System Final Presentation](https://www.bilibili.com/video/BV1dG4y1J7ys).
+We have posted the presentation video on bilibili:
+
+[2022FALL CSC3170 Group2 Database-Messing-System Final Presentation](https://www.bilibili.com/video/BV1dG4y1J7ys).
 
 Presentation slides: [Presentation slides.pdf](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/presentation-related%20files/Presentation%20slides.pdf).
 
