@@ -131,9 +131,12 @@ All the data are stored in the rows of each table. Rows are stored based on **Ha
 Since the HashSets are unordered, the clause **order by 'xxx'** has no effect when the column **'xxx'** is not in the result table.
 
 ## Basic Syntax
+
+​	*<sup>\*</sup>Note that the students.db file used in examples is stored under the "readme-related files" folder.*
+
 - **create statement** ::= create table \<name> \<table definition>
 
-- **table definition** ::= (\<column name>\<column data type><sup>+</sup>,); | as\<select clause>;
+- **table definition** ::= (\<column name> \<column data type><sup>+</sup>,); | as \<select clause>;
 
   Example: 
 
@@ -144,6 +147,7 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
   Example: 
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/insert.gif)
+  
 - **print statement** ::= print \<table name>;
 
   Example: 
@@ -161,7 +165,17 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 - **select clause** ::= select \<column name><sup>+</sup>, from \<table name> \<condition clause>;
 
 - **Operator in select clause**: =, \<, \<=, >, >=, !=
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/where.gif)
 ## Advanced Syntax
+
+- **Primary key** ::= primary key \<column name>; (It is used together with the table definition.)
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/primary_key.gif)
 
 - **Asterisk symbol** ::= select * from \<table name>;
 
@@ -171,19 +185,19 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/rename.gif)
 
-- **Aggregated functions (avg, max, min, count, sum) **::= select \<function> \<column name><sup>+</sup>, from \<table name>;
+- **Aggregated functions (avg, max, min, count, sum)** ::= select \<function> \<column name><sup>+</sup>, from \<table name>;
 
   Example: 
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/aggregate.gif)
 
-- **select with round function **::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<table name>;
+- **select with round function** ::= select round \<column name> \<operator> \<operand> reserve \<number of reserved bits> from \<table name>;
 
   Example:
 
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/round.gif)
 
-- **select with in condition **::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
+- **select with in condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> in \<select clause>;
 
   Example: 
 
@@ -202,6 +216,10 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
   ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/group_by.gif)
 
 - **select with between condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> between \<lower bound> and \<upper bound>;
+
+  Example: 
+
+  ![](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/readme-related%20files/between.gif)
 
 - **select with like condition** ::= select \<column name><sup>+</sup>, from \<table name> where \<column name> like \<pattern>;
   (supported operator: '_' and  '%')
@@ -250,7 +268,9 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
 For the specific results, please refer to the pdf file “[**Presentation slides.pdf**](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/presentation-related%20files/Presentation%20slides.pdf)". For code and .db file used in presentation, you can check the "[presentation-related files](https://github.com/CSC3170-2022Fall/project-database-messing-system/tree/main/presentation-related%20files)" directory.
 
 ## Hyperlinks
-We have posted the presentation video on bilibili: [2022FALL CSC3170 Group2 Database-Messing-System Final Presentation](https://www.bilibili.com/video/BV1dG4y1J7ys).
+We have posted the presentation video on bilibili:
+
+[2022FALL CSC3170 Group2 Database-Messing-System Final Presentation](https://www.bilibili.com/video/BV1dG4y1J7ys).
 
 Presentation slides: [Presentation slides.pdf](https://github.com/CSC3170-2022Fall/project-database-messing-system/blob/main/presentation-related%20files/Presentation%20slides.pdf).
 

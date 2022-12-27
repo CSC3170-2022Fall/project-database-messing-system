@@ -145,7 +145,7 @@
 	- [x] snapshot
 	- [x] log
 
-## Presensation and Report
+## Presentation and Report
 ### Presentation
 - [x] PPT-**ZYQ**
 - [x] Present
@@ -160,3 +160,4 @@
 - [x] Set Up Instruction-**HTC**
 - [x] Readme and TO-DO List-**ZYQ**
 - [x] Error message format and comment edit-**AZH**
+- [x] Gif examples-**SCH**
