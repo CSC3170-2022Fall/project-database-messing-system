@@ -230,9 +230,13 @@ Since the HashSets are unordered, the clause **order by 'xxx'** has no effect wh
   
   
   
-  **Notes**: aggregate functions can be used with "**where**" conditions **only if** there is "**group by**" clause, in that case, only the last argument can be an aggregate function.
+  **Notes**: 
+  
+  Aggregate functions can be used with "**where**" conditions **only when** there is "**group by**" clause, in that case, only the last argument can be an aggregate function.
   
   "**in**" and "**not in**" can only be applied to the select clause with **one** table.
+
+  "**in**" and "**not in**" can be used along with other conditions, but it must be the **last** condition.
 
 ## Version Control Syntax
 - **commit statement** ::= commit \<table name>;
