@@ -73,7 +73,7 @@ $ java db61b.Main
 
 ### Custom Tests
 
-This project is configured with test cases from CSC3170-2022Fall Assignment2.
+This project is configured with test cases from CSC3170-2022Fall Assignment2. A modified version of assignment description is provided [here](Assignment2/assignment-description.md).
 
 The solution should be stored as `Assignment2/solutions/x.sql` and the answer should be stored as `Assignment2/answers/x.db`, where `x` is the number of the test cases.
 
